@@ -8,13 +8,14 @@ import random
 import re
 import shutil
 import subprocess
+import tempfile
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reader", type=Path, required=True)
     parser.add_argument("--directory", type=Path,
-                        default=Path(__file__).resolve().parents[2] / ".agent-tmp" / "R97-05")
+                        default=Path(tempfile.gettempdir()) / "ninfer-io")
     args = parser.parse_args()
     args.directory.mkdir(parents=True, exist_ok=True)
     free = shutil.disk_usage(args.directory).free

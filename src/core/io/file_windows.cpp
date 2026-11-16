@@ -13,19 +13,6 @@ std::string utf8_path(const std::filesystem::path& path) {
     return {reinterpret_cast<const char*>(text.data()), text.size()};
 }
 
-std::wstring wide_path(const std::string& utf8) {
-    if (utf8.size() > static_cast<std::size_t>(std::numeric_limits<int>::max()))
-        throw std::invalid_argument("file path is too long");
-    const auto count = ::MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, utf8.data(),
-                                             static_cast<int>(utf8.size()), nullptr, 0);
-    if (!count) windows::fail("convert UTF-8 file path");
-    std::wstring result(count, L'\0');
-    if (!::MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, utf8.data(),
-                               static_cast<int>(utf8.size()), result.data(), count))
-        windows::fail("convert UTF-8 file path");
-    return result;
-}
-
 std::size_t read_at(FileView file, std::uint64_t offset, std::span<std::byte> destination,
                     const std::string& context) {
     auto operation = windows::overlapped(offset);
@@ -54,20 +41,29 @@ ReadOnlyFile::ReadOnlyFile(const std::filesystem::path& path, ReadMode mode) : p
     if (mode != ReadMode::Buffered && mode != ReadMode::Direct)
         throw std::invalid_argument("invalid file read mode");
     const auto context = utf8_path(path);
-    const auto wide    = wide_path(context);
-    windows::Handle handle(::CreateFileW(
-        wide.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, nullptr,
-        OPEN_EXISTING,
-        FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED |
-            (mode == ReadMode::Direct ? FILE_FLAG_NO_BUFFERING : 0),
-        nullptr));
-    if (!handle.valid()) windows::fail(context, "CreateFileW");
+    if (path.empty()) windows::fail(context, "CreateFileW", ERROR_PATH_NOT_FOUND);
+    const auto open = [&](DWORD extra_flags = 0) {
+        return windows::Handle(::CreateFileW(
+            path.c_str(), GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+            nullptr, OPEN_EXISTING,
+            FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED | extra_flags |
+                (mode == ReadMode::Direct ? FILE_FLAG_NO_BUFFERING : 0),
+            nullptr));
+    };
+    auto handle = open();
+    const auto open_error = handle.valid() ? ERROR_SUCCESS : ::GetLastError();
+    // A directory needs backup semantics to reach the regular-file check below.
+    // Backup privileges may also bypass regular-file access/sharing checks: retain
+    // the original error and never accept a regular file through this retry.
+    if (open_error == ERROR_ACCESS_DENIED) handle = open(FILE_FLAG_BACKUP_SEMANTICS);
+    if (!handle.valid()) windows::fail(context, "CreateFileW", open_error);
     BY_HANDLE_FILE_INFORMATION information{};
     if (!::GetFileInformationByHandle(handle.get(), &information))
         windows::fail(context, "GetFileInformationByHandle");
     if (::GetFileType(handle.get()) != FILE_TYPE_DISK ||
         (information.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
         windows::fail(context, "expected regular file", ERROR_INVALID_PARAMETER);
+    if (open_error != ERROR_SUCCESS) windows::fail(context, "CreateFileW", open_error);
     LARGE_INTEGER length{};
     if (!::GetFileSizeEx(handle.get(), &length)) windows::fail(context, "GetFileSizeEx");
     view_.bytes = static_cast<std::uint64_t>(length.QuadPart);

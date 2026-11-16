@@ -60,20 +60,17 @@ add_test(NAME ninfer_nf4_exact_test
 
 ninfer_add_test(ninfer_read_queue_test SOURCES "${CMAKE_CURRENT_LIST_DIR}/../io/test_read_queue.cpp"
   LIBRARIES ninfer_core $<$<NOT:$<BOOL:${NINFER_TARGET_R9700}>>:PkgConfig::URING>)
-target_compile_definitions(ninfer_read_queue_test PRIVATE
-  NINFER_IO_TEST_ROOT="${PROJECT_SOURCE_DIR}/.agent-tmp/R97-05")
 if(NOT WIN32)
   ninfer_test_interpose(ninfer_read_queue_test io_uring_submit)
 endif()
 set_tests_properties(ninfer_read_queue_test PROPERTIES TIMEOUT 30)
 
-ninfer_add_test(ninfer_io_edges_test SOURCES "${CMAKE_CURRENT_LIST_DIR}/../io/test_io_edges.cpp"
-  LIBRARIES ninfer_core)
-target_compile_definitions(ninfer_io_edges_test PRIVATE
-  NINFER_IO_TEST_ROOT="${PROJECT_SOURCE_DIR}/.agent-tmp/R97-05")
-set_tests_properties(ninfer_io_edges_test PROPERTIES TIMEOUT 30)
-
 if(WIN32)
+  # Includes Windows IOCP wait caching and handle-lifetime checks; not a POSIX suite.
+  ninfer_add_test(ninfer_io_edges_test SOURCES "${CMAKE_CURRENT_LIST_DIR}/../io/test_io_edges.cpp"
+    LIBRARIES ninfer_core)
+  set_tests_properties(ninfer_io_edges_test PROPERTIES TIMEOUT 30)
+
   # Opt-in: the Python driver creates and removes a 4.5 GiB deterministic fixture.
   # Keep it out of ordinary CTest runs; invoke test_large_file.py --reader <this target>.
   add_executable(ninfer_io_large_file_test "${CMAKE_CURRENT_LIST_DIR}/../io/test_large_file.cpp")

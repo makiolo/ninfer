@@ -32,6 +32,18 @@ void rejects(F fn) {
     throw std::runtime_error("invalid I/O operation accepted");
 }
 
+template <class F>
+void rejects_errno(int expected, F fn) {
+    try {
+        fn();
+    } catch (const std::system_error& error) {
+        require(error.code() == std::error_code(expected, std::generic_category()),
+                "I/O operation reported the wrong errno");
+        return;
+    }
+    throw std::runtime_error("invalid I/O operation accepted");
+}
+
 std::byte pattern(std::uint64_t position) {
     return std::byte((position * 37 + position / 13) & 255);
 }
@@ -117,7 +129,11 @@ void paths_and_moves(const std::filesystem::path& root) {
     require(direct.read_direct(0, {static_cast<std::byte*>(storage.data()), 4096}) == 4096,
             "Unicode direct read differs");
     rejects<std::system_error>([&] { ReadOnlyFile missing(root / "absent"); });
-    rejects<std::system_error>([&] { ReadOnlyFile directory(root); });
+    for (const auto mode : {ReadMode::Buffered, ReadMode::Direct}) {
+        rejects_errno(ENOENT, [&] { ReadOnlyFile empty_path({}, mode); });
+        // file.cpp rejects non-regular files with EINVAL after fstat (or at O_DIRECT open).
+        rejects_errno(EINVAL, [&] { ReadOnlyFile directory(root, mode); });
+    }
     rejects([&] { ReadOnlyFile invalid(path, static_cast<ReadMode>(99)); });
 #ifdef _WIN32
     const auto locked_path = root / "access-denied";

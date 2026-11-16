@@ -204,6 +204,8 @@ ReadWake DirectReadQueue::wait() {
 }
 
 void DirectReadQueue::wake() {
+    // Each call posts a packet; unlike eventfd, notices are not coalesced. The contract
+    // does not fix coalescing, so callers may see harmless extra Signalled wakeups.
     if (!::PostQueuedCompletionStatus(impl_->port.get(), 0, 1, nullptr))
         windows::fail("wake direct read queue");
 }
