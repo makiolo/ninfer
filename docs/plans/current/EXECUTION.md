@@ -18,3 +18,10 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   del plan: faltan `r9700/sources.cmake` en las Ops (incluidos por `${NINFER_TARGET}`) y los targets `CUDA::*`. Decisión
   del director: R97-03 (sube a L4) crea manifiestos vacíos y mapea `CUDA::*` en `Dependencies.cmake`; las tareas de
   OPS rellenan cada manifiesto. Intento 2 lanzado.
+- 2026-11-16 ~23:00 UTC · R97-02 en revisión (492); R97-05 lanzada (Codex, HOST empieza: depende solo de R97-01/03).
+- 2026-11-16 · R97-02 revisión 492: ACCEPT WITH CONDITIONS (numérica OK en host y ASUS, oráculo OK; el target CMake no
+  enlaza por builtins de compiler-rt → intento 2). Nota para PLAN_OPS: sin mapear en la cabecera
+  `cudaLaunchKernelEx`, `cudaLaunchAttribute*`, `cudaLaunchConfig_t`, `cudaGridDependencySynchronize`,
+  `cudaTriggerProgrammaticLaunchCompletion` (PDL, `src/core/pdl.cuh`), `cudaOccupancyMaxActiveClusters`
+  (`mhc/dgx_spark`) y `cudaRoundNearest` (FP4); `normalization` usa máscara de 32 bits en `__shfl_down_sync`;
+  `sampling` necesita `cub/block/block_merge_sort.cuh` (hipCUB). Inventario: `.agent-tmp/R97-02/ops-compile.md`.
