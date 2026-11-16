@@ -28,3 +28,4 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
 - 2026-11-16 23:0x UTC · R97-02 cerrada (`36f36b4a`, registro `a718ec76`). R97-04 lanzada (smoke con fuentes de dispositivo de core; enlace de `ninfer_core` completo pasa a R97-08).
 - 2026-11-16 23:1x UTC · R97-04 revisión 496: ACCEPT WITH CONDITIONS (escaneo de módulos C++ y reenvío de `<cuda_*.h>` deben ser globales en `r9700`) → intento 2.
 - 2026-11-16 23:2x UTC · R97-04 cerrada (`de5cce05`): **hito 1 cumplido** (r9700-ops configura, smoke en la ASUS). PLAN_BUILD completo. R97-05 entregada (`6b075a37`), a revisión.
+- 2026-11-16 23:2x UTC · R97-05 revisión 498: ACCEPT WITH CONDITIONS (raíz de tests de io en el árbol fuente en todas las dianas) → intento 2 (500). R97-06 en curso (499).
