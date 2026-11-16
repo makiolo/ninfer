@@ -3,7 +3,11 @@
 
 #include <spdlog/logger.h>
 
-#include <unistd.h>
+#ifdef _WIN32
+#    include "support/stderr_capture_windows.h"
+#else
+#    include <unistd.h>
+#endif
 
 #include <algorithm>
 #include <array>
@@ -17,6 +21,7 @@
 
 namespace {
 
+#ifndef _WIN32
 class StderrCapture {
 public:
     StderrCapture() {
@@ -63,6 +68,7 @@ private:
     int pipe_[2]{-1, -1};
     int saved_ = -1;
 };
+#endif
 
 int check(bool condition, const char* message) {
     if (condition) { return 0; }
