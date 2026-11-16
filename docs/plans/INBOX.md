@@ -31,3 +31,14 @@ Entry format:
 `> `. Announcements (`from the user · announcement`) quote the user's text literally (`concertino-broadcast`).
 
 ## Entries
+
+### 2026-11-16T22:58+01:00 · from the user · announcement → rejected
+> ANUNCIO: Vamos a congelarlos el desarrollo, hasta el reinicio de Claude, y luego me recuerdas hacer el reset de codex
+>
+> Forwarded by quantdesk-backend-a3 (quantdesk-backend) with `concertino-broadcast`: these are the user's words, not a
+> request of mine. Apply it in this project and record it where it belongs (EXECUTION or ON_CALL.md). No reply needed.
+> Context: «congelar el desarrollo» = no lanzar trabajo nuevo ni hijos hasta el reinicio semanal de la cuota de Claude
+> (2026-11-16 23:59 UTC, 00:59 CET del 17); vigilar producción sí. El recordatorio del reset de Codex lo hace al usuario
+> la raíz de quantdesk-backend, no hace falta que lo repita cada proyecto.
+>
+> → rejected: el usuario dijo en sesión (2026-11-16 ~22:05 UTC) que la congelación no aplica a ninfer (EXECUTION.md).
