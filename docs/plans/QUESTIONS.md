@@ -110,3 +110,16 @@ is asked, and whoever hears the answer writes it here in the user's own words.
 - Received by: sesión de planificación, 2026-11-16
 - Confirmation in the executing director: not applicable
 - Applied in: PLAN_PERF movido a future/SPRINT-02/; next/SPRINT.md §3, §5, §6
+
+### Q-008 · open · decision
+- Raised: 2026-11-16, sesión de planificación del port ROCm
+- Task: R97-22, R97-24..27 (SPRINT-02)
+- Question: El tensor parallel usa las dos R9700. ¿Se libera también la segunda GPU de su ranura de IA local mientras
+  duren esas tareas?
+- Options: A) Sí, las dos exclusivas durante R97-22 y desde R97-24; B) Turnos: TP solo en ventanas acordadas
+- Implications: A: sin IA local en GPU durante esa fase; B: TP más lento de desarrollar y benchmarks en ventanas
+- Recommendation: A
+- Literal answer: —
+- Received by: —
+- Confirmation in the executing director: not applicable
+- Applied in: —

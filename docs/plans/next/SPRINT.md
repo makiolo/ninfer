@@ -58,7 +58,7 @@ Ninguna ([DEPENDENCIES.md](../DEPENDENCIES.md)).
 |---|---|---|
 | PERF: R97-19..21 (línea base, GEMV RDNA4, prefill WMMA) | Q-007: SPRINT-01 cierra al funcionar correcto | future/SPRINT-02 |
 | Vision (encoder, FFmpeg/JPEG) | Fuera del primer hito (Q-002) | backlog (tras SPRINT-01) |
-| Segunda GPU / paralelismo | Sin RCCL en Windows | backlog |
+| Segunda GPU / tensor parallel TP2 | Sin RCCL ni P2P en Windows; requiere hito de 1 GPU | future/SPRINT-02 (PLAN_TP) |
 | DFlash / DFlash2 | Fuera del primer hito | backlog |
 | NVFP4 y artefactos `_nvfp4` | Sin FP4 nativo en RDNA4 | backlog |
 | MoE, offload de expertos, Flash Next, GLM | Otros modelos | backlog |

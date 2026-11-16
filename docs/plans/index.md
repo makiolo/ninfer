@@ -28,7 +28,7 @@ Cycle: planning → start → execution → close and archive → freeze → rel
 |---|---|---|
 | Active | none | — |
 | Next | SPRINT-01 — Port ROCm R9700 (planning) | [next/SPRINT.md](next/SPRINT.md) |
-| Future | SPRINT-02 — Rendimiento R9700 (planning) | [future/SPRINT-02/SPRINT.md](future/SPRINT-02/SPRINT.md) |
+| Future | SPRINT-02 — Rendimiento y TP2 en R9700 (planning) | [future/SPRINT-02/SPRINT.md](future/SPRINT-02/SPRINT.md) |
 | Last closed | none | [archive/](archive/index.md) |
 
 ## Backlog
