@@ -96,8 +96,8 @@ is asked, and whoever hears the answer writes it here in the user's own words.
 - Literal answer: "Una fija, exclusiva (Recomendado)"
 - Received by: sesión de planificación, 2026-11-16
 - Confirmation in the executing director: not applicable
-- Applied in: CONCERTINO.md §11, next/SPRINT.md §7. Pendiente al iniciar: cuál de las dos (índice HIP) y liberar su
-  ranura de IA local (acción del usuario o con su permiso).
+- Applied in: CONCERTINO.md §11, current/SPRINT.md §7; la GPU concreta se eligió al iniciar (Q-009 en
+  current/QUESTIONS.md: ASUS, HIP 0).
 
 ### Q-007 · answered · decision
 - Raised: 2026-11-16, sesión de planificación del port ROCm
@@ -111,7 +111,8 @@ is asked, and whoever hears the answer writes it here in the user's own words.
 - Confirmation in the executing director: not applicable
 - Applied in: PLAN_PERF movido a future/SPRINT-02/; next/SPRINT.md §3, §5, §6
 
-### Q-008 · open · decision
+### Q-008 · moved · decision
+- Moves: to docs/plans/current/QUESTIONS.md at the start of SPRINT-01 (2026-11-16); the live entry is there.
 - Raised: 2026-11-16, sesión de planificación del port ROCm
 - Task: R97-22, R97-24..27 (SPRINT-02)
 - Question: El tensor parallel usa las dos R9700. ¿Se libera también la segunda GPU de su ranura de IA local mientras

@@ -105,7 +105,8 @@ None: the plan's order.
   ROCm `bin/` lists them.
 - The same GPUs host the local-AI slots (`claude-local`, one slot per GPU, OS locks). One R9700 is dedicated to
   ninfer for the sprint (Q-006), selected with `HIP_VISIBLE_DEVICES=<index>`; its local-AI slot is freed by the user.
-  The HIP index of the dedicated GPU: «fill in at start».
+  Dedicated GPU: **ASUS, HIP index 0** (PCI bus 6, subsystem 1043; Q-009). HIP index 1 is the Sapphire (bus 3,
+  subsystem 1DA2), which keeps the local-AI tiers `sonnet`/`haiku`.
 - Upstream builds only on Linux (`cmake/NinferPlatform.cmake`); the existing `rtx5090`/`dgx_spark` targets cannot
   be built on this machine, so CUDA non-regression is checked by configuration review, not by running them.
 - Weights: `out/qwen3_8_27b.ninfer` (Hugging Face `neroued/Qwen3.8-27B-NInfer`, 19.03 GiB), downloaded only in

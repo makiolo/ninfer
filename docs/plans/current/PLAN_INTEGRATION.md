@@ -1,6 +1,6 @@
 # PLAN_INTEGRATION — Runtime y validación end-to-end
 
-Sprint: SPRINT-01 · Grupo: INTEGRATION · Fuente: `backlog/PLAN_ROCM_R9700.md` §F4–F5.
+Sprint: SPRINT-01 · Grupo: INTEGRATION · Fuente: `backlog/PLAN_ROCM_R9700.md` (etiqueta `archive/2026-11-16/sprint-01-sources`) §F4–F5.
 Depende de: HOST (R97-05..08) y OPS (R97-09..15). Bloquea: PERF.
 
 ## 1. Contexto y estado de partida

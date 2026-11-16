@@ -1,6 +1,6 @@
 # PLAN_BUILD — Toolchain y diana `r9700`
 
-Sprint: SPRINT-01 · Grupo: BUILD · Fuente: `backlog/PLAN_ROCM_R9700.md` §F1 (2026-11-16, sin commit previo).
+Sprint: SPRINT-01 · Grupo: BUILD · Fuente: `backlog/PLAN_ROCM_R9700.md` (etiqueta `archive/2026-11-16/sprint-01-sources`) §F1 (2026-11-16, sin commit previo).
 Depende de: nada. Bloquea: HOST, OPS, INTEGRATION, PERF.
 
 ## 1. Contexto y estado de partida

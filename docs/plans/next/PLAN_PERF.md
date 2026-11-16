@@ -1,7 +1,7 @@
 # PLAN_PERF — Rendimiento en RDNA4
 
 Sprint: SPRINT-02 (usuario, 2026-11-16, Q-007) · Grupo: PERF ·
-Fuente: `backlog/PLAN_ROCM_R9700.md` §F6. Depende de: R97-18 (SPRINT-01).
+Fuente: `backlog/PLAN_ROCM_R9700.md` (etiqueta `archive/2026-11-16/sprint-01-sources`) §F6. Depende de: R97-18 (SPRINT-01).
 
 ## 1. Contexto y estado de partida
 

@@ -1,6 +1,6 @@
 # PLAN_HOST — Lado CPU en Windows nativo
 
-Sprint: SPRINT-01 · Grupo: HOST · Fuente: `backlog/PLAN_ROCM_R9700.md` §F2.
+Sprint: SPRINT-01 · Grupo: HOST · Fuente: `backlog/PLAN_ROCM_R9700.md` (etiqueta `archive/2026-11-16/sprint-01-sources`) §F2.
 Depende de: R97-01, R97-03. Bloquea: INTEGRATION.
 
 ## 1. Contexto y estado de partida

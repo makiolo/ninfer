@@ -1,6 +1,6 @@
 # PLAN_OPS — Ops de Qwen3.8-27B en HIP (texto + MTP + KV FP8)
 
-Sprint: SPRINT-01 · Grupo: OPS · Fuente: `backlog/PLAN_ROCM_R9700.md` §F3.
+Sprint: SPRINT-01 · Grupo: OPS · Fuente: `backlog/PLAN_ROCM_R9700.md` (etiqueta `archive/2026-11-16/sprint-01-sources`) §F3.
 Depende de: R97-02, R97-04. Bloquea: INTEGRATION, PERF.
 
 ## 1. Contexto y estado de partida
