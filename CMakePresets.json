@@ -70,6 +70,39 @@
         "NINFER_BUILD_ENGINE": "OFF",
         "NINFER_BUILD_APPS": "OFF"
       }
+    },
+    {
+      "name": "r9700-release",
+      "displayName": "R9700 product binaries",
+      "description": "Windows AMD64, Ninja and HIP SDK Clang; HIP_PATH must name the SDK root.",
+      "inherits": "product",
+      "environment": {
+        "PATH": "$env{HIP_PATH}/bin;$penv{PATH}"
+      },
+      "cacheVariables": {
+        "NINFER_TARGET": "r9700",
+        "CMAKE_C_COMPILER": "clang.exe",
+        "CMAKE_CXX_COMPILER": "clang++.exe",
+        "CMAKE_HIP_COMPILER": "clang++.exe"
+      }
+    },
+    {
+      "name": "r9700-dev",
+      "displayName": "R9700 products, tests and benchmarks",
+      "inherits": "r9700-release",
+      "cacheVariables": {
+        "BUILD_TESTING": "ON",
+        "NINFER_BUILD_BENCHMARKS": "ON"
+      }
+    },
+    {
+      "name": "r9700-ops",
+      "displayName": "R9700 Core, Artifact and Ops development",
+      "inherits": "r9700-dev",
+      "cacheVariables": {
+        "NINFER_BUILD_ENGINE": "OFF",
+        "NINFER_BUILD_APPS": "OFF"
+      }
     }
   ],
   "buildPresets": [
@@ -96,6 +129,18 @@
     {
       "name": "dgx-spark-dev",
       "configurePreset": "dgx-spark-dev"
+    },
+    {
+      "name": "r9700-release",
+      "configurePreset": "r9700-release"
+    },
+    {
+      "name": "r9700-dev",
+      "configurePreset": "r9700-dev"
+    },
+    {
+      "name": "r9700-ops",
+      "configurePreset": "r9700-ops"
     }
   ],
   "testPresets": [
@@ -123,6 +168,20 @@
     {
       "name": "dgx-spark-dev",
       "configurePreset": "dgx-spark-dev",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "r9700-dev",
+      "configurePreset": "r9700-dev",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "r9700-ops",
+      "configurePreset": "r9700-ops",
       "output": {
         "outputOnFailure": true
       }

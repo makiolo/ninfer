@@ -2,7 +2,11 @@ cmake_minimum_required(VERSION 3.28)
 
 include(cmake/NinferPlatform.cmake)
 
-project(ninfer LANGUAGES C CXX CUDA)
+if(NINFER_TARGET_R9700)
+  project(ninfer LANGUAGES C CXX HIP)
+else()
+  project(ninfer LANGUAGES C CXX CUDA)
+endif()
 ninfer_validate_platform()
 
 # --- Global settings ---------------------------------------------------------
@@ -18,8 +22,13 @@ endif()
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CUDA_STANDARD 20)
-set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+if(NINFER_TARGET_R9700)
+  set(CMAKE_HIP_STANDARD 20)
+  set(CMAKE_HIP_STANDARD_REQUIRED ON)
+else()
+  set(CMAKE_CUDA_STANDARD 20)
+  set(CMAKE_CUDA_STANDARD_REQUIRED ON)
+endif()
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)        # clangd / IDE tooling
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
@@ -39,9 +48,13 @@ endif()
 include(cmake/Dependencies.cmake)
 include(cmake/NinferTargets.cmake)
 
-# Project binaries share the same libraries and CUDA runtime. These defaults are
+# Project binaries share the same libraries and GPU runtime. These defaults are
 # set after third-party targets so their build policies remain independent.
-set(CMAKE_CUDA_RUNTIME_LIBRARY Shared)
+if(NINFER_TARGET_R9700)
+  set(CMAKE_HIP_RUNTIME_LIBRARY SHARED)
+else()
+  set(CMAKE_CUDA_RUNTIME_LIBRARY Shared)
+endif()
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 set(CMAKE_BUILD_RPATH_USE_ORIGIN ON)
 set(CMAKE_LINK_DEPENDS_NO_SHARED ON)
@@ -57,4 +70,8 @@ if(BUILD_TESTING)
 endif()
 if(NINFER_BUILD_BENCHMARKS)
   add_subdirectory(bench)
+endif()
+
+if(NINFER_TARGET_R9700)
+  ninfer_configure_hip_sources("${PROJECT_SOURCE_DIR}")
 endif()
