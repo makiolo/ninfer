@@ -52,3 +52,4 @@ R97-05, R97-06 y R97-07 en paralelo (ficheros disjuntos); R97-08 al final. Puede
 
 | ID | Commit | Tests | Desviaciones |
 |---|---|---|---|
+| R97-05 | `6b075a37`, `168398d7` | Tests de io (original + bordes + >4 GiB) en verde en Windows; fichero de 4 831 838 331 B con 8 lecturas en vuelo cruzando 4 GiB: SHA-256 idéntico (Python, `hashlib` independiente y BCrypt) `18beb34a…454d`; CTest DLL 4/4 (incl. artifact `reader`/`backing`); mutaciones (EOF, `OffsetHigh=0`) detectadas por el revisor. Revisión Sonnet 5.5 high: ACCEPT WITH CONDITIONS (corregidas en `168398d7`). | `test_io_edges` solo en Windows (comprueba IOCP); `wake()` sin coalescencia documentado; alineación leída de `FILE_STORAGE_INFO` (512/4096 aquí). `ninfer_core` completo aún no enlaza (R97-06/08). |
