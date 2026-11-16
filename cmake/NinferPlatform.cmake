@@ -75,6 +75,26 @@ function(ninfer_validate_platform)
     ninfer_validate_hip_architecture()
     set(ninfer_system Windows)
     set(ninfer_architecture ${NINFER_HIP_ARCHITECTURE})
+    # CMake's Windows-Clang link rules use -nostdlib. hip-lang requests
+    # --rtlib=compiler-rt, but that cannot add builtins under -nostdlib.
+    # Supply the compiler's host builtins explicitly for every HIP link.
+    execute_process(
+      COMMAND "${CMAKE_HIP_COMPILER}" --print-libgcc-file-name --rtlib=compiler-rt
+      OUTPUT_VARIABLE ninfer_hip_builtins
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+      ERROR_VARIABLE ninfer_hip_builtins_error
+      RESULT_VARIABLE ninfer_hip_builtins_result)
+    file(TO_CMAKE_PATH "${ninfer_hip_builtins}" ninfer_hip_builtins)
+    if(NOT ninfer_hip_builtins_result STREQUAL "0" OR
+       NOT IS_ABSOLUTE "${ninfer_hip_builtins}" OR
+       NOT EXISTS "${ninfer_hip_builtins}")
+      message(FATAL_ERROR
+        "r9700 could not locate HIP compiler-rt builtins: "
+        "${ninfer_hip_builtins} (${ninfer_hip_builtins_result}) "
+        "${ninfer_hip_builtins_error}")
+    endif()
+    set(CMAKE_HIP_STANDARD_LIBRARIES
+      "${CMAKE_HIP_STANDARD_LIBRARIES} \"${ninfer_hip_builtins}\"" PARENT_SCOPE)
   else()
     ninfer_validate_cuda_architecture()
     set(ninfer_system Linux)
