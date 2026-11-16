@@ -23,6 +23,18 @@ elseif(NINFER_TARGET STREQUAL "r9700")
   set(NINFER_TARGET_R9700 1)
   set(NINFER_HIP_ARCHITECTURE gfx1201)
   set(NINFER_PROCESSOR_PATTERN "^(x86_64|amd64|AMD64)$")
+  # Reject unsupported hosts before project() starts HIP/ROCm detection.
+  # CMAKE_HOST_SYSTEM_PROCESSOR may not be initialized until project().
+  set(ninfer_host_processor "${CMAKE_HOST_SYSTEM_PROCESSOR}")
+  if(NOT ninfer_host_processor)
+    cmake_host_system_information(RESULT ninfer_host_processor QUERY OS_PLATFORM)
+  endif()
+  if(NOT CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows" OR
+     NOT ninfer_host_processor MATCHES "${NINFER_PROCESSOR_PATTERN}")
+    message(FATAL_ERROR
+      "${NINFER_TARGET} does not support ${CMAKE_HOST_SYSTEM_NAME}/${ninfer_host_processor}")
+  endif()
+  unset(ninfer_host_processor)
 else()
   message(FATAL_ERROR "Unknown NINFER_TARGET '${NINFER_TARGET}'; expected rtx5090, dgx_spark or r9700")
 endif()

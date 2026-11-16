@@ -50,9 +50,7 @@ include(cmake/NinferTargets.cmake)
 
 # Project binaries share the same libraries and GPU runtime. These defaults are
 # set after third-party targets so their build policies remain independent.
-if(NINFER_TARGET_R9700)
-  set(CMAKE_HIP_RUNTIME_LIBRARY SHARED)
-else()
+if(NOT NINFER_TARGET_R9700)
   set(CMAKE_CUDA_RUNTIME_LIBRARY Shared)
 endif()
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
