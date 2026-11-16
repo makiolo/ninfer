@@ -5,9 +5,9 @@
 Una sola sesión externa: el director. Se abre **ya**, con
 `concertino-launch.cmd --model claude-opus-5-5 --effort high` en la raíz del repo (`S:\Projects\ninfer`): Fable está
 al 100 % hasta las 00:00 UTC del 17-11, y el director orquesta con el ~4 % que le queda a Claude hasta su reinicio
-(16-11 23:59 UTC). Tras el reinicio de Fable, el siguiente relevo vuelve al valor por defecto del lanzador
-(**Fable 5.2 high**, sin argumentos). Relevos y recuperación: el mismo `concertino-launch.cmd` o
-`concertino-recover.cmd`. Antes de que el director use la GPU (R97-04), descarga el modelo
+(16-11 23:59 UTC). El valor por defecto del lanzador es Opus 5.5 high; tras el reinicio de Fable, el siguiente
+relevo sale en **Fable 5.2 high** con `concertino-launch.cmd --model claude-fable-5-2 --effort high`. Relevos y
+recuperación: el mismo `concertino-launch.cmd` o `concertino-recover.cmd`. Antes de que el director use la GPU (R97-04), descarga el modelo
 de LM Studio de la ASUS (paso de usuario, ver «Guardia de activación»).
 
 ## Guardia de activación
@@ -79,7 +79,7 @@ Si la cuota se agota, se espera al reinicio; no se relaja ninguna revisión ni s
 Por cada intento de ejecución o de revisión: `dashboard.py attempt start …` al lanzarlo y `attempt end N --result …`
 al terminar; `dashboard.py task … --status …` cuando una tarea cambia de estado, y `update` tras cada cierre.
 
-## Prompt del director
+## Director prompt
 
 ```text
 Eres el director del SPRINT-01 de ninfer (S:\Projects\ninfer, rama fork_R9700). Sigue la skill global `concertino`
