@@ -1,9 +1,14 @@
 #include "core/io/file.h"
 #include "core/io/read_queue.h"
 #include "core/buffer.h"
+#include "io/fixture.h"
+#ifdef _WIN32
+#include "io/windows_interpose.h"
+#else
 #include "symbol_interpose.h"
 
 #include <liburing.h>
+#endif
 
 #include <algorithm>
 #include <array>
@@ -15,10 +20,27 @@
 #include <vector>
 
 namespace {
+#ifndef _WIN32
 bool interrupt_submit = false;
 bool short_submit     = false;
+#endif
 bool fail_submit      = false;
 bool fail_read        = false;
+
+#ifdef _WIN32
+BOOL WINAPI read_file(HANDLE file, LPVOID buffer, DWORD bytes, LPDWORD received,
+                      LPOVERLAPPED operation) {
+    if (operation && !operation->hEvent && (fail_submit || fail_read)) {
+        const auto error = fail_submit ? ERROR_NOT_ENOUGH_QUOTA : ERROR_INVALID_HANDLE;
+        fail_submit = fail_read = false;
+        ::SetLastError(error);
+        return FALSE;
+    }
+    static const auto real = reinterpret_cast<decltype(&::ReadFile)>(
+        ::GetProcAddress(::GetModuleHandleW(L"kernel32.dll"), "ReadFile"));
+    return real(file, buffer, bytes, received, operation);
+}
+#endif
 
 void require(bool value, const char* message) {
     if (!value) throw std::runtime_error(message);
@@ -41,10 +63,7 @@ struct Files {
     static constexpr std::size_t bytes = 4096 + 123;
 
     Files() {
-        std::string name = (std::filesystem::temp_directory_path() / "ninfer-io-XXXXXX").string();
-        auto* path       = ::mkdtemp(name.data());
-        if (!path) throw std::runtime_error("mkdtemp failed");
-        directory = path;
+        directory = ninfer::test::io::make_directory();
         std::vector<std::byte> data(bytes);
         for (std::size_t file = 0; file < 2; ++file) {
             for (std::size_t i = 0; i < data.size(); ++i) data[i] = pattern(file, i);
@@ -64,6 +83,11 @@ struct Files {
 void run() {
     using namespace ninfer;
     using namespace ninfer::io;
+#ifdef _WIN32
+    ninfer::test::io::ImportReplacement injection(
+        reinterpret_cast<const void*>(&validate_direct_read), "ReadFile",
+        reinterpret_cast<void*>(&read_file));
+#endif
     Files fixture;
     ReadOnlyFile buffered(fixture.directory / "0");
     std::array<std::byte, 90> small;
@@ -115,7 +139,9 @@ void run() {
     rejects([&] { (void)queue.try_enqueue({1, 0, 0, 4096, 999}); });
     enqueue(1);
     require(queue.try_enqueue({0, 0, 0, 4096, 999}) == ReadAdmission::Full, "queue is not bounded");
+#ifndef _WIN32
     interrupt_submit = short_submit = true;
+#endif
     queue.submit();
     std::array<ReadCompletion, 1> output;
     while (completed < seen.size()) {
@@ -176,6 +202,7 @@ void run() {
 }
 } // namespace
 
+#ifndef _WIN32
 extern "C" int io_uring_submit(io_uring* ring) {
     static const auto real = ninfer::test::next_symbol<int (*)(io_uring*)>("io_uring_submit");
     if (interrupt_submit) {
@@ -202,6 +229,7 @@ extern "C" int io_uring_submit(io_uring* ring) {
     }
     return real(ring);
 }
+#endif
 
 int main() {
     try {

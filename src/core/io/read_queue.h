@@ -26,10 +26,10 @@ enum class ReadAdmission { Accepted, Full, Closed };
 enum class ReadWake { Completion, Signalled };
 
 // Single-owner-thread queue; only wake() may be called concurrently. Files and nonoverlapping
-// CPU buffers are borrowed through destruction. Construction registers them once with io_uring.
+// CPU buffers are borrowed through destruction. Construction registers the platform I/O resources.
 // No worker or CUDA resource is created. Each Accepted request reserves its buffer until poll
 // returns its one completion. The caller finishes consuming those bytes before reusing it.
-// Accepted prepares an SQE; submit issues it. Invalid requests throw; Full/Closed are flow control.
+// Accepted prepares a read; submit issues it. Invalid requests throw; Full/Closed are flow control.
 class DirectReadQueue {
 public:
     DirectReadQueue(std::span<const FileView> files, std::span<const MemorySpan> buffers,

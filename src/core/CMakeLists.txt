@@ -11,6 +11,12 @@ if(NINFER_TARGET STREQUAL "rtx5090")
   target_link_libraries(ninfer_cpu_executor PUBLIC ninfer_cpu)
 endif()
 
+if(WIN32)
+  set(ninfer_io_sources io/file_windows.cpp io/read_queue_windows.cpp)
+else()
+  set(ninfer_io_sources io/file.cpp io/read_queue.cpp)
+endif()
+
 add_library(ninfer_core SHARED
   arena.cpp
   buffer.cpp
@@ -22,8 +28,7 @@ add_library(ninfer_core SHARED
   device_memory.cpp
   dtype.cpp
   nf4.cpp
-  io/file.cpp
-  io/read_queue.cpp
+  ${ninfer_io_sources}
   gdn_replay_records.cpp
   kda_replay_records.cpp
   cyclic_kv_cache.cpp
