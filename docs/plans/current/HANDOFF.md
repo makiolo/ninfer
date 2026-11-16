@@ -35,8 +35,9 @@
 - Cerradas: R97-01 (`92958cf5`, `d3302962`), R97-03 (`95e6402e`, `21297e2d`), R97-02 (oráculo `9ce05e73`, `62175136`,
   `36f36b4a`), R97-04 (`8a29f812`, `de5cce05`). Registros de cierre `222b306d`, `dc7429d2`, `a718ec76`, `92cb69e2`.
 - Cerrada también R97-05 (`6b075a37`, `168398d7`; registro `a80fbc9d`).
-- En curso: R97-06 (autor, intento 499; ya hizo un commit intermedio `761d4440` «feat(cpu): enable Windows topology and
-  executor»: sigue trabajando).
+- En revisión: R97-06 (autor terminado, intento 499 → commits `761d4440` CPU, `a0ade27f` logging, `92ae1c50` señales;
+  revisión Sonnet 5.5 high = intento 501). El autor avisa: «falta JPEG al configurar» y `cpu_tensor` choca con
+  `nvtx3/nvToolsExt.h` (ISSUE-001).
 - Issue abierto: ISSUE-001 (`ninfer_cpu_executor`/`CUDA::nvtx3` en `r9700`); la parte `ninfer_cpu_executor` va en la
   ficha de R97-06; nvtx3 queda para quien porte `core/nvtx.h` (R97-08 o OPS).
 - Patrón observado: cada entrega de Codex sale con 1 ronda de condiciones del revisor (toolchain, alcance); el director
@@ -45,7 +46,7 @@
 ## In flight
 | Child | ID | Model | Process or task | Output | Task card | Pending check |
 |---|---|---|---|---|---|---|
-| r97-06-author | R97-06 | Codex gpt-6.1-sol high | lanza pid 39472 (attempt 499) | `.git/concertino/sprint-01/R97-06/author-output.md`, `lz-author.fin` | `.git/concertino/sprint-01/R97-06/card.md` | revisión con Sonnet 5.5 high (patrón `R97-05/review-card.md`) |
+| r97-06-review | R97-06 | Claude Sonnet 5.5 high | lanza pid 14960 (attempt 501) | `.git/concertino/sprint-01/R97-06/review-events.jsonl` (resultado en el evento `type=result`), `lz-review.fin` | `.git/concertino/sprint-01/R97-06/review-card.md` (+ `card.md`) | contrastar hallazgos con el código; si hay condiciones, `card-fix.md` + intento 2 en Codex (patrón de R97-05); cerrar R97-06 en PLAN_HOST/STATUS; `attempt end 499/501` |
 
 Lanzamiento de hijos: `lanza.py` + `hijo.py` (ver cualquier `lz-*.pid`/`*-events.jsonl` en `.git/concertino/sprint-01/<ID>/`);
 autor Codex: `codex exec -m gpt-6.1-sol -c model_reasoning_effort=high --dangerously-bypass-approvals-and-sandbox -C <repo> --json -o <out> -`;
@@ -73,7 +74,7 @@ Pre-revisión de fichas: `claude-agy run --model gemini-3.8-flash-high --prompt-
 Nada nuevo en memoria: las decisiones y trampas de toolchain quedaron versionadas en el cierre de PLAN_BUILD, EXECUTION.md e ISSUE-001.
 
 ## Next step
-Adoptar R97-06 (intento 499); cuando escriba `lz-author.fin`, lanzar su revisión. Después, con la cuota de
+Adoptar la revisión de R97-06 (intento 501) y cerrar R97-06. Después, con la cuota de
 Claude reiniciada: lanzar R97-07 (servidor HTTP/Winsock y `media_acquire`; la parte de señales de `apps/serve/main.cpp`
 es de R97-06) y empezar OPS por el **oráculo de R97-09** (Claude) antes de su autor Codex. Antes de cada lanzamiento,
 `claude-or quota --weekly`: Codex estaba al 96 % (reinicio semanal 21-11; el usuario quiere hacer un reset de Codex

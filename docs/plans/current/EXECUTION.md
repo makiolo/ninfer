@@ -30,3 +30,4 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
 - 2026-11-16 23:2x UTC · R97-04 cerrada (`de5cce05`): **hito 1 cumplido** (r9700-ops configura, smoke en la ASUS). PLAN_BUILD completo. R97-05 entregada (`6b075a37`), a revisión.
 - 2026-11-16 23:2x UTC · R97-05 revisión 498: ACCEPT WITH CONDITIONS (raíz de tests de io en el árbol fuente en todas las dianas) → intento 2 (500). R97-06 en curso (499).
 - 2026-11-16 23:3x UTC · R97-05 cerrada (`168398d7`). R97-06 entregada (`761d4440`), a revisión.
+- 2026-11-16 23:4x UTC · R97-06 entregada (`761d4440`, `a0ade27f`, `92ae1c50`), revisión 501 lanzada.
