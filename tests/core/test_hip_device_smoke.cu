@@ -35,13 +35,15 @@ void smoke() {
 
     constexpr unsigned int count = 1000;
     constexpr unsigned int block = 256;
-    constexpr auto bytes = count * sizeof(std::uint32_t);
+    constexpr unsigned int capacity = count + block;
+    constexpr std::uint32_t sentinel = 0xa5a5a5a5u;
+    constexpr auto bytes = capacity * sizeof(std::uint32_t);
     ninfer::PinnedHostBuffer upload(bytes);
     ninfer::PinnedHostBuffer download(bytes);
     auto* input = static_cast<std::uint32_t*>(upload.data());
     auto* output = static_cast<std::uint32_t*>(download.data());
-    for (unsigned int i = 0; i < count; ++i) {
-        input[i] = 7u * i + 11u;
+    for (unsigned int i = 0; i < capacity; ++i) {
+        input[i] = i < count ? 7u * i + 11u : sentinel;
         output[i] = 0xffffffffu;
     }
 
@@ -61,7 +63,7 @@ void smoke() {
             completion.record(execution.stream());
             completion.synchronize();
             require(completion.ready(), "roundtrip event is not ready after synchronization");
-            for (unsigned int i = 0; i < count; ++i) {
+            for (unsigned int i = 0; i < capacity; ++i) {
                 require(output[i] == input[i], "H2D/D2H roundtrip differs from input");
             }
 
@@ -78,6 +80,9 @@ void smoke() {
                 if (output[i] != 22u * i + 33u) {
                     throw std::runtime_error("kernel mismatch at index " + std::to_string(i));
                 }
+            }
+            for (unsigned int i = count; i < capacity; ++i) {
+                require(output[i] == sentinel, "kernel overwrote trailing sentinel");
             }
         } catch (...) {
             // Finish every borrowed use before event, stream or backing destruction.
@@ -117,6 +122,7 @@ int main(int argc, char** argv) {
         std::fprintf(stderr, "device smoke failed: %s\n", error.what());
         return 1;
     }
-    std::puts("PASS: exact roundtrip and kernel results for 1000 elements (block 256); core resources released");
+    std::puts("PASS: exact roundtrip and kernel results for 1000 elements (block 256); "
+              "256 trailing sentinels intact; core resources released");
     return 0;
 }

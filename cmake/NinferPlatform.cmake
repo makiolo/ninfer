@@ -21,6 +21,9 @@ elseif(NINFER_TARGET STREQUAL "dgx_spark")
   set(NINFER_PROCESSOR_PATTERN "^(aarch64|arm64|ARM64)$")
 elseif(NINFER_TARGET STREQUAL "r9700")
   set(NINFER_TARGET_R9700 1)
+  # Shared sources use no C++ modules; HIP SDK Clang has no clang-scan-deps.
+  # Initialize every C++ target consistently, including builds without presets.
+  set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
   set(NINFER_HIP_ARCHITECTURE gfx1201)
   set(NINFER_PROCESSOR_PATTERN "^(x86_64|amd64|AMD64)$")
   # Reject unsupported hosts before project() starts HIP/ROCm detection.
@@ -108,5 +111,15 @@ function(ninfer_validate_platform)
   set(NINFER_CONFIGURED_TARGET ${NINFER_TARGET} CACHE INTERNAL "Configured NInfer target")
   configure_file(${PROJECT_SOURCE_DIR}/src/core/platform.h.in
     ${PROJECT_BINARY_DIR}/generated/core/platform.h @ONLY)
+  if(NINFER_TARGET_R9700)
+    # Preserve CUDA include spellings through the shared compatibility owner.
+    # Only forward headers whose APIs cuda_compat.h already supplies.
+    foreach(ninfer_cuda_header IN ITEMS
+        cuda_runtime.h cuda_runtime_api.h cuda_bf16.h cuda_fp16.h cuda_fp8.h
+        cuda_profiler_api.h)
+      file(CONFIGURE OUTPUT "${PROJECT_BINARY_DIR}/generated/${ninfer_cuda_header}"
+        CONTENT "#pragma once\n#include \"core/cuda_compat.h\"\n" @ONLY)
+    endforeach()
+  endif()
   message(STATUS "NInfer target: ${NINFER_TARGET} (${CMAKE_SYSTEM_PROCESSOR}, ${ninfer_architecture})")
 endfunction()
