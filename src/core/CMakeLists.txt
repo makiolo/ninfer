@@ -42,4 +42,4 @@ add_library(ninfer_core SHARED
 ninfer_internal_includes(ninfer_core)
 ninfer_cuda_library(ninfer_core)
 target_link_libraries(ninfer_core PUBLIC ninfer_cpu CUDA::cudart CUDA::nvtx3 Threads::Threads)
-target_link_libraries(ninfer_core PRIVATE PkgConfig::URING)
+target_link_libraries(ninfer_core PRIVATE $<$<NOT:$<BOOL:${NINFER_TARGET_R9700}>>:PkgConfig::URING>)

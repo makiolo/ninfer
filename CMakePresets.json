@@ -74,13 +74,18 @@
     {
       "name": "r9700-release",
       "displayName": "R9700 product binaries",
-      "description": "Windows AMD64 and Ninja; set HIP_PATH to the HIP SDK root. SDK Clang requires the MSVC and Windows SDK environment, e.g. a VS x64 developer console.",
+      "description": "Windows AMD64 and Ninja; VCPKG_ROOT must name the vcpkg root, HIP_PATH the HIP SDK root. SDK Clang requires the MSVC and Windows SDK environment, e.g. a VS x64 developer console.",
       "inherits": "product",
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
       "environment": {
         "PATH": "$env{HIP_PATH}/bin;$penv{PATH}"
       },
       "cacheVariables": {
         "NINFER_TARGET": "r9700",
+        "CMAKE_PROJECT_ninfer_INCLUDE_BEFORE": "${sourceDir}/cmake/Dependencies.cmake",
+        "VCPKG_TARGET_TRIPLET": "x64-windows",
+        "VCPKG_HOST_TRIPLET": "x64-windows",
+        "VCPKG_MANIFEST_NO_DEFAULT_FEATURES": "OFF",
         "CMAKE_C_COMPILER": "clang.exe",
         "CMAKE_CXX_COMPILER": "clang++.exe",
         "CMAKE_HIP_COMPILER": "clang++.exe"
@@ -89,7 +94,7 @@
     {
       "name": "r9700-dev",
       "displayName": "R9700 products, tests and benchmarks",
-      "description": "Set HIP_PATH to the HIP SDK root. SDK Clang requires the MSVC and Windows SDK environment, e.g. a VS x64 developer console.",
+      "description": "Requires VCPKG_ROOT (vcpkg root), HIP_PATH (HIP SDK root), and the MSVC and Windows SDK environment, e.g. a VS x64 developer console.",
       "inherits": "r9700-release",
       "cacheVariables": {
         "BUILD_TESTING": "ON",
@@ -99,11 +104,12 @@
     {
       "name": "r9700-ops",
       "displayName": "R9700 Core, Artifact and Ops development",
-      "description": "Set HIP_PATH to the HIP SDK root. SDK Clang requires the MSVC and Windows SDK environment, e.g. a VS x64 developer console.",
+      "description": "Requires VCPKG_ROOT (vcpkg root), HIP_PATH (HIP SDK root), and the MSVC and Windows SDK environment. Installs only the base host dependencies; no Engine or product support packages.",
       "inherits": "r9700-dev",
       "cacheVariables": {
         "NINFER_BUILD_ENGINE": "OFF",
-        "NINFER_BUILD_APPS": "OFF"
+        "NINFER_BUILD_APPS": "OFF",
+        "VCPKG_MANIFEST_NO_DEFAULT_FEATURES": "ON"
       }
     }
   ],

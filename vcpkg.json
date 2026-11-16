@@ -1,0 +1,46 @@
+{
+  "name": "ninfer",
+  "version-string": "0",
+  "builtin-baseline": "d43918b9143e24ffb56917daacd9126ad03014d6",
+  "supports": "windows & x64 & !mingw",
+  "dependencies": [
+    "hwloc",
+    {
+      "name": "pkgconf",
+      "host": true
+    }
+  ],
+  "default-features": [
+    "engine",
+    "product-support"
+  ],
+  "features": {
+    "engine": {
+      "description": "JPEG and FFmpeg media decoding for the Engine",
+      "dependencies": [
+        "libjpeg-turbo",
+        {
+          "name": "ffmpeg",
+          "default-features": false,
+          "features": [
+            "avcodec",
+            "avformat",
+            "swscale"
+          ]
+        }
+      ]
+    },
+    "product-support": {
+      "description": "HTTP/HTTPS media acquisition for product support",
+      "dependencies": [
+        {
+          "name": "curl",
+          "default-features": false,
+          "features": [
+            "schannel"
+          ]
+        }
+      ]
+    }
+  }
+}
