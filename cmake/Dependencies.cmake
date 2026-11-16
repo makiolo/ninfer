@@ -16,6 +16,18 @@ if(NINFER_TARGET_R9700)
   file(TO_CMAKE_PATH "$ENV{HIP_PATH}" ninfer_hip_path)
   file(TO_CMAKE_PATH "$ENV{ROCM_PATH}" ninfer_rocm_path)
   find_package(hip REQUIRED CONFIG HINTS "${ninfer_hip_path}" "${ninfer_rocm_path}")
+
+  # HIP's runtime implements both the CUDA runtime and driver API equivalents.
+  # Keep existing consumers' dependency names local to the r9700 build graph.
+  foreach(ninfer_cuda_runtime IN ITEMS cudart cuda_driver)
+    add_library(CUDA::${ninfer_cuda_runtime} INTERFACE IMPORTED GLOBAL)
+    target_link_libraries(CUDA::${ninfer_cuda_runtime} INTERFACE hip::host)
+  endforeach()
+
+  # NVTX3 has no source-compatible HIP dependency here. This deliberately missing
+  # library makes any consumer fail explicitly at link time until profiling is ported.
+  add_library(CUDA::nvtx3 INTERFACE IMPORTED GLOBAL)
+  target_link_libraries(CUDA::nvtx3 INTERFACE ninfer_r9700_nvtx3_unsupported)
 else()
   find_package(CUDAToolkit REQUIRED)
 endif()

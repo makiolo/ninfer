@@ -8,7 +8,7 @@ if(NINFER_TARGET STREQUAL "rtx5090")
     "${CMAKE_CURRENT_LIST_DIR}/norm_combine/rtx5090/dispatch.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/norm_combine/rtx5090/shapes/h2560.cu"
     "${CMAKE_CURRENT_LIST_DIR}/norm_combine/rtx5090/shapes/h5120.cu")
-else()
+elseif(NOT NINFER_TARGET_R9700)
   target_sources(ninfer_ops PRIVATE
     "${CMAKE_CURRENT_LIST_DIR}/norm_combine/${NINFER_TARGET}/launch.cu")
 endif()

@@ -10,7 +10,9 @@ target_sources(ninfer_ops PRIVATE
   "${CMAKE_CURRENT_LIST_DIR}/recurrent.cu"
 )
 
-target_sources(ninfer_ops PRIVATE "${CMAKE_CURRENT_LIST_DIR}/${NINFER_TARGET}/select.cpp")
+if(NOT NINFER_TARGET_R9700)
+  target_sources(ninfer_ops PRIVATE "${CMAKE_CURRENT_LIST_DIR}/${NINFER_TARGET}/select.cpp")
+endif()
 
 if(NINFER_TARGET STREQUAL "dgx_spark")
   target_sources(ninfer_ops_non_rdc PRIVATE "${CMAKE_CURRENT_LIST_DIR}/dgx_spark/input_conv.cu")

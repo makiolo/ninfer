@@ -25,9 +25,13 @@ target_sources(ninfer_ops PRIVATE
 target_sources(ninfer_ops_non_rdc PRIVATE
   "${CMAKE_CURRENT_LIST_DIR}/dense/plain/softmax_attention.cu"
   "${CMAKE_CURRENT_LIST_DIR}/dense/packed/launch.cu"
-  "${CMAKE_CURRENT_LIST_DIR}/dense/packed/${NINFER_TARGET}/uniform.cu"
   "${CMAKE_CURRENT_LIST_DIR}/dense/causal_cache/nvfp4/tiled_launch.cu"
 )
+
+if(NOT NINFER_TARGET_R9700)
+  target_sources(ninfer_ops_non_rdc PRIVATE
+    "${CMAKE_CURRENT_LIST_DIR}/dense/packed/${NINFER_TARGET}/uniform.cu")
+endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/qsa/sources.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/kpool_mla/sources.cmake")
