@@ -9,6 +9,11 @@ Depende de: R97-18 (SPRINT-01) y R97-19 (línea base, PLAN_PERF). No depende de 
 - **Sin P2P entre las dos R9700 en Windows:** `hipInfo.exe` lista `peers:` vacío y `non-peers: device#0 device#1`
   en ambas, `isLargeBar: 0` (Resizable BAR no activo o no expuesto). Bus PCI 3 y 6. Toda copia entre GPUs pasa por
   memoria del host.
+- **Plataforma host:** ASUS Maximus VII Hero (Z97), i7-4790K (Haswell), BIOS 0609 (2014), 32 GB DDR3. Las dos R9700
+  cuelgan de los puertos PEG de la CPU (`8086:0C01` y `8086:0C05`, bus 0 dev 1 fn 0/1), es decir, **PCIe 3.0 x8 cada
+  una** (~7.9 GB/s teóricos por sentido), aunque la tarjeta enlaza Gen5 x16 con su switch interno. Este enlace, y no
+  ReBAR, es el límite principal de la comunicación TP por el host.
+- **Resizable BAR:** Z97 no tiene soporte oficial de ASUS. Las copias DMA con memoria pinned no lo necesitan.
 - **Sin RCCL en el HIP SDK de Windows**, y NCCL no existe en AMD.
 - El repo ya tiene ejecución distribuida (`src/distributed/`, `docs/maintainer/distributed-execution.md`): un
   coordinador + un worker por rank, arranque con `posix_spawn`/SSH, conexión de control por sockets, backends de
@@ -84,8 +89,8 @@ medir sobre los kernels finales.
 ## 5. GAPs abiertos
 
 - Q-008: liberar también la segunda R9700 de su ranura de IA local durante las tareas TP.
-- Resizable BAR: `isLargeBar: 0`. Si R97-22 muestra que la latencia del host limita, activarlo en la BIOS es una acción
-  del usuario.
+- Resizable BAR: `isLargeBar: 0` y sin soporte oficial en Z97. Solo se plantearía con un BIOS modificado si R97-22
+  mostrara que el acceso zero-copy de la CPU a la VRAM limita, y la decisión y el flasheo son del usuario.
 
 ## 6. Registro de cierre
 
