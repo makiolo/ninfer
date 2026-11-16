@@ -1,7 +1,13 @@
 #include "core/cpu/executor.h"
 
 #include <immintrin.h>
-#include <sched.h>
+#ifdef _WIN32
+#    define WIN32_LEAN_AND_MEAN
+#    define NOMINMAX
+#    include <windows.h>
+#else
+#    include <sched.h>
+#endif
 
 #include <algorithm>
 #include <array>
@@ -14,6 +20,16 @@
 
 namespace {
 using namespace ninfer;
+
+unsigned current_processor() noexcept {
+#ifdef _WIN32
+    PROCESSOR_NUMBER processor{};
+    GetCurrentProcessorNumberEx(&processor);
+    return processor.Group * 64U + processor.Number; // hwloc's Windows OS CPU numbering.
+#else
+    return static_cast<unsigned>(sched_getcpu());
+#endif
+}
 
 void require(bool value, const char* message) {
     if (!value) throw std::runtime_error(message);
@@ -41,7 +57,7 @@ void compute(void* pointer, const CpuWorkerContext& worker) noexcept {
     const auto check = [&](bool value) {
         if (!value) work.failed.store(true, std::memory_order_relaxed);
     };
-    check(static_cast<unsigned>(sched_getcpu()) == work.plan->worker_cpus[worker.rank()]);
+    check(current_processor() == work.plan->worker_cpus[worker.rank()]);
     check((_mm_getcsr() & 0xffc0U) == 0x1f80U && std::fegetround() == FE_TONEAREST);
     work.features[worker.rank()] = current_cpu_features();
     const auto range             = worker.range(work.items);
