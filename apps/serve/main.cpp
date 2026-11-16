@@ -1,15 +1,14 @@
 #include "product/logging/logging.h"
 #include "product/logging/configuration.h"
 #include "product/logging/startup_log.h"
+#include "product/logging/process_signals.h"
 #include "serve/generation_service.h"
 #include "serve/http_server.h"
 #include "product/config/options.h"
 
 #include <spdlog/logger.h>
 
-#include <atomic>
 #include <chrono>
-#include <csignal>
 #include <exception>
 #include <iostream>
 #include <memory>
@@ -17,15 +16,6 @@
 #include <string>
 #include <thread>
 #include <utility>
-
-namespace {
-
-static_assert(std::atomic<bool>::is_always_lock_free);
-std::atomic<bool> g_stop_requested{false};
-
-void handle_signal(int) { g_stop_requested.store(true, std::memory_order_relaxed); }
-
-} // namespace
 
 int main(int argc, char** argv) {
     ninfer::product::ServeOptions options;
@@ -57,6 +47,7 @@ int main(int argc, char** argv) {
 
     try {
         ninfer::product::log_configuration(*logger, ninfer::product::configuration_view(options));
+        ninfer::product::ProcessSignals signals;
         ninfer::serve::HttpServer server(options, logger);
         if (!server.bind()) {
             operational_log.bind_failure(options.host, options.port);
@@ -82,16 +73,15 @@ int main(int argc, char** argv) {
             std::chrono::duration<double>(Clock::now() - warmup_started).count());
         server.attach(service);
 
-        std::signal(SIGINT, handle_signal);
-        std::signal(SIGTERM, handle_signal);
+        signals.install();
 
         serving = true;
         operational_log.server_ready(options.host, options.port, server.public_model_id(),
                                      !options.api_key.empty());
 
-        std::jthread stop_monitor([&server](std::stop_token stop) {
+        std::jthread stop_monitor([&server, &signals](std::stop_token stop) {
             while (!stop.stop_requested()) {
-                if (g_stop_requested.load(std::memory_order_relaxed)) {
+                if (signals.requested()) {
                     server.stop();
                     return;
                 }

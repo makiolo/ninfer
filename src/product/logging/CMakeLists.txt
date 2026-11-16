@@ -3,6 +3,7 @@ add_library(ninfer_product_logging STATIC
   configuration.cpp
   pretty_format.cpp
   startup_log.cpp
+  process_signals.cpp
   ../statistics.cpp
   ../observations.cpp
 )
