@@ -1,0 +1,262 @@
+#pragma once
+
+// CUDA spelling is the source contract; the HIP backend owns its translation.
+// Include this instead of CUDA SDK headers when compiling shared source as HIP.
+#if defined(__HIP_PLATFORM_AMD__) || defined(__HIP__)
+
+#include <hip/hip_runtime.h>
+#include <hip/hip_bf16.h>
+#include <hip/hip_fp8.h>
+#include <hip/hip_math_constants.h>
+
+#define CUDART_INF_F HIP_INF_F
+
+// HIP 7.2 has separate OCP and FNUZ types. gfx12 uses OCP E4M3FN:
+// signed zero, subnormals, max finite 448, and NaN at +/-0x7f.
+using __nv_bfloat16 = __hip_bfloat16;
+using __nv_bfloat162 = __hip_bfloat162;
+using __nv_bfloat16_raw = __hip_bfloat16_raw;
+using __nv_bfloat162_raw = __hip_bfloat162_raw;
+using __nv_fp8_storage_t = __hip_fp8_storage_t;
+using __nv_fp8x2_storage_t = __hip_fp8x2_storage_t;
+using __nv_saturation_t = __hip_saturation_t;
+using __nv_fp8_interpretation_t = __hip_fp8_interpretation_t;
+inline constexpr auto __NV_SATFINITE = __HIP_SATFINITE;
+inline constexpr auto __NV_E4M3 = __HIP_E4M3;
+
+// HIP 7.2's scalar SATFINITE propagates infinity to NaN; its device x2
+// conversion also passes the original, unclipped lanes to the instruction.
+// Clip infinities as well as finite overflow before the scalar SDK conversion.
+// Comparisons leave NaNs and signed zero intact. All rounding stays in the SDK.
+__host__ __device__ inline __nv_fp8_storage_t __nv_cvt_float_to_fp8(
+    float value, __nv_saturation_t saturation, __nv_fp8_interpretation_t interpretation) {
+    if (saturation == __NV_SATFINITE && interpretation == __NV_E4M3) {
+        if (value > 448.0f) value = 448.0f;
+        if (value < -448.0f) value = -448.0f;
+    }
+    return __hip_cvt_float_to_fp8(value, saturation, interpretation);
+}
+__host__ __device__ inline __nv_fp8x2_storage_t __nv_cvt_float2_to_fp8x2(
+    float2 value, __nv_saturation_t saturation, __nv_fp8_interpretation_t interpretation) {
+    const auto lo = __nv_cvt_float_to_fp8(value.x, saturation, interpretation);
+    const auto hi = __nv_cvt_float_to_fp8(value.y, saturation, interpretation);
+    return static_cast<__nv_fp8x2_storage_t>(lo | (static_cast<unsigned int>(hi) << 8));
+}
+
+// Storage and decode match OCP in the SDK. These small value types ensure their
+// float constructors also use the corrected SATFINITE encoder above.
+struct __nv_fp8_e4m3 {
+    __nv_fp8_storage_t __x;
+    __host__ __device__ __nv_fp8_e4m3() = default;
+    __host__ __device__ explicit __nv_fp8_e4m3(float value)
+        : __x(__nv_cvt_float_to_fp8(value, __NV_SATFINITE, __NV_E4M3)) {}
+    __host__ __device__ explicit operator float() const {
+        __hip_fp8_e4m3 value;
+        value.__x = __x;
+        return static_cast<float>(value);
+    }
+    __host__ __device__ explicit operator __half() const {
+        __hip_fp8_e4m3 value;
+        value.__x = __x;
+        return static_cast<__half>(value);
+    }
+};
+struct __nv_fp8x2_e4m3 {
+    __nv_fp8x2_storage_t __x;
+    __host__ __device__ __nv_fp8x2_e4m3() = default;
+    __host__ __device__ explicit __nv_fp8x2_e4m3(float2 value)
+        : __x(__nv_cvt_float2_to_fp8x2(value, __NV_SATFINITE, __NV_E4M3)) {}
+    __host__ __device__ explicit operator float2() const {
+        __hip_fp8x2_e4m3 value;
+        value.__x = __x;
+        return static_cast<float2>(value);
+    }
+    __host__ __device__ explicit operator __half2() const {
+        __hip_fp8x2_e4m3 value;
+        value.__x = __x;
+        return static_cast<__half2>(value);
+    }
+};
+
+// HIP's float -> __bf16 conversion is RNE, including gradual underflow and
+// NaN preservation. It lacks these two CUDA spellings; reuse the SDK conversion.
+__host__ __device__ inline __nv_bfloat16 __float2bfloat16_rn(float value) {
+    return __float2bfloat16(value);
+}
+__host__ __device__ inline __nv_bfloat162 __floats2bfloat162_rn(float x, float y) {
+    return __halves2bfloat162(__float2bfloat16_rn(x), __float2bfloat16_rn(y));
+}
+
+static_assert(sizeof(__nv_bfloat16) == 2 && sizeof(__nv_bfloat162) == 4);
+static_assert(sizeof(__nv_fp8_e4m3) == 1 && sizeof(__nv_fp8x2_e4m3) == 2);
+
+// Runtime names with matching signatures and contracts in HIP 7.2.
+#define cudaError_t hipError_t
+#define cudaSuccess hipSuccess
+#define cudaErrorMemoryAllocation hipErrorOutOfMemory
+#define cudaErrorNotReady hipErrorNotReady
+#define cudaGetErrorName hipGetErrorName
+#define cudaGetErrorString hipGetErrorString
+#define cudaGetLastError hipGetLastError
+#define cudaPeekAtLastError hipPeekAtLastError
+#define cudaDeviceProp hipDeviceProp_t
+#define cudaUUID_t hipUUID
+#define cudaGetDevice hipGetDevice
+#define cudaSetDevice hipSetDevice
+#define cudaGetDeviceCount hipGetDeviceCount
+#define cudaGetDeviceProperties hipGetDeviceProperties
+#define cudaDeviceSynchronize hipDeviceSynchronize
+#define cudaGetDeviceFlags hipGetDeviceFlags
+#define cudaSetDeviceFlags hipSetDeviceFlags
+#define cudaDeviceScheduleAuto hipDeviceScheduleAuto
+#define cudaDeviceScheduleBlockingSync hipDeviceScheduleBlockingSync
+#define cudaDeviceScheduleMask hipDeviceScheduleMask
+#define cudaDeviceScheduleSpin hipDeviceScheduleSpin
+#define cudaDeviceScheduleYield hipDeviceScheduleYield
+#define cudaDriverGetVersion hipDriverGetVersion
+#define cudaRuntimeGetVersion hipRuntimeGetVersion
+#define cudaProfilerStart hipProfilerStart
+#define cudaProfilerStop hipProfilerStop
+#define cudaStream_t hipStream_t
+#define cudaStreamCreate hipStreamCreate
+#define cudaStreamCreateWithFlags hipStreamCreateWithFlags
+#define cudaStreamDestroy hipStreamDestroy
+#define cudaStreamSynchronize hipStreamSynchronize
+#define cudaStreamQuery hipStreamQuery
+#define cudaStreamWaitEvent hipStreamWaitEvent
+#define cudaStreamGetDevice hipStreamGetDevice
+#define cudaStreamNonBlocking hipStreamNonBlocking
+#define cudaStreamBeginCapture hipStreamBeginCapture
+#define cudaStreamEndCapture hipStreamEndCapture
+#define cudaStreamIsCapturing hipStreamIsCapturing
+#define cudaStreamCaptureModeThreadLocal hipStreamCaptureModeThreadLocal
+#define cudaStreamCaptureStatus hipStreamCaptureStatus
+#define cudaStreamCaptureStatusActive hipStreamCaptureStatusActive
+#define cudaStreamCaptureStatusNone hipStreamCaptureStatusNone
+#define cudaStreamSetCaptureDependencies hipStreamSetCaptureDependencies
+#define cudaEvent_t hipEvent_t
+#define cudaEventCreate hipEventCreate
+#define cudaEventCreateWithFlags hipEventCreateWithFlags
+#define cudaEventDestroy hipEventDestroy
+#define cudaEventDisableTiming hipEventDisableTiming
+#define cudaEventElapsedTime hipEventElapsedTime
+#define cudaEventQuery hipEventQuery
+#define cudaEventRecord hipEventRecord
+#define cudaEventRecordWithFlags hipEventRecordWithFlags
+#define cudaEventRecordExternal hipEventRecordExternal
+#define cudaEventWaitExternal hipEventWaitExternal
+#define cudaEventSynchronize hipEventSynchronize
+#define cudaMalloc hipMalloc
+#define cudaMallocHost hipHostMalloc
+#define cudaFree hipFree
+#define cudaFreeHost hipHostFree
+#define cudaHostGetDevicePointer hipHostGetDevicePointer
+#define cudaHostRegister hipHostRegister
+#define cudaHostRegisterDefault hipHostRegisterDefault
+#define cudaHostUnregister hipHostUnregister
+#define cudaMemGetInfo hipMemGetInfo
+#define cudaMemset hipMemset
+#define cudaMemsetAsync hipMemsetAsync
+#define cudaMemcpy hipMemcpy
+#define cudaMemcpyAsync hipMemcpyAsync
+#define cudaMemcpy2DAsync hipMemcpy2DAsync
+#define cudaMemcpyKind hipMemcpyKind
+#define cudaMemcpyHostToDevice hipMemcpyHostToDevice
+#define cudaMemcpyDeviceToHost hipMemcpyDeviceToHost
+#define cudaMemcpyDeviceToDevice hipMemcpyDeviceToDevice
+#define cudaMemcpyAttributes hipMemcpyAttributes
+#define cudaMemcpySrcAccessOrderStream hipMemcpySrcAccessOrderStream
+#define cudaGraph_t hipGraph_t
+#define cudaGraphExec_t hipGraphExec_t
+#define cudaGraphNode_t hipGraphNode_t
+#define cudaGraphDestroy hipGraphDestroy
+#define cudaGraphExecDestroy hipGraphExecDestroy
+#define cudaGraphLaunch hipGraphLaunch
+#define cudaGraphUpload hipGraphUpload
+#define cudaGraphGetNodes hipGraphGetNodes
+#define cudaGraphNodeGetType hipGraphNodeGetType
+#define cudaGraphNodeSetEnabled hipGraphNodeSetEnabled
+#define cudaGraphNodeType hipGraphNodeType
+#define cudaGraphNodeTypeKernel hipGraphNodeTypeKernel
+#define cudaGraphNodeTypeMemcpy hipGraphNodeTypeMemcpy
+#define cudaGraphNodeTypeMemset hipGraphNodeTypeMemset
+#define cudaGraphAddChildGraphNode hipGraphAddChildGraphNode
+#define cudaGraphExecChildGraphNodeSetParams hipGraphExecChildGraphNodeSetParams
+#define cudaGraphExecUpdateSuccess hipGraphExecUpdateSuccess
+#define cudaFuncAttributeMaxDynamicSharedMemorySize hipFuncAttributeMaxDynamicSharedMemorySize
+#define cudaOccupancyMaxActiveBlocksPerMultiprocessor hipOccupancyMaxActiveBlocksPerMultiprocessor
+#define cudaLaunchCooperativeKernel hipLaunchCooperativeKernel
+
+template <class Kernel>
+inline hipError_t cudaFuncSetAttribute(Kernel kernel, hipFuncAttribute attribute, int value) {
+    return hipFuncSetAttribute(reinterpret_cast<const void*>(kernel), attribute, value);
+}
+
+// CUDA's newer graph entry points carry edge data absent from HIP 7.2.
+// Only the default dependency contract is representable; never drop edge data.
+inline hipError_t cudaStreamGetCaptureInfo(
+    hipStream_t stream, hipStreamCaptureStatus* status, unsigned long long* id,
+    hipGraph_t* graph = nullptr, const hipGraphNode_t** dependencies = nullptr,
+    const void** edge_data = nullptr, size_t* count = nullptr) {
+    if (edge_data) return hipErrorNotSupported;
+    return hipStreamGetCaptureInfo_v2(stream, status, id, graph, dependencies, count);
+}
+inline hipError_t cudaStreamUpdateCaptureDependencies(
+    hipStream_t stream, hipGraphNode_t* dependencies, const void* edge_data,
+    size_t count, unsigned int flags = 0) {
+    if (edge_data) return hipErrorNotSupported;
+    return hipStreamUpdateCaptureDependencies(stream, dependencies, count, flags);
+}
+inline hipError_t cudaGraphInstantiate(hipGraphExec_t* exec, hipGraph_t graph,
+                                      unsigned long long flags = 0) {
+    // HIP 7.2 documents that it ignores these flags.
+    if (flags) return hipErrorNotSupported;
+    return hipGraphInstantiateWithFlags(exec, graph, flags);
+}
+struct cudaGraphExecUpdateResultInfo {
+    hipGraphExecUpdateResult result;
+    hipGraphNode_t errorNode;
+    hipGraphNode_t errorFromNode;
+};
+inline hipError_t cudaGraphExecUpdate(hipGraphExec_t exec, hipGraph_t graph,
+                                     cudaGraphExecUpdateResultInfo* info) {
+    if (!info) return hipErrorInvalidValue;
+    info->errorFromNode = nullptr;
+    return hipGraphExecUpdate(exec, graph, &info->errorNode, &info->result);
+}
+inline hipError_t cudaMemcpyBatchAsync(
+    void* const* destinations, const void* const* sources, const size_t* sizes, size_t count,
+    const hipMemcpyAttributes* attributes, const size_t* indices, size_t attribute_count,
+    hipStream_t stream) {
+    // HIP 7.2 rejects batch attributes, including the stream source ordering
+    // used by Core. Ordered SDK copies implement that contract without hidden
+    // storage or synchronization. Reject unsupported attributes before enqueue.
+    if (count == 0) return hipSuccess;
+    if (!destinations || !sources || !sizes || !attributes || !indices ||
+        attribute_count == 0 || attribute_count > count || indices[0] != 0)
+        return hipErrorInvalidValue;
+    for (size_t i = 0; i < attribute_count; ++i) {
+        if (indices[i] >= count || (i && indices[i] <= indices[i - 1]))
+            return hipErrorInvalidValue;
+        const auto& attribute = attributes[i];
+        if (attribute.srcAccessOrder != hipMemcpySrcAccessOrderStream || attribute.flags ||
+            attribute.srcLocHint.type != hipMemLocationTypeInvalid ||
+            attribute.dstLocHint.type != hipMemLocationTypeInvalid)
+            return hipErrorNotSupported;
+    }
+    for (size_t i = 0; i < count; ++i) {
+        const auto error = hipMemcpyAsync(destinations[i], sources[i], sizes[i],
+                                          hipMemcpyDefault, stream);
+        if (error != hipSuccess) return error;
+    }
+    return hipSuccess;
+}
+
+#else
+
+#include <cuda_runtime.h>
+#include <cuda_bf16.h>
+#include <cuda_fp16.h>
+#include <cuda_fp8.h>
+
+#endif

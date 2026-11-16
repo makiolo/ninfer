@@ -70,8 +70,19 @@ const Bf16Decode kBf16Decode[] = {
 };
 
 // ---- helpers ---------------------------------------------------------------------------------
-HD inline std::uint32_t f2u(float x) { std::uint32_t u; std::memcpy(&u, &x, 4); return u; }
-HD inline float u2f(std::uint32_t u) { float x; std::memcpy(&x, &u, 4); return x; }
+// The Windows CRT's std::memcpy is host-only under HIP. Character copies retain
+// the object representation on both execution sides without numeric conversion.
+template <class To, class From>
+HD inline To copy_bits(From value) {
+    static_assert(sizeof(To) == sizeof(From));
+    To result;
+    auto* dst = reinterpret_cast<unsigned char*>(&result);
+    const auto* src = reinterpret_cast<const unsigned char*>(&value);
+    for (std::size_t i = 0; i < sizeof(To); ++i) dst[i] = src[i];
+    return result;
+}
+HD inline std::uint32_t f2u(float x) { return copy_bits<std::uint32_t>(x); }
+HD inline float u2f(std::uint32_t u) { return copy_bits<float>(u); }
 inline bool f32_is_nan(std::uint32_t b) { return (b & 0x7FFFFFFFu) > 0x7F800000u; }
 inline bool same_f32(std::uint32_t got, std::uint32_t want, bool nan) {
     return nan ? f32_is_nan(got) : got == want;
