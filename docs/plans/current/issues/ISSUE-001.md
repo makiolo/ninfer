@@ -27,3 +27,6 @@
 
 ## 3. Minimal reproducible case
 `cmake --fresh --preset r9700-ops -B <dir>` y buscar `ninfer_cpu_executor` en `<dir>/build.ninja`.
+
+## 4. Progress
+- 2026-11-17 · Parte `ninfer_cpu_executor` **resuelta** en R97-06 (`761d4440`): `executor.cpp`/`x86.cpp` compilan en `r9700` y sus tests pasan. Queda la parte nvtx3 (dueño: quien porte `core/nvtx.h`, R97-08 o PLAN_OPS); al resolverla debe compilar también `ninfer_cpu_tensor_test`, ya registrado en `r9700`.
