@@ -58,3 +58,4 @@ R97-01 → R97-02 → R97-04; R97-03 en paralelo con R97-02 (ficheros disjuntos:
 
 | ID | Commit | Tests | Desviaciones |
 |---|---|---|---|
+| R97-01 | `92958cf5`, `d3302962` | `cmake --preset r9700-ops` pasa `project(HIP)` `gfx1201`, plataforma, `platform.h` y `find_package(hip)`; primer error `hwloc>=2.5` (`Dependencies.cmake:16`, R97-03). Revisión Sonnet 5.5 high: ACCEPT WITH CONDITIONS (3 corregidas en `d3302962`). CUDA: variables idénticas por `cmake -P` (no construible aquí). | Aceptación «configura» parcial por diseño: la configuración completa se verifica al cerrar R97-03. Requiere entorno MSVC + `HIP_PATH`. |

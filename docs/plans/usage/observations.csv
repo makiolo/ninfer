@@ -4,3 +4,6 @@ ninfer-s01-start-claude-fable,claude,main,weekly-fable,subscription,2026-11-16T2
 ninfer-s01-start-codex,codex,prolite,weekly,subscription,2026-11-16T21:27:52Z,2026-11-21T11:38:00Z,10080,94,1,true,claude-or quota --weekly (api)
 ninfer-s01-start-agy-argon,agy,main,weekly-gemini-4-argon,subscription,2026-11-16T21:27:52Z,2026-11-21T06:43:00Z,10080,91.76,0.01,true,claude-or quota --weekly (agy /usage JSON)
 ninfer-s01-start-agy-flash,agy,main,weekly-gemini-3.8-flash,subscription,2026-11-16T21:27:52Z,2026-11-22T02:01:00Z,10080,39.102,0.001,true,claude-or quota --weekly (agy /usage JSON)
+ninfer-s01-boot-claude-all,claude,main,weekly-all-models,subscription,2026-11-16T21:32:00Z,2026-11-16T23:59:00Z,10080,96,1,true,claude-or quota --weekly (api) director ninfer-32 boot
+ninfer-s01-boot-claude-fable,claude,main,weekly-fable,subscription,2026-11-16T21:32:00Z,2026-11-17T00:00:00Z,10080,100,1,true,claude-or quota --weekly (api) director ninfer-32 boot
+ninfer-s01-boot-codex,codex,main,weekly,subscription,2026-11-16T21:32:00Z,2026-11-21T11:38:00Z,10080,94,1,true,claude-or quota --weekly (api prolite) director ninfer-32 boot
