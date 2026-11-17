@@ -61,6 +61,8 @@ Trampa: en esta máquina la herramienta Bash expande comillas invertidas dentro 
 entre comillas; escribir ficheros con texto Markdown solo con Write/Edit.
 
 ## Decisions
+- Usuario (2026-11-17 ~02:00 UTC): subir todo a su fork. Remoto `fork` (`git@github.com:makiolo/ninfer.git`, por SSH),
+  rama `fork_R9700`; el director hace `git push fork fork_R9700` tras cada commit de registro. Hijos: sin push.
 - Usuario (2026-11-17 ~00:00 UTC): ninfer no hace la revisión de alertas de 8 h del perfil (EXECUTION.md y memoria).
 - Usuario (2026-11-16 ~22:05 UTC): la congelación de la cartera no aplica a ninfer (EXECUTION.md; INBOX → rejected).
 - Decisiones de BUILD/HOST anteriores: cierre de PLAN_BUILD, EXECUTION.md e ISSUE-001.

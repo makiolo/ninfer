@@ -86,3 +86,8 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
 - 2026-11-17 01:54 UTC · Usuario (anuncio vía concertino-e6): «Aunque este codex al 3%, no dejeis de usarlo, asi
   cuando llegemos a 1% lo reinicio, pero hay que gastar». Aplicado: Codex sigue como autor; ya no se para por cuota
   escasa, solo si se agota de verdad (entonces PushNotification).
+- 2026-11-17 02:0x UTC · Usuario: «He creado un fork, ves subiendo todo aqui https://github.com/makiolo/ninfer puedes
+  subir la rama, o subirlo a master directamente, es un fork mio». Remoto `fork` = `git@github.com:makiolo/ninfer.git`
+  (SSH; HTTPS se queda esperando al Git Credential Manager). Subida la rama `fork_R9700` (seguimiento
+  `fork/fork_R9700`); `master` del fork se deja igual que el original para sincronizarlo. El director sube tras cada
+  commit de registro; los hijos siguen sin push.
