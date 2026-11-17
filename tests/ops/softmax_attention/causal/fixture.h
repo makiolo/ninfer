@@ -423,5 +423,6 @@ int run_batch_case(CudaExecutionView execution, const Geometry& geometry, KvCach
                    std::span<const std::uint32_t> graph_limits = {});
 int verify_workspace_capacity_contract(CudaExecutionView, KvCacheStorage);
 void add_cases(OpSuite&);
+void add_r9700_cases(OpSuite&);
 
 } // namespace ninfer::test::causal_attention
