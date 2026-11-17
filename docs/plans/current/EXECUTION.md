@@ -492,3 +492,8 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   exactos (curl salida 0). **SHA-256 comprobado:** `81f924d440c27261d820c19a9f8d45794c5aee410f8a68bd358133fa8c0375da`,
   igual que `out/qwen3_8_27b.SHA256SUMS` y que el `artifact-manifest.json` del repositorio. R97-17 ya no tiene que
   descargar nada: usa esa ruta explícita.
+- 2026-11-17 08:5x UTC · **R97-29 cerrada.** Revisión (545, Opus 5.5 high): ACCEPT, sin hallazgos bloqueantes. El
+  director contrastó con el código: add Q5 suma el residuo en FP32 y redondea una vez (`add/r9700/dispatch.cu`;
+  distinto bit a bit de CUDA, dentro del contrato), swiglu usa `common::silu` exacta, y los rechazos de pair están en
+  su módulo dueño. Dudas de la revisión, anotadas en PLAN_OPS §5: nada de lo nuevo en tests se ha compilado en CUDA;
+  el padre Q8 compartido de 14336 filas lo confirma R97-17 con el artefacto (ya descargado).
