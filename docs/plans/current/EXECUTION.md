@@ -478,3 +478,8 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   SHA-256. El resto de R97-17 (carga y generación) sigue dependiendo de R97-31 y R97-16.
 - 2026-11-17 08:4x UTC · Consulta de `reinforcement-learning-b3` (S: pierde unos 19 GiB/h): la huella de ninfer en
   S: es de unos 2,6 GiB y `out/` estaba vacío; respondido, con aviso de la descarga de 19 GiB.
+- 2026-11-17 08:4x UTC · **R97-29 gate: exit 0** (tras `3b3f26cd`; `.agent-tmp/R97-29/gate.log`): split `q4_q5`
+  215, swiglu `q4` 82, add `q5` 215, **pair `q8` 169**, proyección `q4` 654, `q5` 514 y `q8` 1 742; 0 omitidos.
+  **Revisión lanzada** (545, Claude Opus 5.5 high; `R97-29/review-card.md`, pre-revisada READY; incluye el arreglo
+  de registro de pair y el efecto en las dianas CUDA). Cuota a las 08:40 UTC: Claude 59 %, Fable 82 %, Codex 63 %.
+  En cola: gates de R97-08 (en ejecución) y R97-12.
