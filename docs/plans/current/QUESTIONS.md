@@ -71,7 +71,7 @@ user's own words. Historical entries Q-001..Q-007 stay in [docs/plans/QUESTIONS.
 - Applied in: sin cambios en la cola; las validaciones de ninfer siguen como entradas sin modelo (EXECUTION,
   2026-11-17 05:3x UTC). El director activo lo anota en EXECUTION.
 
-### Q-012 · open · decision
+### Q-012 · answered · decision
 - Raised: 2026-11-17 07:30 UTC, director del relevo 4 (`ninfer-48`)
 - Task: general (revisores, oráculos y director del sprint; afecta a R97-08, R97-11, R97-12, R97-15 y R97-29..31)
 - Question: La cuota semanal de Claude se gasta muy deprisa en toda la cartera: a las 07:25 UTC va por el 51 % (Fable
@@ -90,7 +90,9 @@ user's own words. Historical entries Q-001..Q-007 stay in [docs/plans/QUESTIONS.
 - Recommendation: B. Mantiene la revisión con Claude mientras haya margen y evita que las entregas de Codex se
   queden sin revisar al final. El gasto es de toda la cartera: qué proyectos tienen preferencia sobre Claude es
   decisión tuya y cambia el resultado más que cualquiera de estas opciones.
-- Literal answer: —
-- Received by: —
+- Literal answer: "B) Codex revisa desde el 85 % (Recomendado)"
+- Received by: sesión saliente del relevo 4 (c988ac27, `ninfer-48`), 2026-11-17 08:07 UTC, en lote al entregar el
+  relevo 5; relevada al director activo `ninfer-f6`
 - Confirmation in the executing director: not applicable
-- Applied in: —
+- Applied in: pendiente de aplicar por el director activo (relevo 5): desde que Claude semanal pase del 85 %, las
+  revisiones y los oráculos van a Codex con un modelo distinto del autor y Claude queda solo para el director
