@@ -1,7 +1,7 @@
 # [ISSUE-002] Las dependencias host de `r9700` viven en un árbol vcpkg temporal fuera del repo
 
 > **Type:** Defect\
-> **Status:** Open\
+> **Status:** Pending verification\
 > **Detected:** 2026-11-17\
 > **Origin:** SPRINT-01 / PLAN_HOST / R97-07 (revisión 504, Sonnet 5.5 high, hallazgo 1)\
 > **Affected component:** resolución de dependencias de `r9700` (`cmake/Dependencies.cmake`, `CMakePresets.json`, vcpkg)\
@@ -32,3 +32,14 @@ Configurar `r9700-dev` en un directorio nuevo sin esas variables: falla en `find
 Ubicación estable del árbol de dependencias (fuera de `.agent-tmp/`, p. ej. en el `VCPKG_ROOT` o una ruta documentada)
 y un preset o fichero de entorno `r9700` versionado que lo seleccione; procedimiento documentado donde corresponda
 según `docs/maintainer/build-system.md`.
+
+## 5. Estado (2026-11-17, director relevo 6)
+- Ubicación estable versionada: `cmake/NinferPlatform.cmake` (desde `b8fd7fe2`, R97-08) toma por defecto
+  `$VCPKG_ROOT/installed-ninfer-r9700` (aquí `G:\vcpkg_root\installed-ninfer-r9700`, 420 ficheros verificados), con
+  `NINFER_R9700_VCPKG_INSTALLED_DIR` como alternativa.
+- Árbol temporal de `.agent-tmp/R97-03/` borrado tras cerrar R97-08 (`buildtrees`, `packages`, `try2` y la copia de
+  `vcpkg_installed`, 1,4 GiB); quedan 8 MB de logs de evidencia de R97-03.
+- Falta verificar: configurar `r9700-dev` en un directorio nuevo sin variables de sesión (la caché actual de
+  `build/r9700-dev` aún guarda el `VCPKG_INSTALLED_DIR` de su primera configuración). Lo comprueba la primera
+  reconfiguración limpia (R97-16 o R97-31); el procedimiento en `docs/maintainer/build-system.md` va con la revisión
+  de documentación que programa el usuario (AGENTS.md).
