@@ -202,3 +202,14 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   (`R97-11-gate`: `run-v2.py build` y luego `gpu`, límite 120 min de ejecución; log `.agent-tmp/R97-11/gate.log`).
   Registrada **Q-011** (reparto de la cola entre proyectos; recomendación: seguir por orden de llegada).
   Avances de otros autores: `a35c3613` (R97-15, sampling), `bdbec359` (R97-13, atención densa).
+- 2026-11-17 05:5x UTC · **R97-15 intento 1 (524): primer resultado en GPU del grupo de Ops.** `a35c3613`; compila
+  44/44; en la ASUS (HIP 0, bus 6, wave32) pasan **76 de 79 casos**, 0 omitidos; segunda pasada sin ejecutar. Los 3
+  fallos son `r9700/accept_greedy/penalised_mixed` (K/B/V 3/5/65, 5/33/257, 1/7/33), fila 0. Causa, comprobada por el
+  director en `include/ninfer/ops/speculative_accept.h:37-38`: el test del oráculo pasaba `-1` como target a todas
+  las filas del lote mixto, también a las greedy sin penalizaciones, que por contrato consumen el argmax exacto.
+  Defecto del oráculo, no del port; el autor no tocó el test. **Corrección del director** (`b86077c3`, 1 línea
+  efectiva en `tests/ops/sampling/r9700_edges.cpp`): target exacto para las filas greedy sin penalizaciones y `-1`
+  para el resto; esperados, criterios y casos sin cambios; sintaxis HIP comprobada. Validación lanzada sin modelo
+  (`R97-15-gate`: compilar y dos pasadas seguidas; log `.agent-tmp/R97-15/gate.log`). Excluidos de `r9700`:
+  `accept_sparse`, `candidate_selector`, `gathered_selector`, `vocabulary*`. Único arreglo de producción fuera de
+  kernels: incluir `cuda_runtime.h` antes de `random.cuh` en `distribution.cuh`.
