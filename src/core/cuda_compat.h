@@ -24,6 +24,9 @@ static_assert(__has_builtin(__builtin_amdgcn_ballot_w32),
               "NINFER_TARGET_R9700 requires wave32 device compilation (32-lane wavefronts)");
 #endif
 
+// The SDK declares device intrinsics only in HIP language mode. Ordinary C++
+// translation units use the runtime/type mappings below, not these overloads.
+#if defined(__HIP__)
 // CUDA uses 32-bit masks; HIP 7.2's sync intrinsics require an explicit
 // 64-bit mask even in wave32. Keep that translation here, retaining the SDK's
 // participation checks, width semantics and wavefront memory fences.
@@ -96,6 +99,7 @@ __device__ __forceinline__ unsigned __reduce_or_sync(unsigned mask, unsigned val
 __device__ __forceinline__ unsigned __reduce_xor_sync(unsigned mask, unsigned value) {
     return ninfer::hip_compat::reduce_bits<'^'>(mask, value);
 }
+#endif // __HIP__
 #endif // NINFER_TARGET_R9700
 
 // HIP 7.2 has separate OCP and FNUZ types. gfx12 uses OCP E4M3FN:
