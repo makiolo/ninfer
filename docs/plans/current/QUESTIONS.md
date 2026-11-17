@@ -22,7 +22,8 @@ user's own words. Historical entries Q-001..Q-007 stay in [docs/plans/QUESTIONS.
 - Literal answer: "Sí, exclusivas (Recomendado)"
 - Received by: sesión saliente del relevo 2 (7465607f), 2026-11-17 ~03:3x UTC, en lote al entregar el relevo 3
 - Confirmation in the executing director: not applicable
-- Applied in: pendiente de SPRINT-02 (next/PLAN_TP.md); avisar a los demás proyectos antes de R97-22, como con la ASUS
+- Applied in: next/SPRINT.md §4 y next/PLAN_TP.md §5 (director del relevo 3, 2026-11-17); EXECUTION.md. Pendiente al
+  ejecutar SPRINT-02: avisar a los demás proyectos antes de R97-22, como con la ASUS
 
 ### Q-009 · answered · decision
 - Raised: 2026-11-16 21:2x UTC, sesión que inicia SPRINT-01

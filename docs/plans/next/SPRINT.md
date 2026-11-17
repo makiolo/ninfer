@@ -34,7 +34,7 @@ Ninguna. Premisa interna: SPRINT-01 cerrado con R97-18 aceptada.
 |---|---|---|
 | Q-007 | PERF en SPRINT-01 o SPRINT-02 | SPRINT-02 (usuario, 2026-11-16) |
 | — | Tensor parallel con las 2 GPUs | Entra en SPRINT-02 como PLAN_TP (usuario, 2026-11-16) |
-| Q-008 | Segunda GPU exclusiva durante TP | **abierta** |
+| Q-008 | Segunda GPU exclusiva durante TP | Sí, las dos exclusivas durante R97-22 y desde R97-24 (usuario, 2026-11-17) |
 
 ## 6. Exclusions
 

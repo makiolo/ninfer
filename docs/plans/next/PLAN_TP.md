@@ -88,7 +88,9 @@ medir sobre los kernels finales.
 
 ## 5. GAPs abiertos
 
-- Q-008: liberar también la segunda R9700 de su ranura de IA local durante las tareas TP.
+- Q-008, resuelta (usuario, 2026-11-17: «Sí, exclusivas (Recomendado)»): la segunda R9700 (Sapphire, HIP 1) también
+  queda exclusiva de ninfer durante R97-22 y desde R97-24. Antes de R97-22 el director avisa a los demás proyectos
+  por su INBOX (como con la ASUS) y el usuario libera la ranura de IA local de la Sapphire.
 - Resizable BAR: `isLargeBar: 0` y sin soporte oficial en Z97. Solo se plantearía con un BIOS modificado si R97-22
   mostrara que el acceso zero-copy de la CPU a la VRAM limita, y la decisión y el flasheo son del usuario.
 

@@ -160,3 +160,7 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   Autor lanzado ya (524, Codex `gpt-6.1-sol` high; ficha READY): sus rutas son disjuntas de las seis en curso, así que
   no espera a R97-10..14 (cupo dinámico); solo comparte la cola de compilación y la GPU. Cuota a las 04:0x UTC:
   Claude 30 %, Fable 40 % (2,1 % de la ventana), Codex 15 %.
+- 2026-11-17 04:4x UTC · **Q-008 respondida** (usuario, en la sesión saliente del relevo 2, relevada por `ninfer-0b`;
+  registro `637de1f9`): «Sí, exclusivas (Recomendado)». Las dos R9700 serán exclusivas de ninfer durante R97-22 y
+  desde R97-24 (SPRINT-02). Aplicado en `next/SPRINT.md` §4 y `next/PLAN_TP.md` §5. No cambia SPRINT-01: la Sapphire
+  (HIP 1) sigue prohibida para los hijos hasta entonces. Sin preguntas abiertas.
