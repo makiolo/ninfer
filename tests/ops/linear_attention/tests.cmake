@@ -10,11 +10,17 @@ ninfer_add_op_test(ninfer_kda_input_proj_test
   SOURCES "${CMAKE_CURRENT_LIST_DIR}/kimi_delta_attention/input_conv.cpp"
   LIBRARIES ninfer_ops)
 
+set(ninfer_gdn_test_library ninfer_ops)
+if(NINFER_TARGET_R9700)
+  set(ninfer_gdn_test_library ninfer_gdn_r9700)
+endif()
+
 ninfer_add_op_test(ninfer_causal_conv1d_silu_test
   SOURCES "${CMAKE_CURRENT_LIST_DIR}/causal_conv1d_silu.cpp"
-  LIBRARIES ninfer_ops)
+  LIBRARIES ${ninfer_gdn_test_library})
 
 include("${CMAKE_CURRENT_LIST_DIR}/gated_delta_net/tests.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/gated_delta_net/control/tests.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/gated_delta_net/input_conv/tests.cmake")
-ninfer_add_op_test(ninfer_causal_conv_trajectory_test SOURCES "${CMAKE_CURRENT_LIST_DIR}/causal_conv_trajectory.cpp" LIBRARIES ninfer_ops)
+ninfer_add_op_test(ninfer_causal_conv_trajectory_test SOURCES "${CMAKE_CURRENT_LIST_DIR}/causal_conv_trajectory.cpp" LIBRARIES ${ninfer_gdn_test_library})
+unset(ninfer_gdn_test_library)
