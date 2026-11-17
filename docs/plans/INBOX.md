@@ -53,3 +53,15 @@ Entry format:
 > (no apartarlo por cuota escasa); cuando llegue a ~1 % gastará él un reinicio de la cuenta. Reiniciar es cosa suya.
 >
 > → accepted: docs/plans/current/EXECUTION.md (ya aplicado: 3 autores en Codex, R97-08/10/11).
+
+### 2026-11-17T03:09+01:00 · from the user · announcement
+> Anuncio: Acabo de usar el reset de Codex, volvemos a usos normales, codex al 100% y claude casi nuevo
+>
+> Forwarded by reinforcement_learning (reinforcement-learning-0e) with `concertino-broadcast`: these are the user's words, not a request of
+> mine. Apply it in this project and record it where it belongs (EXECUTION or ON_CALL.md). No reply needed.
+> Context: es posterior al anuncio del 2026-11-17 02:54 («Aunque este codex al 3%, no dejeis de usarlo…»), que queda
+> superado: el usuario ya gastó el reinicio de la cuenta de Codex. Lectura de `claude-or quota --weekly` a las 03:09:
+> Codex 0 % consumido (ventana nueva, reinicio 2026-11-24 02:09 UTC); Claude 20 % consumido y Fable 26 %, con el 1,3 %
+> de su ventana. «Usos normales» = repartir autores y revisores por cuota con las reglas de siempre.
+>
+> → accepted: docs/plans/current/EXECUTION.md (Codex sigue de autor por Q-010; se acaba la vigilancia por agotamiento).

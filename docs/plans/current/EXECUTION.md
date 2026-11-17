@@ -91,3 +91,7 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   (SSH; HTTPS se queda esperando al Git Credential Manager). Subida la rama `fork_R9700` (seguimiento
   `fork/fork_R9700`); `master` del fork se deja igual que el original para sincronizarlo. El director sube tras cada
   commit de registro; los hijos siguen sin push.
+- 2026-11-17 02:09 UTC · Usuario (anuncio vía reinforcement-learning-0e): «Acabo de usar el reset de Codex, volvemos a
+  usos normales, codex al 100% y claude casi nuevo». Codex 0 % consumido (reinicio 2026-11-24 02:09 UTC), Claude 20 %.
+  Aplicado: el reparto vuelve a las reglas de siempre; Codex sigue como autor por el orden Q-010 (Claude orquesta y
+  revisa, Codex implementa). Queda superado el anuncio de las 01:54 UTC.
