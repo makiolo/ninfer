@@ -178,3 +178,10 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   2-30 s por errores de compilación. Mitigación del director (nota en `.agent-tmp/R97-1{0..5}/DIRECTOR-NOTE.md` y en
   las fichas nuevas): pasada de sintaxis `-fsyntax-only` fuera de la cola antes de pedir turno (un proceso a la vez),
   una sola entrada por autor y compilar + ejecutar en la misma entrada. La capacidad (2 ranuras) es del usuario.
+- 2026-11-17 04:5x UTC · **R97-12 intento 1 (519): BLOCKED**, `2d40029e`, sin compilación completa ni GPU. Usó la
+  pasada de sintaxis fuera de la cola (11 unidades pasan; recurrente y replay fallan) y canceló su entrada antes de
+  arrancar. Causa: `src/ops/common/numeric/math.h:31`, `NINFER_KERNEL_HD` solo vale `__host__ __device__` con
+  `__CUDACC__`, así que `FastDivisorU31::divide` es de host bajo HIP. **Decisión del director:** `math.h` autorizado
+  a R97-12 solo para la anotación (división exacta también en el dispositivo `r9700`; rama CUDA intacta). Intento 2
+  lanzado (526, Codex `gpt-6-astra` xhigh; ficha READY), con sonda de `FastDivisorU31` contra el host.
+  R97-08 intento 2 avanza: `e9f25fff` (texto en Windows) y `69e094d3`.
