@@ -1,16 +1,18 @@
 if(NINFER_TARGET STREQUAL "r9700" AND NOT CMAKE_CXX_COMPILER_LOADED)
   # r9700 presets also load this module before project() reads the toolchain.
-  # Diagnose the required environment here, before CMake tries /scripts/... .
-  if("$ENV{VCPKG_ROOT}" STREQUAL "" OR
-     NOT EXISTS "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+  # NinferPlatform resolves the default or user-selected toolchain before project().
+  if(NOT EXISTS "${CMAKE_TOOLCHAIN_FILE}")
     message(FATAL_ERROR
-      "r9700 requires VCPKG_ROOT to name a vcpkg installation containing "
-      "scripts/buildsystems/vcpkg.cmake; set VCPKG_ROOT before configuring")
+      "r9700 requires a local vcpkg toolchain; got '${CMAKE_TOOLCHAIN_FILE}'. "
+      "Set VCPKG_ROOT or CMAKE_TOOLCHAIN_FILE to an existing installation")
   endif()
   return()
 endif()
 
 if(NINFER_TARGET_R9700)
+  # Keep HIP's C++ interface on the platform's architecture too. A host-only
+  # configure must not need GPU detection or fall back to an SDK default target.
+  set(GPU_TARGETS "${NINFER_HIP_ARCHITECTURE}")
   # vcpkg forwards find_package arguments through generated CMake code.
   # Normalize Windows environment paths so backslashes are not parsed as escapes.
   file(TO_CMAKE_PATH "$ENV{HIP_PATH}" ninfer_hip_path)
@@ -24,10 +26,8 @@ if(NINFER_TARGET_R9700)
     target_link_libraries(CUDA::${ninfer_cuda_runtime} INTERFACE hip::host)
   endforeach()
 
-  # NVTX3 has no source-compatible HIP dependency here. This deliberately missing
-  # library makes any consumer fail explicitly at link time until profiling is ported.
-  add_library(CUDA::nvtx3 INTERFACE IMPORTED GLOBAL)
-  target_link_libraries(CUDA::nvtx3 INTERFACE ninfer_r9700_nvtx3_unsupported)
+  # Profiling annotations are explicitly disabled by core/nvtx.h on r9700.
+  # Do not invent a CUDA profiling dependency for the HIP build graph.
 else()
   find_package(CUDAToolkit REQUIRED)
 endif()

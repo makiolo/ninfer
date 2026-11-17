@@ -21,6 +21,22 @@ elseif(NINFER_TARGET STREQUAL "dgx_spark")
   set(NINFER_PROCESSOR_PATTERN "^(aarch64|arm64|ARM64)$")
 elseif(NINFER_TARGET STREQUAL "r9700")
   set(NINFER_TARGET_R9700 1)
+  # Resolve offline host dependencies before project() loads the vcpkg toolchain.
+  # Cache values (-D / user presets) take precedence over environment defaults.
+  set(ninfer_vcpkg_root "G:/vcpkg_root")
+  if(NOT "$ENV{VCPKG_ROOT}" STREQUAL "")
+    file(TO_CMAKE_PATH "$ENV{VCPKG_ROOT}" ninfer_vcpkg_root)
+  endif()
+  set(CMAKE_TOOLCHAIN_FILE "${ninfer_vcpkg_root}/scripts/buildsystems/vcpkg.cmake"
+    CACHE FILEPATH "r9700 vcpkg toolchain")
+  set(ninfer_vcpkg_installed "${ninfer_vcpkg_root}/installed-ninfer-r9700")
+  if(NOT "$ENV{NINFER_R9700_VCPKG_INSTALLED_DIR}" STREQUAL "")
+    file(TO_CMAKE_PATH "$ENV{NINFER_R9700_VCPKG_INSTALLED_DIR}" ninfer_vcpkg_installed)
+  endif()
+  set(VCPKG_INSTALLED_DIR "${ninfer_vcpkg_installed}"
+    CACHE PATH "r9700 offline host dependencies")
+  unset(ninfer_vcpkg_installed)
+  unset(ninfer_vcpkg_root)
   # Shared sources use no C++ modules; HIP SDK Clang has no clang-scan-deps.
   # Initialize every C++ target consistently, including builds without presets.
   set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
@@ -78,9 +94,19 @@ function(ninfer_validate_platform)
     ninfer_validate_hip_architecture()
     set(ninfer_system Windows)
     set(ninfer_architecture ${NINFER_HIP_ARCHITECTURE})
+    # Clang's 128-bit host arithmetic has 16-byte alignment with the MSVC ABI.
+    # Select conforming STL storage alignment consistently across every owner.
+    add_compile_definitions(_ENABLE_EXTENDED_ALIGNED_STORAGE)
+    # CMake's Windows HIP rules omit the shared-library creation flag. HIP host
+    # linkage uses the same MSVC ABI/driver as C++; carry its DLL selection over.
+    set(CMAKE_SHARED_LIBRARY_CREATE_HIP_FLAGS
+      "${CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS}" PARENT_SCOPE)
+    set(CMAKE_SHARED_MODULE_CREATE_HIP_FLAGS
+      "${CMAKE_SHARED_MODULE_CREATE_CXX_FLAGS}" PARENT_SCOPE)
     # CMake's Windows-Clang link rules use -nostdlib. hip-lang requests
     # --rtlib=compiler-rt, but that cannot add builtins under -nostdlib.
-    # Supply the compiler's host builtins explicitly for every HIP link.
+    # Supply the compiler's host builtins explicitly for HIP and C++ links,
+    # including host tools whose 128-bit arithmetic has no HIP library dependency.
     execute_process(
       COMMAND "${CMAKE_HIP_COMPILER}" --print-libgcc-file-name --rtlib=compiler-rt
       OUTPUT_VARIABLE ninfer_hip_builtins
@@ -98,6 +124,8 @@ function(ninfer_validate_platform)
     endif()
     set(CMAKE_HIP_STANDARD_LIBRARIES
       "${CMAKE_HIP_STANDARD_LIBRARIES} \"${ninfer_hip_builtins}\"" PARENT_SCOPE)
+    set(CMAKE_CXX_STANDARD_LIBRARIES
+      "${CMAKE_CXX_STANDARD_LIBRARIES} \"${ninfer_hip_builtins}\"" PARENT_SCOPE)
   else()
     ninfer_validate_cuda_architecture()
     set(ninfer_system Linux)

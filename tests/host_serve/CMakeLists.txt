@@ -24,19 +24,8 @@ add_library(ninfer::json INTERFACE IMPORTED)
 target_include_directories(ninfer::json INTERFACE "${PROJECT_SOURCE_DIR}/third_party")
 add_subdirectory("${PROJECT_SOURCE_DIR}/third_party/xgrammar" xgrammar EXCLUDE_FROM_ALL)
 
-add_library(ninfer_serve_host_transport STATIC
-  "${PROJECT_SOURCE_DIR}/src/serve/http_transport.cpp"
-  "${PROJECT_SOURCE_DIR}/src/serve/request_validation.cpp"
-  "${PROJECT_SOURCE_DIR}/src/text/json_input.cpp"
-  "${PROJECT_SOURCE_DIR}/src/core/cpu/task_pool.cpp"
-  "${PROJECT_SOURCE_DIR}/src/core/cpu/system.cpp")
-ninfer_internal_includes(ninfer_serve_host_transport)
-target_include_directories(ninfer_serve_host_transport PUBLIC
-  "${PROJECT_SOURCE_DIR}/third_party"
-  "${PROJECT_SOURCE_DIR}/third_party/cpp-httplib"
-  "${PROJECT_SOURCE_DIR}/third_party/xgrammar/cpp")
-target_link_libraries(ninfer_serve_host_transport PRIVATE
-  PkgConfig::HWLOC Threads::Threads ninfer_xgrammar)
+include("${CMAKE_CURRENT_LIST_DIR}/HostTransport.cmake")
+ninfer_add_host_transport(ninfer_serve_host_transport)
 
 add_library(ninfer_media_acquire_host STATIC
   "${PROJECT_SOURCE_DIR}/src/product/media_acquire/acquire.cpp")

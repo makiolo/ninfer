@@ -22,7 +22,37 @@
 通过独立 capability 转发。小型差异可使用这些宏，完整实现目录由 CMake 选择。
 模型不据此复制 Op 支持判断，硬件 roofline 参照归 bench。
 
+## r9700（Windows 原生、离线依赖）
+
+`r9700-release`、`r9700-dev`、`r9700-ops` 使用 Windows AMD64、Ninja 和 HIP SDK 的
+`clang++`（MSVC ABI）。从已加载 MSVC x64 / Windows SDK 环境的控制台运行，设置
+`HIP_PATH=S:\Apps\AMD\ROCm`；不需要手动设置 vcpkg 变量或把其 DLL 目录加入 `PATH`。
+默认 toolchain 为 `G:/vcpkg_root/scripts/buildsystems/vcpkg.cmake`，依赖树为
+`G:/vcpkg_root/installed-ninfer-r9700`。三个 preset 均关闭 manifest 安装，配置不下载依赖。
+
+本机首次迁移使用以下复制命令，保留原树，后续构建不再引用它：
+
+```powershell
+robocopy S:\Projects\ninfer\.agent-tmp\R97-03\r9700-dev\vcpkg_installed G:\vcpkg_root\installed-ninfer-r9700 /E /COPY:DAT /DCOPY:DAT /R:1 /W:1
+cmake --preset r9700-dev
+cmake --build build/r9700-dev --target ninfer_host_tests -j 4
+ctest --test-dir build/r9700-dev -L host --output-on-failure
+```
+
+复制的是已安装的完整 host 依赖（包括 `vcpkg/` 元数据和 `x64-windows/`）；无需复制构建缓存或
+重新安装。迁移到其他机器时，先准备同样的本地依赖树。可用 `VCPKG_ROOT` 改变 toolchain
+默认根目录，`NINFER_R9700_VCPKG_INSTALLED_DIR` 改变安装树默认路径；缓存
+`CMAKE_TOOLCHAIN_FILE`、`VCPKG_INSTALLED_DIR`（`-D` 或 `CMakeUserPresets.json`）优先。
+修改 toolchain 使用新 build directory。CTest 为 host 用例设置所选依赖树、HIP 和 Core DLL
+的搜索路径；直接运行 executable 时由调用环境提供相同的 DLL 路径。
+
+`host` 标签只用于无需 GPU 的测试，`ninfer_host_tests` 构建对应 executable。
+协议与 Frontend 测试使用生产 manifest 的 host 源码，不实例化 Engine。
+`core/nvtx` 在此目标显式禁用 profiling annotations：本机 Windows HIP SDK 没有可链接的 ROCTX；
+这不改变数据或同步合同。CUDA 目标仍使用 NVTX。
+
 ## 源码与依赖归属
+
 
 小组件直接列源文件，大组件使用明确的 `sources.cmake`。每个实现一个编译 owner，
 新增文件显式注册；不递归扫描目录或自动发现 shape。Manifest 按 `CMAKE_CURRENT_LIST_DIR`

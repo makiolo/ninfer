@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-#include <unistd.h>
+#include <chrono>
 
 namespace {
 
@@ -983,7 +983,8 @@ int main() {
 
     const std::filesystem::path log_path =
         std::filesystem::temp_directory_path() /
-        ("ninfer-request-log-test-" + std::to_string(static_cast<long long>(::getpid())) +
+        ("ninfer-request-log-test-" + std::to_string(
+            std::chrono::steady_clock::now().time_since_epoch().count()) +
          ".jsonl");
     std::filesystem::remove(log_path);
     {

@@ -1,6 +1,10 @@
 #pragma once
 
-#include <nvtx3/nvToolsExt.h>
+#include "core/platform.h"
+
+#if !NINFER_TARGET_R9700
+#    include <nvtx3/nvToolsExt.h>
+#endif
 
 #include <array>
 #include <cstddef>
@@ -95,6 +99,27 @@ enum class Name : std::size_t {
     Count,
 };
 
+#if NINFER_TARGET_R9700
+// The Windows HIP SDK has no ROCTX library. These annotations carry no data or
+// synchronization semantics; keep their lexical and ownership API as explicit no-ops.
+class ScopedRange {
+public:
+    explicit ScopedRange(Name, Category, std::uint64_t = 0) noexcept {}
+    ScopedRange(const ScopedRange&) = delete;
+    ScopedRange& operator=(const ScopedRange&) = delete;
+    ScopedRange(ScopedRange&&) = delete;
+    ScopedRange& operator=(ScopedRange&&) = delete;
+};
+
+class ScopedAsyncRange {
+public:
+    explicit ScopedAsyncRange(Name, Category, std::uint64_t = 0) noexcept {}
+    ScopedAsyncRange(const ScopedAsyncRange&) = delete;
+    ScopedAsyncRange& operator=(const ScopedAsyncRange&) = delete;
+    ScopedAsyncRange(ScopedAsyncRange&&) = delete;
+    ScopedAsyncRange& operator=(ScopedAsyncRange&&) = delete;
+};
+#else
 [[nodiscard]] inline std::uint32_t color(Category category) noexcept {
     switch (category) {
     case Category::Runtime:
@@ -284,5 +309,7 @@ private:
     nvtxDomainHandle_t domain_;
     nvtxRangeId_t id_{};
 };
+
+#endif
 
 } // namespace ninfer::nvtx
