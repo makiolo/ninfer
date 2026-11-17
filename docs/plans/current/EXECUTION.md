@@ -333,3 +333,11 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   filas en bancos; van a la ficha de R97-29. Nota para la revisión de R97-11: su validación usa sondas
   (`.agent-tmp/R97-11/probe.cmake`: fuentes de producción y ficheros de casos oficiales compilados aparte), no los
   ejecutables registrados, que no enlazan hasta R97-31.
+- 2026-11-17 07:2x UTC · **Lanzados:** oráculo de R97-29 (532, Claude Opus 5.5 high; `R97-29/oracle-card.md`:
+  auditoría de las referencias de split, swiglu, add y pair, formas reales del 27B y casos nuevos) y autor de
+  R97-30 (533, Codex `gpt-6.1-sol` high, 240 min; `R97-30/card.md`: las dos carpetas `sequence` e `indexing`
+  enteras, `__grid_constant__` vacío en `core/cuda_compat.h`, biblioteca propia en `r9700`). Fichas pre-revisadas
+  READY. R97-30 va sin oráculo propio (transformaciones exactas; la revisión comprueba la independencia de las
+  suites). En vuelo: autores de R97-12 (531) y R97-30 (533), oráculo de R97-29 (532), gates de R97-08 (en
+  ejecución), R97-15 y R97-11 (en cola). Cuota a las 07:25 UTC: Claude 51 %, Fable 70 %, Codex 55 %, con el 4,4 %
+  de la semana (a las 06:10 UTC: 44 %, 60 % y 49 %).

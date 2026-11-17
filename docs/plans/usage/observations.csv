@@ -13,3 +13,6 @@ ninfer-s01-h3-codex,codex,main,weekly,subscription,2026-11-17T03:14:00Z,2026-11-
 ninfer-s01-h4-claude-all,claude,main,weekly-all-models,subscription,2026-11-17T06:10:00Z,2026-11-24T00:00:00Z,10080,44,1,true,claude-or quota --weekly (api) director ninfer-48 handoff 4
 ninfer-s01-h4-claude-fable,claude,main,weekly-fable,subscription,2026-11-17T06:10:00Z,2026-11-24T00:00:00Z,10080,60,1,true,claude-or quota --weekly (api) director ninfer-48 handoff 4
 ninfer-s01-h4-codex,codex,main,weekly,subscription,2026-11-17T06:10:00Z,2026-11-24T02:09:00Z,10080,49,1,true,claude-or quota --weekly (api prolite) director ninfer-48 handoff 4
+ninfer-s01-h4b-claude-all,claude,main,weekly-all-models,subscription,2026-11-17T07:25:00Z,2026-11-24T00:00:00Z,10080,51,1,true,claude-or quota --weekly (api) director ninfer-48 handoff 4
+ninfer-s01-h4b-claude-fable,claude,main,weekly-fable,subscription,2026-11-17T07:25:00Z,2026-11-24T00:00:00Z,10080,70,1,true,claude-or quota --weekly (api) director ninfer-48 handoff 4
+ninfer-s01-h4b-codex,codex,main,weekly,subscription,2026-11-17T07:25:00Z,2026-11-24T02:09:00Z,10080,55,1,true,claude-or quota --weekly (api prolite) director ninfer-48 handoff 4
