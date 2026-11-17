@@ -213,3 +213,14 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   (`R97-15-gate`: compilar y dos pasadas seguidas; log `.agent-tmp/R97-15/gate.log`). Excluidos de `r9700`:
   `accept_sparse`, `candidate_selector`, `gathered_selector`, `vocabulary*`. Único arreglo de producción fuera de
   kernels: incluir `cuda_runtime.h` antes de `random.cuh` en `distribution.cuh`.
+- 2026-11-17 05:5x UTC · **R97-13 intento 1 (518): BLOCKED por plazo, casi completa.** Commits `f061bd98` (kernels de
+  escritura KV y `convert.cuh`/`fp8.cuh`), `bf4d695c` (copia paginada y grafos en `cuda_compat.h`), `bdbec359`
+  (atención densa causal BF16 y FP8). En la ASUS con el ejecutable oficial: **FP8 198/198**; **BF16 136/180**
+  (cortado por el plazo; con el arnés de diagnóstico 180/180, L2 relativo máximo 0,0017 con cota 0,0028); 9/9
+  rechazos explícitos de INT8/NVFP4/K8V4; conversiones exhaustivas en verde. Continuación lanzada sin modelo
+  (`R97-13-gate`: `continue.py` = compilar, BF16 oficial y rechazos; log `.agent-tmp/R97-13/gate.log`).
+  **Dos observaciones de máquina** (para la revisión y para el usuario): (1) evento de Windows Display 4101 a las
+  03:55:27 UTC, reinicio del driver de AMD durante un lote FP8 de diagnóstico (fallo de lanzamiento HIP); no se
+  repitió en tres repeticiones del caso ni en la pasada oficial; causa sin resolver. (2) Durante el BF16 de
+  diagnóstico la RAM libre del sistema bajó a 9 MB (proceso de test: 6,4 GB de pico). A las 05:5x UTC hay 10,9 GB
+  libres de 31,9 GB.
