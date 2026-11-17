@@ -446,3 +446,16 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
 - 2026-11-17 08:2x UTC · **Oráculo de R97-12, intento 2, lanzado** (541, Claude Opus 5.5 high;
   `R97-12/oracle-card-2.md`). Cuota a las 08:22 UTC: Claude 57 % (por debajo del 85 % de Q-012), Fable 79 %,
   Codex 62 %.
+- 2026-11-17 08:3x UTC · **R97-08 intento 3 (534): 66 de 67 tests host en verde; BLOCKED por un defecto del
+  runtime fuera de sus rutas.** `c05ca4d4`, `35caa77f`, `b29da1e8`, `2a91fb04`. `ctest -L host`: 184 registrados,
+  67 host, 66 pasan, falla `ninfer_resource_manager_test` (segfault solo con `-O3`). Excluidos 117 con su causa
+  (97 GPU, 10 Ops transitivas, 4 motor, 3 arnés Linux/ELF, 3 dependencias host, entre ellas `glm5next_media`:
+  FFmpeg de vcpkg sin decodificador PNG); lista en `.agent-tmp/R97-08/excluded.md`. Diagnóstico del autor (UBSan,
+  `.agent-tmp/R97-08/resource-trace.log` y `alignment-probe.*`): `RecoveryCostSum`
+  (`src/runtime/engine/context_cache/recovery_cost.h:27`) lleva un `unsigned __int128`; con clang y la ABI de MSVC
+  ese miembro no eleva la alineación del `std::optional` que lo contiene (8 en vez de 16) y el acceso queda
+  desalineado (`resource_manager.h:1703`). **Decisión del director:** es un defecto real de portabilidad del
+  runtime en Windows, no del test; se corrige ya, dentro de R97-08, con la solución que el autor probó en su sonda:
+  `alignas(unsigned __int128)` en `RecoveryCostSum` (`e1f750de`, una línea; sin efecto en Linux, donde ya son 16).
+  **Validación sin modelo lanzada** (`R97-08-gate`: `attempt2.py build` y `ctest`; `.agent-tmp/R97-08/gate.log`).
+  Si el test sigue fallando, vuelve al autor con `src/runtime/engine/context_cache` autorizado.
