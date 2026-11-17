@@ -39,6 +39,11 @@ de LM Studio de la ASUS (paso de usuario, ver «Guardia de activación»).
     (16-11 23:59 UTC) el director no lanza revisiones que no quepan en el ~4 % restante; las deja en cola.
   - **Oráculo distinto del autor** para las tareas numéricas (R97-02, R97-09..15, R97-18): un modelo de Claude
     prepara los casos de referencia antes de lanzar al autor de Codex.
+  - **Q-012 (usuario, 2026-11-17):** el director lee `claude-or quota --weekly` antes de cada revisión u oráculo.
+    Mientras Claude semanal (todos los modelos) esté por debajo del 85 %, revisan y hacen de oráculo los modelos de
+    Claude de arriba. Desde que pase del 85 %, las revisiones y los oráculos van a Codex con un modelo distinto del
+    autor (`gpt-6-astra` xhigh revisa lo de `gpt-6.1-sol` y `gpt-6.1-sol` high lo de `gpt-6-astra`) y Claude queda
+    solo para el director.
   - Si Codex se agota (94 % usado el 16-11), el director para la implementación, envía un PushNotification y
     pregunta al usuario si reinicia la cuota de Codex (eso solo lo hace el usuario). No pasa los autores a Claude sin
     respuesta.

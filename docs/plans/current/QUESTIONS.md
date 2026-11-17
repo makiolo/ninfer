@@ -94,5 +94,6 @@ user's own words. Historical entries Q-001..Q-007 stay in [docs/plans/QUESTIONS.
 - Received by: sesión saliente del relevo 4 (c988ac27, `ninfer-48`), 2026-11-17 08:07 UTC, en lote al entregar el
   relevo 5; relevada al director activo `ninfer-f6`
 - Confirmation in the executing director: not applicable
-- Applied in: pendiente de aplicar por el director activo (relevo 5): desde que Claude semanal pase del 85 %, las
-  revisiones y los oráculos van a Codex con un modelo distinto del autor y Claude queda solo para el director
+- Applied in: current/LAUNCH.md «Modelos, roles y cupo» y EXECUTION.md (director del relevo 5, `ninfer-f6`,
+  2026-11-17 08:1x UTC): el director lee la cuota antes de cada revisión u oráculo; desde que Claude semanal pase del
+  85 %, las revisiones y los oráculos van a Codex con un modelo distinto del autor y Claude queda solo para el director

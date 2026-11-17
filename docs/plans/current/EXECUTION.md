@@ -410,3 +410,7 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   contrastó las tres notas bajas con los manifiestos (expresión generadora en `elementwise/sources.cmake:5`, orden
   de inclusión `indexing` → `sequence`, cobertura de `remap_ids_inplace`): quedan como deuda baja para R97-31. Fila
   en PLAN_OPS §5.
+- 2026-11-17 08:1x UTC · **Q-012 respondida** por el usuario en la sesión saliente (`ninfer-48`, `a7ca0bc2`): «B)
+  Codex revisa desde el 85 % (Recomendado)». Aplicada: regla añadida a LAUNCH «Modelos, roles y cupo»; el director
+  lee la cuota antes de cada revisión u oráculo y, desde que Claude semanal pase del 85 %, los lanza en Codex con un
+  modelo distinto del autor. Hoy Claude va por el 55 %: nada cambia todavía. Sin preguntas abiertas.
