@@ -70,3 +70,27 @@ user's own words. Historical entries Q-001..Q-007 stay in [docs/plans/QUESTIONS.
 - Confirmation in the executing director: not applicable
 - Applied in: sin cambios en la cola; las validaciones de ninfer siguen como entradas sin modelo (EXECUTION,
   2026-11-17 05:3x UTC). El director activo lo anota en EXECUTION.
+
+### Q-012 · open · decision
+- Raised: 2026-11-17 07:30 UTC, director del relevo 4 (`ninfer-48`)
+- Task: general (revisores, oráculos y director del sprint; afecta a R97-08, R97-11, R97-12, R97-15 y R97-29..31)
+- Question: La cuota semanal de Claude se gasta muy deprisa en toda la cartera: a las 07:25 UTC va por el 51 % (Fable
+  70 %) con solo el 4,4 % de la semana, y sube unos 7 puntos por hora (Fable, 10). A ese ritmo Fable se acaba en unas
+  3 horas y Claude entero en unas 7. Por tu orden Q-010, en ninfer Claude dirige, revisa y hace de oráculo, y Codex
+  implementa (Codex va por el 55 %). ¿Qué hace ninfer cuando Claude se acerque al final?
+- Options: A) Nada especial: seguir igual hasta que se agote y entonces parar el sprint hasta el reinicio (24-11
+  00:00 UTC); B) Desde que Claude pase del 85 %, las revisiones y los oráculos pasan a Codex con un modelo distinto
+  del autor (`gpt-6-astra` revisa lo de `gpt-6.1-sol` y al revés) y Claude queda solo para el director; C) Como B,
+  pero desde ya, para estirar Claude; D) Parar ninfer ahora y dejar Claude para otros proyectos
+- Implications: A: revisiones de la mejor calidad hasta el final, pero el sprint se para en horas y no vuelve hasta
+  el 24-11; B: el sprint sigue unas horas más, con revisor del mismo proveedor que el autor (menos independencia en
+  las tareas L7 numéricas) y más gasto de Codex; C: Claude dura más, misma pérdida de independencia desde ahora; D:
+  ninfer se queda con seis tareas a medias. En todos los casos, cuando Claude se agote no hay director: los procesos
+  de Codex en marcha terminan, pero nadie los recoge hasta el reinicio. Si no decides: se aplica A.
+- Recommendation: B. Mantiene la revisión con Claude mientras haya margen y evita que las entregas de Codex se
+  queden sin revisar al final. El gasto es de toda la cartera: qué proyectos tienen preferencia sobre Claude es
+  decisión tuya y cambia el resultado más que cualquiera de estas opciones.
+- Literal answer: —
+- Received by: —
+- Confirmation in the executing director: not applicable
+- Applied in: —
