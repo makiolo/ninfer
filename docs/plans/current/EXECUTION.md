@@ -497,3 +497,15 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   distinto bit a bit de CUDA, dentro del contrato), swiglu usa `common::silu` exacta, y los rechazos de pair están en
   su módulo dueño. Dudas de la revisión, anotadas en PLAN_OPS §5: nada de lo nuevo en tests se ha compilado en CUDA;
   el padre Q8 compartido de 14336 filas lo confirma R97-17 con el artefacto (ya descargado).
+- 2026-11-17 08:5x UTC · **Revisión de R97-08 (547, Sonnet 5.5 high): ACCEPT WITH CONDITIONS.** Evidencia correcta
+  (67 de 67 host, sin saltos ni `WILL_FAIL`); los 20 excluidos que no son de GPU tienen causa cierta y solo en
+  `r9700`; los cinco cambios en tests son de plataforma, sin relajar nada; `e1f750de` es la causa real y basta
+  (`RecoveryCostSum` es el único tipo con `__int128` como miembro persistente). Condiciones y **decisión del
+  director** sobre cada una: (1) añadir junto al struct
+  `static_assert(alignof(std::optional<RecoveryCostSum>) >= alignof(unsigned __int128));` para fijar la invariante:
+  **se hace antes de cerrar** (una línea del director, cuando acabe el gate de R97-12, y se repite `R97-08-gate`);
+  (2) `apps/perplexity/report.cpp:30` (`gmtime_r`) no compila en Windows y R97-18 lo necesita: añadido al texto de
+  R97-18 en PLAN_INTEGRATION §3; (3) los tres tests de inyección de fallos ELF (`tests/symbol_interpose.h`, `dlfcn.h`)
+  no tienen dueño para su versión COFF: fuera del objetivo del sprint, va como ISSUE-006 al backlog; además,
+  `openai_schema_test` y `http_error_handler_test` se reactivan cuando enlace el motor (R97-16 y R97-31), y
+  `glm5next_media` cuando el FFmpeg de vcpkg traiga PNG (solo medios). R97-08 se cierra al pasar ese gate.

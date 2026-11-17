@@ -33,6 +33,9 @@ Depende de: HOST (R97-05..08) y OPS (R97-09..15, R97-29..31). Bloquea: PERF.
 - Nivel L6 · silent-numeric · Autor: strong · Revisor: strong de otro proveedor.
 - `ninfer-perplexity` en un corpus fijo, comparado con la referencia del model card o una ejecución CUDA
   documentada; generación con MTP y `--kv-dtype fp8`; tasa de aceptación MTP registrada.
+- Entrada de la revisión de R97-08 (547): `ninfer-perplexity` se compila en `r9700`, pero
+  `apps/perplexity/report.cpp:30` usa `gmtime_r`, que no existe en Windows; portarlo es parte de esta tarea (y
+  reactivar el test host `perplexity_evaluation`, excluido hoy en `r9700` por ese motivo).
 - Aceptación: perplejidad dentro de la tolerancia acordada en la tarjeta (el oráculo la fija antes de ejecutar);
   tests MTP de `tests/models/qwen3_5` en verde.
 
