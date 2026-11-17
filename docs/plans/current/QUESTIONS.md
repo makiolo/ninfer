@@ -48,3 +48,24 @@ user's own words. Historical entries Q-001..Q-007 stay in [docs/plans/QUESTIONS.
 - Applied in: current/LAUNCH.md «Modelos, roles y cupo» y prompt del director: director en Claude (Opus 5.5 high
   hasta el reinicio de Fable), autores en Codex, revisores y oráculos en Claude; si Codex se agota, se pregunta al
   usuario si lo reinicia. Orden temporal: rige hasta que el usuario la retire.
+
+### Q-011 · open · decision
+- Raised: 2026-11-17 05:3x UTC, director del relevo 3
+- Task: R97-08, R97-10..15 (todas compilan en este checkout)
+- Question: La cola de compilación (2 ranuras para todos los proyectos) frena el sprint. Entre las 04:00 y las 05:25
+  UTC ninfer ejecutó 45 minutos en total; desde las 04:55 UTC, nada: una ranura la tiene el `cargo test` de cierre de
+  `quantdesk-network` (desde las 03:22 UTC, límite 240 min) y la otra `quantdesk`. Cuatro intentos de autor (R97-08,
+  10, 11 y 12) han terminado sin validar por esperas de 1-2 h. ¿Cómo se reparte la máquina?
+- Options: A) Seguir como está (turno por orden de llegada entre todos los proyectos); B) ninfer va primero durante
+  unas horas: los demás directores esperan a que ninfer vacíe su cola de validaciones; C) subir la cola a 3 ranuras
+  (solo se puede con la cola vacía; la CPU tiene 4 núcleos, cada compilación iría más lenta)
+- Implications: A: SPRINT-01 avanza una entrada cada 45-90 min y los intentos de Codex se agotan esperando (el
+  director ya lanza las validaciones como entradas sin modelo para no gastar cuota); B: los cierres y gates de
+  quantdesk, quantdesk-network y radiance-win se retrasan esas horas; C: más proyectos a la vez, todos más lentos, y
+  riesgo de saturar la máquina
+- Recommendation: A, con las validaciones de ninfer lanzadas por el director sin modelo. B solo si quieres ver el
+  modelo generando hoy.
+- Literal answer: —
+- Received by: —
+- Confirmation in the executing director: not applicable
+- Applied in: —

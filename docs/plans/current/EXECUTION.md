@@ -193,3 +193,12 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   Cola a las 04:57 UTC: ninfer ejecutó una entrada en 55 min (R97-14, 44 min de ejecución); una ranura sigue con el
   `cargo test` de cierre de `quantdesk-network` (1 h 35 min) y la otra rota entre proyectos. Esperas de 45-90 min por
   entrada: es previsible que más intentos agoten su tiempo sin validar.
+- 2026-11-17 05:3x UTC · **R97-11 intento 2 (523): BLOCKED por la cola** (114 min sin ranura; retiró su entrada).
+  `de3aa33f`: `numeric/math.cuh` portado (cuatro helpers, vaciado a cero explícito con signo). Sonda de 4 137 puntos
+  y arneses de las cinco suites preparados, sin compilar ni ejecutar. Desde las 04:55 UTC ninfer no ha tenido ranura
+  (`quantdesk` y `quantdesk-network`). **Cambio de método del director:** las validaciones ya preparadas se lanzan
+  como entradas de cola **sin modelo** (`.agent-tmp/director/gate.py` por `lanza.py` + `build_queue.py`), que esperan
+  turno sin gastar cuota ni agotar el tiempo de un intento; el autor solo vuelve si algo falla. Lanzada la de R97-11
+  (`R97-11-gate`: `run-v2.py build` y luego `gpu`, límite 120 min de ejecución; log `.agent-tmp/R97-11/gate.log`).
+  Registrada **Q-011** (reparto de la cola entre proyectos; recomendación: seguir por orden de llegada).
+  Avances de otros autores: `a35c3613` (R97-15, sampling), `bdbec359` (R97-13, atención densa).
