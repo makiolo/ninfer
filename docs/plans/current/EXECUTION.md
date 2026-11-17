@@ -185,3 +185,11 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   a R97-12 solo para la anotación (división exacta también en el dispositivo `r9700`; rama CUDA intacta). Intento 2
   lanzado (526, Codex `gpt-6-astra` xhigh; ficha READY), con sonda de `FastDivisorU31` contra el host.
   R97-08 intento 2 avanza: `e9f25fff` (texto en Windows) y `69e094d3`.
+- 2026-11-17 04:5x UTC · **R97-10 intento 1 (513): BLOCKED por la cola** (180 min agotados). Commits `563e4526`,
+  `7adc091d`, `7f252ce2`, `3402c172` (este incluye el arreglo del director de `cases_bf16.cpp`). Compila 72/72; 28
+  comprobaciones de rechazo Q4 en verde; **0 casos numéricos ejecutados**. Intento 2 lanzado (527, Codex
+  `gpt-6-astra` xhigh): solo la aceptación numérica `--format q4|q5|q8` en una entrada; si la cola no da turno en
+  150 min, deja una orden única para que la lance el director.
+  Cola a las 04:57 UTC: ninfer ejecutó una entrada en 55 min (R97-14, 44 min de ejecución); una ranura sigue con el
+  `cargo test` de cierre de `quantdesk-network` (1 h 35 min) y la otra rota entre proyectos. Esperas de 45-90 min por
+  entrada: es previsible que más intentos agoten su tiempo sin validar.
