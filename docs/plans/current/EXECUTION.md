@@ -373,3 +373,19 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
 - 2026-11-17 07:4x UTC · **R97-11 gate: exit 0** (segunda entrada, tras `637377e9`): sonda de `math.cuh` con salida 0,
   embedding 85, normalización **447/447**, RoPE 40, elementwise 20, reducción 28; 0 omitidos
   (`.agent-tmp/R97-11/gate.log`). **Revisión lanzada** (537, Claude Sonnet 5.5 high; `R97-11/review-card.md`).
+- 2026-11-17 07:5x UTC · **Oráculo de R97-29 (532) aceptado:** `0bdb09e3` (cuatro ficheros de casos nuevos; sin
+  GPU). Referencias de split, swiglu, add y pair independientes y en FP64; contraste con 0 discrepancias
+  (`.agent-tmp/R97-29-oracle/crosscheck.log`, comprobado por el director). Formas reales del 27B en el informe
+  (K = 5120; pair Q8 sobre un padre compartido de 14336 filas, deducido del convertidor y sin artefacto que lo
+  confirme: lo verifica R97-17). Decisiones del director sobre sus dudas: los criterios existentes por suite no se
+  tocan; la puerta -60 de swiglu es contrato; los casos de rechazo se quedan; no se supone T de prefill mayor que
+  1024. **Autor lanzado** (538, Codex `gpt-6-astra` xhigh, 240 min; `R97-29/card.md`, pre-revisada READY):
+  biblioteca propia de la familia lineal, epílogo de `rowsplit.cuh:73` como parámetro y las tres suites de la
+  proyección como no regresión.
+- 2026-11-17 07:5x UTC · **R97-11 cerrada.** Revisión (537, Sonnet 5.5 high): ACCEPT WITH CONDITIONS, sin defectos
+  numéricos; ninguna condición pide cambiar código. Contraste del director: (1) repetir las suites oficiales cuando
+  `ninfer_ops` enlace → R97-31 (añadido a su texto en PLAN_OPS §3); (2) de las cuatro Ops que la revisión da por
+  sin asignar, `rmsnorm_rope`, `rmsnorm_pack_tail` y `rmsnorm_dynamic_grouped_conv_prepare` solo se llaman desde
+  `execution/draft.cpp` (drafter, fuera del objetivo) y `gdn_norm_control_proj` (`gdn.cpp:35`) ya es de R97-12;
+  (3) los helpers de `math.cuh` los usan GDN y atención, no las Ops de R97-11: se pide a la revisión de R97-12.
+  Fila en PLAN_OPS §5.
