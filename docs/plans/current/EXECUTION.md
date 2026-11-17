@@ -489,4 +489,6 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   pre-revisada READY; revisa uno por uno los 20 excluidos que no son de GPU, los cambios en tests y si la corrección
   de alineación es completa). Cuota a las 08:44 UTC: Claude 60 %, Fable 83 %, Codex 63 %.
 - 2026-11-17 08:4x UTC · **Descarga de los pesos terminada:** `out/qwen3_8_27b.ninfer`, 20 437 521 664 bytes
-  exactos (curl salida 0). SHA-256 en comprobación contra `out/qwen3_8_27b.SHA256SUMS`.
+  exactos (curl salida 0). **SHA-256 comprobado:** `81f924d440c27261d820c19a9f8d45794c5aee410f8a68bd358133fa8c0375da`,
+  igual que `out/qwen3_8_27b.SHA256SUMS` y que el `artifact-manifest.json` del repositorio. R97-17 ya no tiene que
+  descargar nada: usa esa ruta explícita.
