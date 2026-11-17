@@ -24,7 +24,9 @@ inline std::uint64_t recovery_cost_increase(std::uint64_t before, std::uint64_t 
 
 // Keep the finite sum and unpriced terms separate so component replacement never
 // subtracts a saturated sentinel or loses a finite remainder.
-struct RecoveryCostSum {
+// Explicit alignment: under the MSVC ABI a bare __int128 member does not raise the alignment of
+// enclosing std::optional storage, which misaligns this sum.
+struct alignas(unsigned __int128) RecoveryCostSum {
     unsigned __int128 finite = 0;
     std::size_t unpriced     = 0;
 
