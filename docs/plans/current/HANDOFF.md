@@ -1,13 +1,12 @@
-# Director HANDOFF — handoff 5
+# Director HANDOFF — handoff 6
 
 ## Handoff
-- Number: 5
-- Outgoing: session c988ac27-276b-47fc-bf1f-9af9da268148, claude-fable-5-2, context 68.0 %
-- Written: 2026-11-17T08:34:26+01:00
-- HEAD at writing: ccda505a8d84b2380e5edd1ce9c8fbb86a31a649
+- Number: 6
+- Outgoing: session 35a27144-5ef2-4a29-a4b1-e9532a91ff63, claude-fable-5-2, context 72.4 %
+- Written: 2026-11-17T09:49:56+01:00
+- HEAD at writing: 06bb63b0478b84c19e693945ecfb56e35aeedf19
 - LAUNCH: docs/plans/current/LAUNCH.md · coordinator block: «Director prompt» (sección final de LAUNCH.md)
 - Previous handoffs: `git log --follow -- docs/plans/current/HANDOFF.md`
-- Accepted: session 35a27144-5ef2-4a29-a4b1-e9532a91ff63, 2026-11-17T08:37:59+01:00, initial context 25.2 %
 
 ## Boot
 0. If the user's private profile exists (config `profile`, default ~/.concertino/profile.md), read it first; its rules
@@ -18,7 +17,7 @@ paths without a root are relative to this repo's root)
 2. Read only this: this file, the coordinator block of the LAUNCH, `docs/plans/CONCERTINO.md`, the `concertino` skill
    (`S:/Projects/concertino/skills/concertino/SKILL.md`, `references/launch.md`, `references/handoff.md`) and the cards of the children in flight.
    Everything else when needed, delegating.
-3. `git status`, the state of the gate or locks of CONCERTINO.md "Commands" and `git log --oneline ccda505a8d84..HEAD`.
+3. `git status`, the state of the gate or locks of CONCERTINO.md "Commands" and `git log --oneline 06bb63b0478b..HEAD`.
 4. Adopt the children in flight: check their process and output and watch it; never relaunch a live ID.
 5. One watcher per director, no shell loops: start `S:/Projects/concertino/skills/concertino/tools/vigia/wsvigia.py` detached with
    `S:/Projects/concertino/skills/concertino/tools/lanza/lanza.py` and subscribe to it (in Claude Code, `Monitor` on its `ws://` URL; its 30-minute
@@ -33,78 +32,102 @@ paths without a root are relative to this repo's root)
 9. Commit the HANDOFF with the acceptance and continue with "Next step".
 
 ## State
-- Cerradas en total: R97-01..07, R97-09 y, en este tramo, **R97-10** (`7f252ce2`), **R97-13** (`bdbec359`) y
-  **R97-14** (`acadec71`); filas en PLAN_OPS §5. R97-28 parcial (verificación final tras R97-18, PLAN_INTEGRATION §5).
-  Detalle de todo en `docs/plans/current/EXECUTION.md`.
-- **Tres tareas nuevas en PLAN_OPS** (huecos del plan, `bc7cf4d1`): **R97-29** lineales compuestas (split, swiglu,
-  add, pair; L7; absorbe `linear/swiglu`), **R97-30** secuencia e indexado del camino MTP (L5) y **R97-31**
-  `ninfer_ops` completo en `r9700` y suites oficiales (L5; tras R97-11, 12, 15, 29 y 30; antes de R97-16; resuelve
-  ISSUE-005). Motivo: `ninfer_ops` entero no enlaza hoy en `r9700` (MoE, PLE, QSA, `pdl.cuh`, `mma.cuh`); cada
-  familia portada se valida con una biblioteca propia (`ninfer_*_r9700`) y sus tests enlazados a ella.
-- En curso: R97-08 (autor, intento 3), R97-11 (gate tras la corrección del oráculo `637377e9`), R97-12 (autor,
-  intento 3; 0 de 9 suites ejecutadas hasta ahora), R97-15 (gate en verde, 79/79 dos veces; en revisión), R97-29
-  (oráculo), R97-30 (autor, intento 2).
-- Pendientes: autor de R97-29 (tras su oráculo), R97-31, INTEGRATION R97-16..18, verificación final de R97-28.
-- Issues: ISSUE-001 (nvtx3 → R97-08), ISSUE-002 (borrar `.agent-tmp/R97-03/` tras aceptar R97-08; ya copiado a
-  `G:\vcpkg_root\installed-ninfer-r9700`), ISSUE-003 (backlog), **ISSUE-004** (atención con más de 128 consultas y
-  contexto largo: un solo lanzamiento, riesgo de TDR sin medir; lo mide R97-16), **ISSUE-005** (suite completa de
-  `ctest` en `r9700`; R97-31).
-- Cola de compilación: sigue siendo el freno (2 ranuras para todos los proyectos, un candado por checkout). Q-011
-  respondida: orden de llegada. Cuando ninfer tiene ranura pasan varias entradas seguidas.
-- Cuota a las 07:34 UTC: Claude 53 %, Fable 73 %, Codex 56 %, con el 4,5 % de la semana (a las 06:10 UTC: 44 %,
-  60 % y 49 %). **Q-012 abierta.** Regla del perfil: Fable > 95 % → el siguiente relevo sale en `claude-opus-5-5 high`.
+- Cerradas en total: R97-01..07, R97-09, R97-10, R97-13, R97-14 y, en este tramo, **R97-15** (`a35c3613`),
+  **R97-11** (`21cf7c6d`), **R97-30** (`acb46111`) y **R97-29** (`505fb8ab`, `3b3f26cd`); filas en PLAN_OPS §5.
+  R97-28 parcial (verificación final tras R97-18). Detalle de todo en `docs/plans/current/EXECUTION.md`.
+- **R97-08** (tests host): revisión 547 ACCEPT WITH CONDITIONS; 67 de 67 host en verde tras la corrección del
+  director `e1f750de` (`alignas` en `RecoveryCostSum`). Falta una línea (`static_assert`), repetir el gate y cerrar
+  (ver «Next step»). Las otras dos condiciones ya están decididas (EXECUTION): `gmtime_r` de `ninfer-perplexity`
+  añadido a R97-18 en PLAN_INTEGRATION; inyección de fallos COFF → ISSUE-006 al backlog (**sin crear todavía**).
+- **R97-12** (Gated DeltaNet): port `2d40029e`, `e9cc0212`, `afe640fb`, `1699f365` (este último crea
+  `ninfer_ops_host_r9700`, que también usa R97-29); oráculo `96d31157` y su corrección de cotas `b279a0c5`. Las
+  nueve suites se ejecutaron: 1 732 casos, 8 fallos por cota inalcanzable, corregida por el oráculo. Gate sin modelo
+  en ejecución con la corrección (las seis primeras suites ya en verde, incluida `causal_conv_trajectory` 53/53).
+- Pendientes sin empezar: **R97-31** (`ninfer_ops` completo y suites oficiales; depende de R97-12; entradas de los
+  cierres en PLAN_OPS §3 y §5), INTEGRATION R97-16, R97-17, R97-18, verificación final de R97-28.
+- **Pesos ya descargados** por orden del usuario: `out/qwen3_8_27b.ninfer`, 20 437 521 664 bytes, SHA-256
+  comprobado (`81f924d4…0375da`); R97-17 no descarga nada.
+- Issues: ISSUE-001 (nvtx3), ISSUE-002 (borrar `.agent-tmp/R97-03/`, 1,3 GiB, tras cerrar R97-08; mirar antes qué
+  hay; ya copiado a `G:\vcpkg_root\installed-ninfer-r9700`), ISSUE-003 (backlog), ISSUE-004 (TDR con más de 128
+  consultas; lo mide R97-16), ISSUE-005 (suite completa de `ctest`; R97-31).
+- Cola de compilación: ahora fluida (turnos de segundos a pocos minutos). Un candado por checkout.
+- Cuota a las 08:50 UTC: Claude 60 %, Fable 83 %, Codex 64 % (5,2 % de la semana). Q-012 respondida (B): desde que
+  Claude semanal pase del 85 %, revisiones y oráculos van a Codex con un modelo distinto del autor (regla en
+  LAUNCH «Modelos, roles y cupo»). **Este relevo sale en `claude-opus-5-5 high`** porque Fable se acaba (regla del
+  perfil; interpretación del director saliente: con Fable al 83 % y subiendo unos 10 puntos por hora, una sesión
+  nueva en Fable se quedaría sin cuota a mitad de tramo y no puede cambiar de modelo).
 
 ## In flight
 | Child | ID | Model | Process or task | Output | Task card | Pending check |
 |---|---|---|---|---|---|---|
-| r97-08-author3 | R97-08 | Codex gpt-6.1-sol high | lanza pid 41628 (attempt 534) | `R97-08/author3-output.md`, `lz-author3.fin` | `R97-08/card-fix-3.md` | `ctest -L host` en verde → revisión Sonnet 5.5 high (escribir la ficha con el modelo de `R97-10/review-card.md`; revisar los excluidos por causa); sin plazo → gate sin modelo con `attempt2.py build` y `ctest`; tras aceptar, borrar `.agent-tmp/R97-03/` (mirar antes qué hay) |
-| r97-12-author3 | R97-12 | Codex gpt-6-astra xhigh | lanza pid 29864 (attempt 531) | `R97-12/author3-output.md`, `lz-author3.fin` | `R97-12/card-fix-3.md` | nueve suites en verde → revisión Opus 5.5 high (incluye `numeric/math.h` `e9cc0212`, la biblioteca propia y el `constexpr`→`const` de dos tests); sin plazo → gate sin modelo con `.agent-tmp/R97-12/run-gate.py build` y `gpu` |
-| r97-30-author2 | R97-30 | Codex gpt-6.1-sol high | lanza pid 7212 (attempt 535) | `R97-30/author2-output.md`, `lz-author2.fin` | `R97-30/card-fix.md` (+ `card.md`) | dos suites en verde → revisión Sonnet 5.5 high (independencia de las suites, `__grid_constant__` en `cuda_compat.h`, `elementwise/sources.cmake`); sin plazo → gate sin modelo con `.agent-tmp/R97-30/run-gate.py` |
-| r97-29-oracle | R97-29 | Claude Opus 5.5 high | lanza pid 11052 (attempt 532) | `R97-29/oracle-events.jsonl` (evento `type=result`), `lz-oracle.fin` | `R97-29/oracle-card.md` | contrastar el informe; escribir la ficha del autor (modelo `R97-14/card.md`; Codex gpt-6-astra xhigh; biblioteca propia en `r9700`; epílogo de `rowsplit.cuh:73`; formas reales del 27B según el informe; `run-gate.py` sin plazos), pre-revisarla y lanzarla; `attempt end 532` |
-| r97-15-review | R97-15 | Claude Sonnet 5.5 high | lanza pid 35428 (attempt 536) | `R97-15/review-events.jsonl` (evento `type=result`), `lz-review.fin` | `R97-15/review-card.md` | el gate pasó (79/79 en dos pasadas, `.agent-tmp/R97-15/gate.log`); contrastar cada hallazgo con el código; cerrar (fila en PLAN_OPS §5, `attempt end 536`, tablero) o intento corto del autor con `card-fix.md` |
-| r97-11-gate | R97-11 | sin modelo (cola) | lanza pid 37668, etiqueta `R97-11-gate` | `.agent-tmp/R97-11/gate.log`; `R97-11/lz-gate2.fin` | `R97-11/card.md` + `card-fix.md` | exit 0 (normalización 447/447) → lanzar `R97-11/review-card.md` (lista; Sonnet 5.5 high; incluye la corrección del oráculo `637377e9` y el uso de sondas); exit ≠ 0 → intento 3 del autor con el log |
+| r97-12-gate | R97-12 | sin modelo (cola) | lanza pid 23852, etiqueta `R97-12-gate` | `.agent-tmp/R97-12/gate.log`; `R97-12/lz-gate.fin` | `R97-12/card.md`, `card-fix.md`, `card-fix-3.md`, `card-fix-4.md`, `oracle-card-2.md` | exit 0 (nueve suites, 1 732 casos, 0 omitidos) → escribir `R97-12/review-card.md` (modelo: `R97-29/review-card.md`; **Opus 5.5 high** si Claude < 85 %, si no `gpt-6.1-sol` high por Q-012), pre-revisarla y lanzarla; exit ≠ 0 → mirar qué suite falla: cota → oráculo; port → intento 5 del autor (`gpt-6-astra` xhigh) |
+
+Puntos obligados de la ficha de revisión de R97-12: (a) `b279a0c5`: las cotas por llamada de
+`causal_conv_trajectory.cpp` se ajustaron a las entradas que genera la STL de MSVC (trunca el aleatorio a 24 bits);
+en Linux/CUDA las entradas son otras y las cotas pueden no valer: ¿debe el test calcular la cota desde su propia
+salida BF16 ideal? (b) `1699f365`: `ninfer_ops_host_r9700` (`src/ops/CMakeLists.txt`, `src/ops/common/sources.cmake`),
+efecto nulo en CUDA; (c) `numeric/math.h` `e9cc0212`, biblioteca propia `ninfer_gdn_r9700`, opciones
+`-fno-fast-math -ffp-contract=off -fno-gpu-flush-denormals-to-zero`; (d) `constexpr`→`const` en tres líneas de dos
+tests; (e) ninguna suite de `r9700` ejercita `exp2_approx` (`prepare.cu`, ruta por trozos con MMA, queda fuera; se usa
+siempre la recurrencia con `expf`): ¿está `gdn_norm_control_proj` (`src/models/qwen3_5/execution/gdn.cpp:35`) y todo
+lo que llama el camino de texto dentro de lo portado y probado?; (f) informes `R97-12/author4-output.md`,
+`.agent-tmp/R97-12/attempt4-diagnostics.md` y `.agent-tmp/R97-12-oracle/criterion-feasibility.md`.
 
 Rutas relativas a `.git/concertino/sprint-01/`. Vigía: wsvigia pid 37076 en `ws://127.0.0.1:8791/`, lista
-`.git/concertino/vigia/fins.txt` (al lanzar algo, sustituir o añadir su `.fin` ahí). Lanzamiento de hijos: `lanza.py`
-+ `hijo.py` (órdenes exactas en cualquier `lz-*-events.jsonl`: Claude con `--claude -- claude -p --model ...`, Codex
-con `-- codex exec -m ... -o <salida>`). Gates sin modelo: `lanza.py` + `build_queue.py run` +
-`.agent-tmp/director/gate.py <log> <orden> [-- <orden>]`. Intentos: `scripts/dashboard.py attempt start|end`. Cierre
-de una tarea: fila en PLAN_OPS §5, entrada en EXECUTION, `STATUS.md`, `attempt end`, `task --status closed`,
-`update`, commit y `git push fork fork_R9700`. Pre-revisión de fichas: `tools/claude_agy.py run --model
-gemini-3.8-flash-high --mode plan --prompt-file <prefijo de R97-14/prereview-prompt.md + ficha>`.
-Trampas: texto Markdown solo con Write/Edit; órdenes de shell solo en ASCII y cortas (las largas no caben en
-Windows); `cd` persiste entre órdenes de Bash; los scripts de validación de los autores pueden llevar un plazo dentro
-(R97-15: la validación salió con 124 sin ejecutar nada); los errores `HTTP 403 ... rmcp` en el stderr de Codex son de
-un MCP y no afectan. Sin compromisos abiertos con otros directores.
+`.git/concertino/vigia/fins.txt` (hoy: `R97-08/lz-review.fin`, ya terminado, y `R97-12/lz-gate.fin`; al lanzar algo,
+sustituir o añadir su `.fin`). Lanzamiento de hijos: `lanza.py` + `hijo.py` (órdenes exactas en cualquier
+`lz-*-events.jsonl`: Claude con `--claude -- claude -p --model ...`, Codex con `-- codex exec -m ... -o <salida>`).
+Gates sin modelo: `lanza.py` + `build_queue.py run` + `.agent-tmp/director/gate.py <log> <orden> [-- <orden>]`.
+Intentos: `scripts/dashboard.py attempt start|end`. Cierre de una tarea: fila en PLAN_OPS §5 (o PLAN_HOST §5),
+entrada en EXECUTION, `STATUS.md`, `attempt end`, `task --status closed`, `update`, commit y `git push fork
+fork_R9700`. Pre-revisión de fichas: `tools/claude_agy.py run --model gemini-3.8-flash-high --mode plan
+--prompt-file <tres primeras líneas de R97-14/prereview-prompt.md + ficha>`.
+Trampas: texto Markdown solo con Write/Edit; órdenes de shell solo en ASCII y cortas; `cd` persiste entre órdenes de
+Bash; no hacer commit de código mientras corre un gate que toma huella de las fuentes; para retirar una entrada de
+la cola, terminar solo su proceso hoja con `arbol.py <pid> --kill` (la cola libera el candado sin residuos); el
+contador de intentos del tablero es de toda la cartera (los números saltan). Sin compromisos abiertos con otros
+directores (la ventana quieta de quantdesk terminó; consulta de espacio en S: de reinforcement_learning respondida).
 
 ## Decisions
 - Usuario (vigentes, EXECUTION y LAUNCH): GPU ASUS (HIP 0) dedicada; Codex implementa y Claude orquesta y revisa
-  (Q-010); cupo dinámico; push a `fork` (`git push fork fork_R9700`) tras cada commit de registro, hijos sin push;
-  Q-008 (las dos R9700 para ninfer en SPRINT-02; avisar a los demás proyectos antes de R97-22). **Q-011 respondida**
-  en este tramo: «Seguir por orden de llegada (Recomendado)» (`85a498d8`).
+  (Q-010); cupo dinámico; push a `fork` tras cada commit de registro, hijos sin push; Q-008; Q-011 (cola por orden
+  de llegada). **En este tramo:** Q-012 respondida, opción B (`a7ca0bc2`, aplicada en LAUNCH, `c1b9bb71`); y orden en
+  sesión de descargar ya el artefacto de Qwen3.8 («creo que el modelo tiene una transformacion y tienes que
+  descargar el gwen 3.8 de ninfer, si no lo encuentras te lo busco»; EXECUTION).
 - Director, este tramo (todas en EXECUTION):
-  - R97-29, R97-30 y R97-31 añadidas a PLAN_OPS como trabajo necesario del objetivo (análisis de uso real del
-    camino de texto del 27B con MTP; `bc7cf4d1`).
-  - R97-10, R97-13 y R97-14 cerradas con condiciones que no piden cambiar código: ISSUE-004, ISSUE-005, y los
-    casos nuevos de los oráculos sin ejecutar en CUDA (esta máquina no puede; pendiente anotado en PLAN_OPS §5).
-  - R97-11: los tres casos de RMSNorm que fallaban tenían una cota inalcanzable; la corrigió el oráculo
-    (`637377e9`), no el autor. Su validación usa sondas porque `ninfer_ops` no enlaza; va a la revisión.
-  - R97-12: biblioteca propia de la familia en `r9700` y `constexpr`→`const` en tres líneas de dos tests.
-  - R97-30: sin oráculo propio (transformaciones exactas); `elementwise/position.cu` y el cambio mínimo de
-    `elementwise/sources.cmake` pasan a sus rutas; `__grid_constant__` vacío en `core/cuda_compat.h`.
-  - R97-08: los dos tests host que dependen del motor se excluyen de `r9700` con su motivo.
+  - R97-15, R97-11, R97-30 y R97-29 cerradas con condiciones que no piden cambiar código; lo pendiente de cada una
+    está en su fila de PLAN_OPS §5 y, para R97-31, en su texto de PLAN_OPS §3.
+  - Los ficheros host comunes (`src/ops/weight_input.cpp`, `src/ops/common/host/operands.cpp`) tienen biblioteca
+    dueña en `r9700`: `ninfer_ops_host_r9700` (`1699f365`); las familias la enlazan.
+  - Los ocho fallos de R97-12 eran cotas inalcanzables: los corrige el oráculo (`b279a0c5`), no el autor.
+  - R97-29: aplicado el parche de registro del autor (`3b3f26cd`, nombre único del caso `workspace-domain` de pair).
+  - R97-08: el fallo de `ninfer_resource_manager_test` era un defecto real del runtime en Windows; corregido por el
+    director con `alignas` (`e1f750de`), aceptado por la revisión con la condición del `static_assert`.
+  - Las Ops que solo llama el drafter (`rmsnorm_rope`, `rmsnorm_pack_tail`,
+    `rmsnorm_dynamic_grouped_conv_prepare`) quedan fuera del objetivo, con rechazo explícito en R97-31.
 
 ## Open questions to the user
-- Q-012 (decision, general): qué hace ninfer cuando la cuota semanal de Claude se acerque al final (revisores,
-  oráculos y director son Claude). No bloquea todavía; si no se decide, se aplica la opción A.
+none
 
 ## Promoted knowledge
-Nada nuevo en la memoria: lo aprendido en este tramo es del sprint y quedó versionado (EXECUTION, PLAN_OPS §3 y §5,
-ISSUE-004, ISSUE-005, QUESTIONS). Sigue vigente la memoria del proyecto `model-less-gates`.
+Memoria del proyecto (agente): `oracle-bf16-bound-feasibility` (pedir en toda ficha de oráculo con salida BF16 la
+viabilidad de la cota con la salida ideal; ha fallado dos veces, R97-11 y R97-12). Sigue vigente `model-less-gates`.
+Lo demás es del sprint y quedó versionado (EXECUTION, PLAN_OPS §3 y §5, PLAN_INTEGRATION §3, LAUNCH, QUESTIONS).
 
 ## Next step
-Adoptar los seis procesos (comprobar pids y `.fin`), armar `Monitor` sobre `ws://127.0.0.1:8791/` y atender el
-primero que termine. Lo más probable es la revisión de R97-15 (leer su evento `type=result`, contrastar y cerrar) o
-el oráculo de R97-29 (contrastar su informe y lanzar al autor de R97-29). La ficha de revisión de R97-11 ya está
-escrita: se lanza en cuanto su gate salga con 0. Antes de cada
-revisión con Claude, leer la cuota y mirar si Q-012 tiene respuesta.
+1. **Cerrar R97-08.** Cuando no corra ningún gate en este checkout (`build_queue.py status`), añadir en
+   `src/runtime/engine/context_cache/recovery_cost.h`, justo después del struct `RecoveryCostSum`, la línea
+   `static_assert(alignof(std::optional<RecoveryCostSum>) >= alignof(unsigned __int128));` (`<optional>` ya está
+   incluido), commit `fix(runtime): ...` con `Refs: R97-08`, y repetir el gate sin modelo (orden exacta en
+   `R97-08/lz-gate3-events.jsonl`: `attempt2.py build` y `attempt2.py ctest`; esperado 67 de 67). Con exit 0: crear
+   ISSUE-006 en `docs/plans/issues/index.md` (inyección de fallos COFF para los tres tests ELF de
+   `tests/symbol_interpose.h`; plantilla `TEMPLATE_ISSUE.md`), fila de R97-08 en PLAN_HOST §5 (commits con
+   `git log --oneline --grep "Refs: R97-08"`; veredicto en el evento `type=result` de `R97-08/review-events.jsonl`;
+   excluidos en `.agent-tmp/R97-08/excluded.md`), `attempt end 547 --result accepted`, cierre habitual, y después
+   ISSUE-002 (borrar `.agent-tmp/R97-03/` mirando antes qué hay).
+2. **R97-12:** atender `R97-12/lz-gate.fin` según la tabla «In flight» (revisión con los puntos obligados).
+3. **R97-31** en cuanto cierre R97-12: escribir su ficha (L5, riesgo alto; autor Codex `gpt-6.1-sol` high; leer
+   PLAN_OPS §3 «R97-31» y las filas de §5, que listan lo que cada cierre le dejó), pre-revisarla y lanzarla. Después
+   R97-16 (runtime) y R97-17 (carga y generación con `out/qwen3_8_27b.ninfer`): es la primera vez que el modelo
+   genera, que es lo que el usuario espera («cuanto te falta para probar qwen 3.8 en alguna gpu ?»).
+Antes de cada revisión u oráculo con Claude, leer la cuota (regla de Q-012).

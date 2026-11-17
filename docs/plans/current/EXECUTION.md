@@ -509,3 +509,10 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   no tienen dueño para su versión COFF: fuera del objetivo del sprint, va como ISSUE-006 al backlog; además,
   `openai_schema_test` y `http_error_handler_test` se reactivan cuando enlace el motor (R97-16 y R97-31), y
   `glm5next_media` cuando el FFmpeg de vcpkg traiga PNG (solo medios). R97-08 se cierra al pasar ese gate.
+- 2026-11-17 08:5x UTC · **Relevo 6 del director** escrito por contexto (72 %; sesión saliente `35a27144`,
+  `ninfer-f6`). En vuelo, adoptable: gate sin modelo de R97-12 (las seis primeras suites en verde, incluida
+  `causal_conv_trajectory` 53/53 con las cotas de `b279a0c5`). Pendiente inmediato: `static_assert` de R97-08, su
+  gate y su cierre; revisión de R97-12; ficha de R97-31. El sucesor sale en `claude-opus-5-5 high`: Fable va por el
+  83 % y sube unos 10 puntos por hora (regla del perfil «cuando se te esté acabando lo cambias a Opus 5.5»;
+  interpretación del director saliente del umbral). Cuota a las 08:50 UTC: Claude 60 %, Fable 83 %, Codex 64 %. Sin
+  preguntas abiertas.
