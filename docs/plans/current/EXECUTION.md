@@ -106,3 +106,11 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   no salen de un config del repo (se confirman con los pesos en R97-17). Decisión del director: los planes densos
   `bf16`/`fp8` incluyen `ops/kv_cache/kernels/write.h`, así que **R97-13 porta los kernels de escritura de KV** y R97-14
   (append, materialize, Hadamard) los consume y valida. Autor lanzado (Codex `gpt-6-astra` xhigh, 518; ficha READY).
+- 2026-11-17 03:0x UTC · Oráculos aceptados: R97-12 (515, `96d31157`: trayectoria prefill→decode de GDN y cadenas de
+  conv, contraste 0) y R97-14 (517, `d6fe1304`: fronteras E4M3, 65 536 patrones BF16, Hadamard exacta, contraste 0).
+  Decisiones: `gdn_input_proj_conv_*` y `gdn_control` entran en R97-12 (el modelo no corre sin ellos);
+  `cudaMemcpyDefault`/`cudaMemcpy2D` los traduce R97-13 (lo necesitan R97-12/13/14); R97-14 consume los kernels de
+  escritura de R97-13 y deja fuera `context_materialize` (solo drafter); NaN de V BF16 = cualquier NaN FP16; no finitos
+  FP8 fuera de contrato. Autores lanzados en Codex `gpt-6-astra` xhigh: R97-12 (519) y R97-14 (520), fichas READY.
+  Cola de compilación: R97-08 con el candado del checkout 46 min y R97-10 esperando 45 min; las fichas nuevas obligan a
+  compilar solo los objetivos propios. En curso: 6 autores Codex.
