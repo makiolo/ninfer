@@ -13,7 +13,7 @@ add_library(ninfer_gdn_r9700 SHARED
 ninfer_internal_includes(ninfer_gdn_r9700)
 ninfer_cuda_library(ninfer_gdn_r9700)
 set_target_properties(ninfer_gdn_r9700 PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
-target_link_libraries(ninfer_gdn_r9700 PUBLIC ninfer_core)
+target_link_libraries(ninfer_gdn_r9700 PUBLIC ninfer_core ninfer_ops_host_r9700)
 target_link_libraries(ninfer_ops PUBLIC ninfer_gdn_r9700)
 
 # Replay/fold promise the same state bits as the recorded trajectory. Preserve
