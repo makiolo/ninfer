@@ -52,3 +52,7 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   reinforment_learning pretende usar la gpu». Aviso de reserva exclusiva de la ASUS (HIP 0, bus 6; Q-009) añadido al
   INBOX de los 8 proyectos restantes y enviado en directo a reinforcement-learning-f5/-0e y deeplearning-dev-8b; la
   Sapphire (HIP 1) sigue compartida. hipInfo: ambas GPU libres.
+- 2026-11-17 00:5x UTC · R97-09 intento 1 (505) BLOCKED con `ff6599b3`: en la ASUS EXACT 823 027 / 4 fallos, BOUND
+  5 688 / 0, PINNED 46 082 / 0. Los 4 fallos son un defecto de entrada del oráculo (`threadIdx.x % 9 - 4` sin signo en
+  CUDA y HIP; la referencia usa `int`). Decisión del director: autorizado el cast con signo en el test (no cambia
+  expectativas). Intento 2 lanzado (506, `card-fix.md`).

@@ -43,7 +43,7 @@
 ## In flight
 | Child | ID | Model | Process or task | Output | Task card | Pending check |
 |---|---|---|---|---|---|---|
-| r97-09-author | R97-09 | Codex gpt-6.1-sol high | lanza pid 13916 (attempt 505) | `.git/concertino/sprint-01/R97-09/author-events.jsonl`, `author-output.md`, `lz-author.fin` | `.git/concertino/sprint-01/R97-09/card.md` (oráculo `040f2a3a`) | revisión Sonnet 5.5 high (L6): ¿test del oráculo intacto?, PINNED sin `--no-pinned`, log de GPU; `attempt end 505` |
+| r97-09-author2 | R97-09 | Codex gpt-6.1-sol high | lanza pid 432 (attempt 506; el 505 acabó BLOCKED con `ff6599b3`) | `.git/concertino/sprint-01/R97-09/author2-events.jsonl`, `author2-output.md`, `lz-author2.fin` | `card-fix.md` (+ `card.md`) | lanzar la revisión ya escrita en `review-card.md` (Sonnet 5.5 high); `attempt end 506` |
 
 (Actualizado 00:3x UTC: R97-07 cerrada, oráculo de R97-09 aceptado.)
 
