@@ -10,7 +10,7 @@ user's own words. Historical entries Q-001..Q-007 stay in [docs/plans/QUESTIONS.
 
 ## Entries
 
-### Q-008 · open · decision
+### Q-008 · answered · decision
 - Moves: from docs/plans/QUESTIONS.md at the start of SPRINT-01 (2026-11-16); it applies to SPRINT-02 (next/PLAN_TP.md).
 - Raised: 2026-11-16, sesión de planificación del port ROCm
 - Task: R97-22, R97-24..27 (SPRINT-02)
@@ -19,10 +19,10 @@ user's own words. Historical entries Q-001..Q-007 stay in [docs/plans/QUESTIONS.
 - Options: A) Sí, las dos exclusivas durante R97-22 y desde R97-24; B) Turnos: TP solo en ventanas acordadas
 - Implications: A: sin IA local en GPU durante esa fase; B: TP más lento de desarrollar y benchmarks en ventanas
 - Recommendation: A
-- Literal answer: —
-- Received by: —
+- Literal answer: "Sí, exclusivas (Recomendado)"
+- Received by: sesión saliente del relevo 2 (7465607f), 2026-11-17 ~03:3x UTC, en lote al entregar el relevo 3
 - Confirmation in the executing director: not applicable
-- Applied in: —
+- Applied in: pendiente de SPRINT-02 (next/PLAN_TP.md); avisar a los demás proyectos antes de R97-22, como con la ASUS
 
 ### Q-009 · answered · decision
 - Raised: 2026-11-16 21:2x UTC, sesión que inicia SPRINT-01
