@@ -61,3 +61,7 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   el cast autorizado). Condición: sin guarda de wave32 en compilación (wave64 truncaría `__ballot_sync` en silencio) →
   intento 3 (508, `card-fix2.md`). Deuda baja a registrar al cierre: `__reduce_{and,or,xor}_sync` con bucle de
   shuffles también con máscara completa (rendimiento); `HIP_VISIBLE_DEVICES=0` fijo en `tests/cmake/HipCompatTests.cmake:9`.
+- 2026-11-17 01:xx UTC · R97-09 intento 3 (508, `dec8d874`): guarda `static_assert(__has_builtin(__builtin_amdgcn_ballot_w32))`
+  en la pasada de dispositivo `r9700`; el director comprobó las dos ramas (wave32 compila, `-mwavefrontsize64` falla con
+  el mensaje). Test en la ASUS 874 797 / 0. **R97-09 cerrada** (registro en PLAN_OPS). Siguientes: R97-10..15
+  (OPS) y R97-08 (HOST, con ISSUE-002).

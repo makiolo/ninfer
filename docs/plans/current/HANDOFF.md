@@ -43,7 +43,9 @@
 ## In flight
 | Child | ID | Model | Process or task | Output | Task card | Pending check |
 |---|---|---|---|---|---|---|
-| r97-09-author3 | R97-09 | Codex gpt-6.1-sol high | lanza pid 26672 (attempt 508; 505 BLOCKED `ff6599b3`, 506 `80aaf2c5`, revisión 507 ACCEPT WITH CONDITIONS) | `.git/concertino/sprint-01/R97-09/author3-events.jsonl`, `author3-output.md`, `lz-author3.fin` | `card-fix2.md` (guarda wave32) | comprobar la guarda (rama wave64 falla) y el test; cerrar R97-09 en PLAN_OPS/STATUS con la deuda de EXECUTION; `attempt end 508` |
+| none | | | | | | |
+
+(R97-09 cerrada en `dec8d874`; siguiente: elegir entre R97-08 y R97-10..15 según PLAN_OPS §4 y la cuota de Codex.)
 
 (Actualizado 00:3x UTC: R97-07 cerrada, oráculo de R97-09 aceptado.)
 
