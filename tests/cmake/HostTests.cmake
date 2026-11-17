@@ -8,6 +8,10 @@ function(ninfer_register_host_tests)
   # Engine/model linkage includes GPU implementations that these contracts do not
   # exercise. No Engine substitute or production dispatch change is introduced.
   if(NINFER_BUILD_ENGINE)
+    ninfer_add_test(ninfer_jinja_time_host_test
+      SOURCES "${PROJECT_SOURCE_DIR}/tests/host_system/test_jinja_time.cpp"
+      LIBRARIES ninfer_jinja)
+    set_property(TEST ninfer_jinja_time_host_test APPEND PROPERTY ENVIRONMENT "TZ=UTC0")
     include("${PROJECT_SOURCE_DIR}/tests/host_serve/HostTransport.cmake")
     ninfer_add_host_transport(ninfer_serve_host_transport)
     foreach(owner IN ITEMS ninfer_serve ninfer_model_control ninfer_model_loading)
@@ -17,7 +21,7 @@ function(ninfer_register_host_tests)
       set(host_sources)
       foreach(source IN LISTS owner_sources)
         cmake_path(ABSOLUTE_PATH source BASE_DIRECTORY "${owner_directory}" NORMALIZE)
-        if(owner STREQUAL "ninfer_serve" OR source MATCHES "/frontend/|/prefix_identity\\.cpp$|/vision/window\\.cpp$")
+        if(owner STREQUAL "ninfer_serve" OR source MATCHES "/frontend/|/prefix_identity\\.cpp$|/vision/window\\.cpp$|/token_input\\.cpp$|/common/batch\\.cpp$|/common/context/")
           list(APPEND host_sources "${source}")
         endif()
       endforeach()
@@ -78,7 +82,7 @@ function(ninfer_register_host_tests)
     ninfer_context_cost_measure_test)
   if(NINFER_BUILD_ENGINE)
     list(APPEND host_tests
-      ninfer_jinja_test ninfer_chat_templates_test ninfer_tokenizer_host_test
+      ninfer_jinja_test ninfer_jinja_time_host_test ninfer_chat_templates_test ninfer_tokenizer_host_test
       ninfer_host_timing_test
       ninfer_scheduler_test ninfer_context_cost_test ninfer_placement_policy_test
       ninfer_resource_manager_test ninfer_context_capacity_test
@@ -90,7 +94,8 @@ function(ninfer_register_host_tests)
       ninfer_anthropic_schema_test ninfer_serve_options_test ninfer_request_log_test
       ninfer_metrics_test ninfer_http_error_handler_test ninfer_http_transport_test
       ninfer_http_loopback_test ninfer_media_acquire_host_test ninfer_tool_streaming_test
-      ninfer_bench_support_test
+      ninfer_bench_support_test ninfer_vision_window_test ninfer_token_input_test
+      ninfer_batch_execution_test ninfer_recovery_test ninfer_context_conversion_test
       ninfer_qwen_frontend_test ninfer_qwen_tool_constraints_test
       ninfer_qwen_tool_schema_oracle_test ninfer_tool_call_parser_test
       ninfer_glm5next_frontend_resources_test ninfer_glm5next_chat_template_test
