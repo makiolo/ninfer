@@ -486,8 +486,8 @@ __global__ void k_atomic_int(int* counter, int* olds, int* hist, int* shared_out
     __shared__ int acc; __shared__ float facc;
     if (threadIdx.x == 0) { acc = 0; facc = 0; }
     __syncthreads();
-    atomicAdd(&acc, threadIdx.x % 9 - 4);
-    atomicAdd(&facc, float(threadIdx.x % 9 - 4));
+    atomicAdd(&acc, int(threadIdx.x) % 9 - 4);
+    atomicAdd(&facc, float(int(threadIdx.x) % 9 - 4));
     __syncthreads();
     if (threadIdx.x == 0) { shared_out[blockIdx.x] = acc; shared_out[kBlocks + blockIdx.x] = int(facc); }
 }
