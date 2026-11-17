@@ -69,3 +69,6 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   referencia FP64 independiente (op-development.md), así que los oráculos de R97-10..15 auditan esa referencia,
   contrastan con Python y añaden casos de riesgo `r9700` (solo tests nuevos). Lanzados los oráculos de R97-10 (Opus
   5.5 high, 509) y R97-11 (Sonnet 5.5 high, 510); fichas pre-revisadas READY. Claude al 15 %.
+- 2026-11-17 01:xx UTC · Usuario: «Lanza con Codex, quiero gastarlo». R97-08 lanzada en Codex `gpt-6.1-sol` high
+  (intento 511; ficha READY) con ISSUE-002 (árbol vcpkg estable) y la parte nvtx3 de ISSUE-001 asignadas. Cupo lleno
+  (2 oráculos + 1 autor). Los autores de R97-10/11 salen en Codex en cuanto entreguen sus oráculos.
