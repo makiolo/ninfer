@@ -526,3 +526,18 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
 - 2026-11-17 09:1x UTC · **R97-08 cerrada.** `static_assert` de la condición 1 (`1e4cff7a`); gate sin modelo
   (`.agent-tmp/R97-08/gate4.log`): recompila `ninfer_resource_manager_test` y `ctest -L host` 67 de 67, 0 omitidos,
   salida 0. ISSUE-006 creada (backlog, inyección de fallos COFF; condición 3). Fila en PLAN_HOST §5.
+- 2026-11-17 09:1x UTC · **ISSUE-002:** borradas las carpetas pesadas de `.agent-tmp/R97-03/` (1,4 GiB; quedan 8 MB
+  de logs). Ninguna build usa ya ese árbol (la ruta por defecto es `$VCPKG_ROOT/installed-ninfer-r9700`, `b8fd7fe2`);
+  queda «pendiente de verificación» hasta la primera configuración limpia (R97-31, `build/r9700-ops`).
+- 2026-11-17 09:3x UTC · **R97-12 cerrada.** Revisión (551, Opus 5.5 high): ACCEPT WITH CONDITIONS, sin defectos
+  numéricos; reprodujo el generador de libstdc++ y la salida BF16 ideal pasa las 87 comparaciones de `b279a0c5` con las
+  dos STL (responde al punto (a) del relevo 6). **Decisión del director:** las dos condiciones (C1 `#if` sobrante de
+  `__grid_constant__` en `replay/fold_io.cuh`; C2 CMake muerto en los manifiestos de `linear_attention`) son limpieza
+  sin efecto numérico y van a R97-31, que ya ordena manifiestos; no se repite el gate de R97-12. Fila en PLAN_OPS §5.
+- 2026-11-17 09:3x UTC · **R97-31 lanzada** (Codex `gpt-6.1-sol` high, 180 min; `R97-31/card.md`, redactada por un
+  subagente secretario y completada por el director, pre-revisada READY). **Decisiones del director** sobre las dudas
+  de la redacción: `context_materialize` (solo drafter) sale con rechazo explícito, como las tres `rmsnorm_*`; R97-31
+  acepta con `ctest -L ops` (el `ctest` completo de ISSUE-005 sigue siendo el DoD de R97-18); `remap_ids_inplace` no
+  gana casos aquí; `openai_schema_test` y `http_error_handler_test` se reactivan en R97-16 (necesitan el motor); las
+  Ops de R97-15 sin definición en `r9700` pasan a rechazo explícito en su módulo dueño. Build en `build/r9700-ops`
+  (preset), que es además la primera configuración limpia para ISSUE-002; toda suite de Ops lleva `LABELS "ops"`.
