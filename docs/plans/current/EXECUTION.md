@@ -340,4 +340,10 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   READY. R97-30 va sin oráculo propio (transformaciones exactas; la revisión comprueba la independencia de las
   suites). En vuelo: autores de R97-12 (531) y R97-30 (533), oráculo de R97-29 (532), gates de R97-08 (en
   ejecución), R97-15 y R97-11 (en cola). Cuota a las 07:25 UTC: Claude 51 %, Fable 70 %, Codex 55 %, con el 4,4 %
-  de la semana (a las 06:10 UTC: 44 %, 60 % y 49 %).
+  de la semana (a las 06:10 UTC: 44 %, 60 % y 49 %). Registrada **Q-012** (qué hace ninfer cuando se acabe Claude).
+- 2026-11-17 07:2x UTC · **R97-08 gate: exit 1.** Con `-k 0` compila todo salvo dos ejecutables host que no
+  enlazan: `ninfer_glm5next_media_test` (símbolos de `glm5next::vision`) y `ninfer_glm5next_protocol_test`
+  (símbolos de `ninfer::Engine`, `PreparedPrompt` y `GenerationHandle`); `ctest` no se ejecutó. **Intento 3
+  lanzado** (534, Codex `gpt-6.1-sol` high, 180 min; `R97-08/card-fix-3.md`, pre-revisada READY): excluir de los
+  tests host de `r9700` los que dependan del motor, con su motivo y la tarea que los reactiva, o enlazar la
+  biblioteca host que falte; compilar y ejecutar `ctest -L host` en una sola entrada.
