@@ -29,7 +29,7 @@ Filas de [GOVERNANCE.md](../GOVERNANCE.md) que afectan a este sprint.
 |---|---|---|---|
 | [PLAN_BUILD.md](PLAN_BUILD.md) | Toolchain y diana `r9700` | R97-01..04 | — |
 | [PLAN_HOST.md](PLAN_HOST.md) | Lado CPU en Windows | R97-05..08 | R97-01, R97-03 |
-| [PLAN_OPS.md](PLAN_OPS.md) | Ops HIP de Qwen3.8-27B | R97-09..15 | R97-02, R97-04 |
+| [PLAN_OPS.md](PLAN_OPS.md) | Ops HIP de Qwen3.8-27B | R97-09..15, R97-29..31 | R97-02, R97-04 |
 | [PLAN_INTEGRATION.md](PLAN_INTEGRATION.md) | Runtime y validación end-to-end | R97-16..18 | HOST, OPS |
 
 Plan de origen: `backlog/PLAN_ROCM_R9700.md`, conservado en la etiqueta `archive/2026-11-16/sprint-01-sources`

@@ -60,9 +60,41 @@ Depende de: R97-02, R97-04. Bloquea: INTEGRATION, PERF.
 - `src/ops/sampling` (greedy, top-k/top-p, temperatura) y la verificación/aceptación de borradores MTP.
 - Aceptación: suites de sampling en verde; test determinista de aceptación MTP.
 
+### R97-29 — Lineales compuestas del camino de texto (split, swiglu, add, pair)
+- Añadida el 2026-11-17 (hueco del plan: análisis de uso real, EXECUTION). Nivel L7 · silent-numeric · Autor: pareja
+  fuerte · Revisor: el otro de la pareja. Depende de R97-10.
+- `src/ops/linear/{split,swiglu,add,pair}` en `r9700`, sobre las rutas por filas partidas de R97-10, solo en los
+  formatos que usa el 27B `groupwise-int`: `linear_split` Q4+Q5 (atención y GDN), `linear_swiglu` Q4 con `gate` y
+  `up` fusionados (MLP), `linear_add` Q5 (salidas de atención, GDN y `down`), `linear_pair` Q8 (historia MTP). El
+  epílogo deja de ser fijo (`kernels/common/r9700/rowsplit.cuh:73`). Lo demás se rechaza de forma explícita.
+- Aceptación: suites `tests/ops/linear/{split,swiglu,add,pair}` en verde en `r9700` para esos formatos contra su
+  referencia independiente; caso explícito de rechazo de un formato no soportado; capacidades de workspace correctas.
+
+### R97-30 — Secuencia e indexado del camino MTP
+- Añadida el 2026-11-17 (mismo análisis). Nivel L5 · transformaciones exactas (sin oráculo propio: la revisión
+  comprueba la independencia de las suites existentes) · Autor: strong · Revisor: strong de otro proveedor.
+- `src/ops/sequence/{causal_pairs,verify}.cu` e `src/ops/indexing/{state_fields,features,batch_columns}.cu` en
+  `r9700`: `prepare_causal_pairs`, `prepare_verify_ids`, `gather_state_fields`, `concat_bf16_features`,
+  `split_bf16_features`, `remap_ids_inplace` y `scatter_batch_columns`. Hoy `causal_pairs.cu` y `state_fields.cu` no
+  compilan en HIP (`__grid_constant__`) y el resto no se ha validado en GPU.
+- Aceptación: suites `tests/ops/sequence` e `tests/ops/indexing` de esas entradas en verde en `r9700`, igualdad
+  exacta; lo no portado de esas carpetas, rechazado de forma explícita o fuera del registro con su motivo.
+
+### R97-31 — `ninfer_ops` completo en `r9700` y suites oficiales
+- Añadida el 2026-11-17 (mismo análisis; resuelve ISSUE-005). Nivel L5 · Riesgo alto (manifiestos compartidos con
+  las dianas CUDA) · Autor: strong · Revisor: strong de otro proveedor. Depende de R97-11, R97-12, R97-15, R97-29 y
+  R97-30; bloquea R97-16.
+- Hoy `ninfer_ops` no enlaza en `r9700`: arrastra familias sin portar (MoE, PLE, QSA, KDA, `common/cuda/mma.cuh`,
+  `pipeline.cuh`, `core/pdl.cuh`). Cada familia no portada queda fuera de la diana en su propio manifiesto, con
+  rechazo explícito donde el modelo o el runtime la referencien, sin tocar las dianas CUDA.
+- Aceptación: `ninfer_ops` y los ejecutables oficiales de test de todas las Ops portadas compilan y enlazan en
+  `r9700`; `ctest` de las suites de Ops en verde en la ASUS, con los casos de rutas no portadas fuera del registro
+  o comprobando el rechazo (lista con motivo), y un caso de rechazo para `kv_cache_append` con INT8, NVFP4 y K8V4.
+
 ## 4. Orden y paralelismo
 
 R97-09 primero. Después R97-10, R97-11, R97-12, R97-13 y R97-14 en paralelo (carpetas disjuntas), R97-15 al final.
+R97-29 tras R97-10 y R97-30 en cuanto haya hueco (carpetas disjuntas); R97-31 al final, antes de R97-16.
 Mutex: `src/ops/common/` (solo R97-09) y la GPU (un test de GPU a la vez; lock de GPU, Q-006).
 
 ## 5. Registro de cierre

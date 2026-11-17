@@ -9,8 +9,8 @@
 > **Severity:** Medium\
 > **Destination:** Current sprint (antes del DoD de R97-18)\
 > **Priority and reason:** la suite completa de `ctest` no puede salir en verde mientras haya casos que llegan a Ops no portadas\
-> **Owner:** a asignar (tarea corta de registro de tests, autor Codex)\
-> **Follow-up:** se asigna cuando cierren las Ops (R97-11..13, R97-15) y se conozca la lista completa
+> **Owner:** autor de R97-31\
+> **Follow-up:** PLAN_OPS R97-31 (`ninfer_ops` completo en `r9700` y suites oficiales)
 
 ## 1. Contexto y comportamiento observado
 1. **Atención.** El catálogo BF16 de `ninfer_softmax_attention_test` tiene 57 casos fuera del alcance de `r9700`

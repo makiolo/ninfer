@@ -314,4 +314,22 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   que en `r9700` arrastra familias sin portar; además dos tests suyos no compilan (`constexpr` con `std::sqrt`).
   **0 de 9 suites ejecutadas.** Decisión del director: intento 3 con el patrón de R97-13 y R97-14 (biblioteca
   propia de la familia en `r9700` y tests enlazados a ella) y arreglo de compilación de los dos tests sin cambiar
-  valores; el autor deja la validación preparada y el director la lanza sin modelo.
+  valores; el autor deja la validación preparada y el director la lanza sin modelo. **Intento 3 lanzado** (531,
+  Codex `gpt-6-astra` xhigh, 240 min; `R97-12/card-fix-3.md`, pre-revisada READY).
+- 2026-11-17 07:3x UTC · **Huecos del plan: tres tareas nuevas en PLAN_OPS (R97-29, R97-30, R97-31).** Análisis de
+  solo lectura (subagente Claude Sonnet 5.5, lectura estática, nada compilado) de las Ops que llama el camino de
+  texto del 27B denso con MTP (`src/models/qwen3_5`) frente a lo que compila `r9700`. En el camino y sin
+  implementación ni tarea: `linear_split` (Q4+Q5; todas las capas de atención y la proyección GDN del prefill;
+  `attention.cpp:32`, `gdn.cpp:29`), `linear_swiglu` (Q4 fusionado; `dense_mlp.cpp:72`), `linear_add` (Q5;
+  `text.cpp:180,274`, `dense_mlp.cpp:74`) y `linear_pair` (Q8; `mtp.cpp:162`), todas fuera por el `return()` de
+  `src/ops/linear/sources.cmake:1-4`; `prepare_causal_pairs` y `gather_state_fields`, que no compilan en HIP
+  (`__grid_constant__`); y `features.cu`, `batch_columns.cu` y `verify.cu`, listados pero sin validar. Además
+  `ninfer_ops` entero no enlaza hoy en `r9700` (MoE, PLE, QSA, `pdl.cuh`, `mma.cuh`), así que ni el motor ni las
+  suites oficiales pueden enlazar. Decisión del director: son trabajo necesario para el objetivo del sprint (sin
+  ellas R97-17 no puede generar), no una ampliación; se añaden como **R97-29** (lineales compuestas, L7),
+  **R97-30** (secuencia e indexado del camino MTP, L5) y **R97-31** (`ninfer_ops` completo y suites oficiales, L5,
+  antes de R97-16; resuelve ISSUE-005). `linear/swiglu` queda dentro de R97-29. No comprobado por el análisis: que
+  las formas Q4/Q5/Q8 del 27B estén registradas en `projection/q*/r9700/shapes.cpp` y cómo agrupa el artefacto las
+  filas en bancos; van a la ficha de R97-29. Nota para la revisión de R97-11: su validación usa sondas
+  (`.agent-tmp/R97-11/probe.cmake`: fuentes de producción y ficheros de casos oficiales compilados aparte), no los
+  ejecutables registrados, que no enlazan hasta R97-31.
