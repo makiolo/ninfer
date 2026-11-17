@@ -42,3 +42,14 @@ Entry format:
 > la raíz de quantdesk-backend, no hace falta que lo repita cada proyecto.
 >
 > → rejected: el usuario dijo en sesión (2026-11-16 ~22:05 UTC) que la congelación no aplica a ninfer (EXECUTION.md).
+
+### 2026-11-17T02:54+01:00 · from the user · announcement
+> Anuncio: Aunque este codex al 3%, no dejeis de usarlo, asi cuando llegemos a 1% lo reinicio, pero hay que gastar
+>
+> Forwarded by concertino (concertino-e6) with `concertino-broadcast`: these are the user's words, not a request of
+> mine. Apply it in this project and record it where it belongs (EXECUTION or ON_CALL.md). No reply needed.
+> Context: «codex al 3%» = queda un 3 % de la cuota semanal de Codex (`claude-or quota --weekly`: 97 % usado, reinicio
+> automático 2026-11-21 11:38 UTC). El usuario pide seguir enrutando trabajo a Codex aunque la cuota esté casi agotada
+> (no apartarlo por cuota escasa); cuando llegue a ~1 % gastará él un reinicio de la cuenta. Reiniciar es cosa suya.
+>
+> → accepted: docs/plans/current/EXECUTION.md (ya aplicado: 3 autores en Codex, R97-08/10/11).

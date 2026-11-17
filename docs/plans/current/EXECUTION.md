@@ -76,3 +76,13 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   con oráculos FP64 independientes; criterio de embedding Q8 laxo, 2^-8), contraste 61 casos / 0 discrepancias y
   `778d8840` (argmax_edge). Decisiones del director: |x|>1,8e19 en RMSNorm y NaN en argmax fuera de contrato;
   `gated_residual` fuera (0 usos en qwen3_5); caso Q8 bit a bit nuevo. Intento 2 lanzado (512, `oracle-card-2.md`).
+- 2026-11-17 01:5x UTC · Oráculo de R97-10 (509) aceptado: `0ab0acdc` (referencia de `tests/ops/quantized_weight.h`
+  independiente; contraste 129 casos / 0; casos de frontera row-split y rechazo de 3 formas solo Spark/5090). Autor
+  lanzado en Codex `gpt-6-astra` xhigh (513), con el shim `cudaErrorNoDevice`/`InsufficientDriver` de
+  `op_tester.h:65` como primer commit.
+- 2026-11-17 01:5x UTC · Oráculo de R97-11 (512) aceptado: `3c796e59` (RMSNorm, RoPE 2^22, embedding Q8 bit a bit) +
+  `778d8840`; alcance fijado por uso real en el camino de texto de Qwen3.8-27B. `linear/swiglu` sale de R97-11: se
+  asigna cuando cierre R97-10. Autor lanzado en Codex `gpt-6.1-sol` high (514). Cupo lleno (3 autores Codex).
+- 2026-11-17 01:54 UTC · Usuario (anuncio vía concertino-e6): «Aunque este codex al 3%, no dejeis de usarlo, asi
+  cuando llegemos a 1% lo reinicio, pero hay que gastar». Aplicado: Codex sigue como autor; ya no se para por cuota
+  escasa, solo si se agota de verdad (entonces PushNotification).
