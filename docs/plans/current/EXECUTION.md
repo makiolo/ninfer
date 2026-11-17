@@ -389,3 +389,19 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   `execution/draft.cpp` (drafter, fuera del objetivo) y `gdn_norm_control_proj` (`gdn.cpp:35`) ya es de R97-12;
   (3) los helpers de `math.cuh` los usan GDN y atención, no las Ops de R97-11: se pide a la revisión de R97-12.
   Fila en PLAN_OPS §5.
+- 2026-11-17 07:5x UTC · **R97-30 intento 2 (535): entregado en verde.** `acb46111` sobre `9967f6f0` (solo
+  manifiestos CMake y dos líneas de `core/cuda_compat.h`; ninguna fuente `.cu` cambia). El director repitió la
+  validación sin modelo sobre HEAD con los dos commits (`R97-30-gate`, `.agent-tmp/R97-30/gate.log`): sequence
+  **276** y indexing **362** casos, 0 omitidos, salida 0, HEAD y alcance estables. **Revisión lanzada** (540, Claude
+  Sonnet 5.5 high; `R97-30/review-card.md`, pre-revisada READY; pide comprobar la independencia de las suites, que
+  aquí hacen de oráculo).
+- 2026-11-17 07:5x UTC · **R97-12 intento 3 (531): BLOCKED al enlazar**, `afe640fb` (biblioteca `ninfer_gdn_r9700`;
+  20/20 fuentes y 19 objetos de test compilan; ninguna suite ejecutada). Faltan `validate_fp8_weight` y
+  `validate_nvfp4_weight` (`src/ops/common/host/operands.cpp`) y `prepare_gdn_control_proj_weights`
+  (`src/ops/weight_input.cpp`): dos ficheros host comunes que solo compila `ninfer_ops`. Los necesitan también las
+  lineales de R97-29 (`linear_add.cpp:56`, `split/operands.cpp:28`, `pair/test.cpp:269`). **Decisión del director:**
+  en `r9700` esos dos ficheros pasan a una biblioteca dueña, `ninfer_ops_host_r9700`, que `ninfer_ops` enlaza
+  `PUBLIC`; la crea el autor de R97-12 en un commit propio (rutas añadidas: `src/ops/CMakeLists.txt`, solo la línea
+  de `weight_input.cpp`, y `src/ops/common/sources.cmake`; dianas CUDA con el mismo efecto) y R97-29 la consume
+  (`.agent-tmp/R97-29/DIRECTOR-NOTE.md`). **Intento 4 lanzado** (539, Codex `gpt-6-astra` xhigh, 240 min;
+  `R97-12/card-fix-4.md`, pre-revisada READY). Cuota a las 07:55 UTC: Claude 55 %, Fable 76 %, Codex 59 %.
