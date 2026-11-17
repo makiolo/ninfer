@@ -14,6 +14,9 @@
 #include "core/platform.h"
 
 #if NINFER_TARGET_R9700
+#define cudaErrorNoDevice hipErrorNoDevice
+#define cudaErrorInsufficientDriver hipErrorInsufficientDriver
+
 #if defined(__HIP_DEVICE_COMPILE__)
 // Clang exposes ballot_w32 only with the wavefrontsize32 target feature.
 // Query that feature without the deprecated __AMDGCN_WAVEFRONT_SIZE macros.
