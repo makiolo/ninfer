@@ -36,9 +36,21 @@ Depende de: HOST (R97-05..08) y OPS (R97-09..15). Bloquea: PERF.
 - Aceptación: perplejidad dentro de la tolerancia acordada en la tarjeta (el oráculo la fija antes de ejecutar);
   tests MTP de `tests/models/qwen3_5` en verde.
 
+### R97-28 — Documentación de producto de la diana R9700
+- Nivel L3 · Riesgo bajo · Autor: Claude Sonnet 5.5 high · Revisor: el director (contraste con el alcance del sprint).
+- Añadida por el usuario (2026-11-17): «En todos los textos del repo que dice: RTX 5090 and DGX Spark, ahora añade la
+  R9700 de amd, tambien en los ejemplos pon el preset de la r9700 [...] para ir preparando si nos pueden aceptar un
+  futuro PR» y «escribelo, asumiendo que el sprint esta implementado, forma parte del sprint».
+- README, docs de producto, ejemplo `examples/configs/r9700-qwen3_8-27b-groupwise.toml` y model card de Qwen3.8-27B
+  con el alcance del sprint (Qwen3.8-27B `groupwise-int`, texto + MTP + KV FP8, una GPU, Windows/HIP); sin cifras de
+  rendimiento inventadas (comentarios para R97-19..21). `docs/maintainer/build-system.md` lo completa R97-08.
+- Aceptación: ninguna afirmación fuera de alcance; antes de cerrar el sprint, el director comprueba cada afirmación
+  contra R97-17/18 (TOML de ejemplo arrancando con el modelo) y R97-19..21 rellena las cifras.
+
 ## 4. Orden y paralelismo
 
-R97-16 → R97-17 → R97-18, en serie (GPU y artefacto compartidos).
+R97-16 → R97-17 → R97-18, en serie (GPU y artefacto compartidos). R97-28 en paralelo (solo documentación); su
+verificación final va tras R97-18.
 
 ## 5. Registro de cierre
 

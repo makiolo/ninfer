@@ -114,3 +114,9 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   FP8 fuera de contrato. Autores lanzados en Codex `gpt-6-astra` xhigh: R97-12 (519) y R97-14 (520), fichas READY.
   Cola de compilación: R97-08 con el candado del checkout 46 min y R97-10 esperando 45 min; las fichas nuevas obligan a
   compilar solo los objetivos propios. En curso: 6 autores Codex.
+- 2026-11-17 03:1x UTC · Usuario: «En todos los textos del repo que dice: RTX 5090 and DGX Spark, ahora añade la R9700
+  de amd, tambien en los ejemplos pon el preset de la r9700 [...] para ir preparando si nos pueden aceptar un futuro
+  PR». El director editó README (cabecera, Build, `r9700-release`, `r9700-dev`), `bench/README.md` y
+  `tests/README.md` (`8a792933`). Usuario: «escribelo, asumiendo que el sprint esta implementado, forma parte del
+  sprint» → nueva tarea **R97-28** en PLAN_INTEGRATION (docs de producto, TOML de ejemplo, model card; sin cifras
+  inventadas). Lanzada en Claude Sonnet 5.5 high (521; ficha READY). Su verificación final va tras R97-18.
