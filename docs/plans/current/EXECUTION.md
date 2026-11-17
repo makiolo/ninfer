@@ -347,3 +347,10 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   lanzado** (534, Codex `gpt-6.1-sol` high, 180 min; `R97-08/card-fix-3.md`, pre-revisada READY): excluir de los
   tests host de `r9700` los que dependan del motor, con su motivo y la tarea que los reactiva, o enlazar la
   biblioteca host que falte; compilar y ejecutar `ctest -L host` en una sola entrada.
+- 2026-11-17 07:3x UTC · **R97-30 intento 1 (533): BLOCKED_SCOPE** a los 7 minutos, con commit WIP `9967f6f0`
+  (las diez fuentes de `sequence` e `indexing` y la biblioteca propia; sintaxis correcta, nada ejecutado). La suite
+  de indexado prueba también `fill_i32_positions` y `offset_i32_positions` (`src/ops/elementwise/position.cu`, 126
+  casos), fuera de sus rutas. **Decisión del director:** autorizado; `position.cu` pasa a ser de R97-30 en `r9700`
+  y se permite el cambio mínimo en `src/ops/elementwise/sources.cmake` para que se compile una sola vez, en su
+  biblioteca (las demás fuentes de `elementwise` son de R97-11 y no se tocan). **Intento 2 lanzado** (535, Codex
+  `gpt-6.1-sol` high; `R97-30/card-fix.md`, pre-revisada READY).
