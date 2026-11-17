@@ -46,7 +46,12 @@ de LM Studio de la ASUS (paso de usuario, ver «Guardia de activación»).
   R97-11, R97-15, R97-16, R97-18; L7 R97-10, R97-12, R97-13, R97-14.
 - Sin Haiku 5.5 como autor ni revisor. Sin IA local en este sprint (su GPU ASUS está dedicada a ninfer).
 - API de pago y modelos gratuitos de OpenRouter: no autorizados. Un error de API o facturación para el plan.
-- Cupo: director + 3 descendientes activos, contando revisores; **solo uno usa la GPU a la vez**.
+- Cupo **dinámico** (usuario, 2026-11-17: «Haz que este proyecto pueda lanzar mas subagentes que 3, se decide
+  dinamicamente»): sin tope fijo de descendientes. Antes de cada lanzamiento el director decide con: tareas listas con
+  rutas disjuntas de las que están en curso; cuota del proveedor (`claude-or quota --weekly`); la cola de compilación
+  (`build_queue.py status`: un candado por checkout y 2 ranuras globales, así que los autores que compilan en este
+  checkout van por turnos y añadir más solo alarga la espera; oráculos y revisiones de lectura no compilan); y la
+  GPU. **Solo uno usa la GPU a la vez** (sigue igual).
 - Arnés: ficha completa (`references/card.md`) revisada por un modelo barato antes de lanzar; revisor con contexto
   limpio que recibe ficha, diff y log de tests; el director contrasta cada hallazgo con el código.
 

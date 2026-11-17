@@ -95,3 +95,9 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   usos normales, codex al 100% y claude casi nuevo». Codex 0 % consumido (reinicio 2026-11-24 02:09 UTC), Claude 20 %.
   Aplicado: el reparto vuelve a las reglas de siempre; Codex sigue como autor por el orden Q-010 (Claude orquesta y
   revisa, Codex implementa). Queda superado el anuncio de las 01:54 UTC.
+- 2026-11-17 02:4x UTC · Usuario: «Haz que este proyecto pueda lanzar mas subagentes que 3, se decide dinamicamente».
+  LAUNCH.md: cupo dinámico (tareas listas con rutas disjuntas, cuota, cola de compilación y GPU; un test de GPU a la
+  vez). Observación: la cola tiene un candado por checkout y 2 ranuras globales, así que los autores que compilan en
+  ninfer van por turnos (R97-11 lo tenía 39 min); se amplía con hijos que no compilan. Lanzados los oráculos de R97-12
+  (515), R97-13 (516) y R97-14 (517), Opus 5.5 high, fichas READY. En curso: 3 autores Codex + 3 oráculos.
+  Progreso de los autores: `563e4526` (shim de errores de R97-10), `c666530a` (registro de oráculos de R97-11).

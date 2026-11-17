@@ -45,6 +45,9 @@
 |---|---|---|---|---|---|---|
 | r97-10-author | R97-10 | Codex gpt-6-astra xhigh | lanza pid 22300 (attempt 513; oráculo `0ab0acdc`) | `.git/concertino/sprint-01/R97-10/author-events.jsonl`, `author-output.md`, `lz-author.fin` | `.git/concertino/sprint-01/R97-10/card.md` | revisión Opus 5.5 high (L7); después asignar `linear/swiglu` |
 | r97-11-author | R97-11 | Codex gpt-6.1-sol high | lanza pid 24304 (attempt 514; oráculo `778d8840`, `3c796e59`) | `.git/concertino/sprint-01/R97-11/author-events.jsonl`, `author-output.md`, `lz-author.fin` | `.git/concertino/sprint-01/R97-11/card.md` | revisión Sonnet 5.5 high |
+| r97-12-oracle | R97-12 | Claude Opus 5.5 high | lanza pid 39584 (attempt 515) | `.git/concertino/sprint-01/R97-12/oracle-events.jsonl`, `lz-oracle.fin` | `.git/concertino/sprint-01/R97-12/oracle-card.md` | revisar; ficha del autor Codex `gpt-6-astra` xhigh |
+| r97-13-oracle | R97-13 | Claude Opus 5.5 high | lanza pid 35072 (attempt 516) | `.git/concertino/sprint-01/R97-13/oracle-events.jsonl`, `lz-oracle.fin` | `.git/concertino/sprint-01/R97-13/oracle-card.md` | revisar; ficha del autor Codex `gpt-6-astra` xhigh |
+| r97-14-oracle | R97-14 | Claude Opus 5.5 high | lanza pid 8584 (attempt 517) | `.git/concertino/sprint-01/R97-14/oracle-events.jsonl`, `lz-oracle.fin` | `.git/concertino/sprint-01/R97-14/oracle-card.md` | revisar; ficha del autor Codex `gpt-6-astra` xhigh |
 | r97-08-author | R97-08 | Codex gpt-6.1-sol high | lanza pid 25796 (attempt 511) | `.git/concertino/sprint-01/R97-08/author-events.jsonl`, `author-output.md`, `lz-author.fin` | `.git/concertino/sprint-01/R97-08/card.md` | revisión Sonnet 5.5 high; borrar `.agent-tmp/R97-03/` tras aceptar ISSUE-002 |
 
 (Usuario 01:xx UTC: «Lanza con Codex, quiero gastarlo». R97-09 cerrada en `dec8d874`. Las suites de Ops ya tienen referencia FP64 independiente: en R97-10..15 el oráculo
