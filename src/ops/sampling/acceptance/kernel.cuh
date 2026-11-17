@@ -290,7 +290,7 @@ __launch_bounds__(S::kSamplerGroupBlock) __global__ void speculative_sampling_gr
     }
     __syncthreads();
 
-    if (tid == 0 && greedy && cfg.mask.words && !isfinite(cand_val[0])) { asm volatile("trap;"); }
+    if (tid == 0 && greedy && cfg.mask.words && !isfinite(cand_val[0])) { sampling_execution_failure(); }
 
     if constexpr (SparseProposal) {
         __shared__ int last_column;

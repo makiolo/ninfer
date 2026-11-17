@@ -2,7 +2,9 @@
 
 #include "ops/sampling/kernels/distribution.cuh"
 #include <bit>
+#if !NINFER_TARGET_R9700
 #include "ops/common/cuda/pipeline.cuh"
+#endif
 
 namespace ninfer::ops::sampling_detail {
 
@@ -16,6 +18,16 @@ struct alignas(16) SamplingInputTile {
     __device__ void prefetch(const __nv_bfloat16* input, const int* history, int available,
                              bool penalties) {
         const int tid = threadIdx.x;
+#if NINFER_TARGET_R9700
+        // HIP uses ordinary loads into the same explicitly owned shared tile.
+        // The consumer's block barrier publishes both logits and history.
+#pragma unroll
+        for (int i = 0; i < kItems; ++i) {
+            const int at = i * Threads + tid;
+            logits[at] = at < available ? input[at] : __float2bfloat16(0.F);
+            if (penalties) counts[at] = history && at < available ? history[at] : 0;
+        }
+#else
         if ((reinterpret_cast<std::uintptr_t>(input) & 15U) == 0) {
 #pragma unroll
             for (int i = 0; i < kItems / 8; ++i) {
@@ -52,6 +64,7 @@ struct alignas(16) SamplingInputTile {
 #pragma unroll
             for (int i = 0; i < kItems; ++i) counts[i * Threads + tid] = 0;
         }
+#endif
     }
 };
 
@@ -81,9 +94,9 @@ struct ThresholdSelection {
     using Key                                        = KeyType;
     static constexpr int kSamplingTileIndexBits      = std::countr_zero(unsigned(kTile));
     static constexpr unsigned kSamplingTileIndexMask = kTile - 1;
-    using MaxSort                                    = cub::BlockMergeSort<Key, Threads, 1>;
-    using SmallSort                                  = cub::WarpMergeSort<Key, 1>;
-    using FinalSort                                  = cub::WarpMergeSort<Key, 4>;
+    using MaxSort                                    = sort_backend::BlockMergeSort<Key, Threads, 1>;
+    using SmallSort                                  = sort_backend::WarpMergeSort<Key, 1, 32>;
+    using FinalSort                                  = sort_backend::WarpMergeSort<Key, 4, 32>;
 
     struct Storage {
         union {
@@ -127,6 +140,10 @@ struct ThresholdSelection {
 #pragma unroll
         for (int i = 0; i < Items; ++i) maximum = max(maximum, values[i]);
         if (cap == 1) {
+#if NINFER_TARGET_R9700
+            __shared__ unsigned long long warp_keys[Threads / 32];
+            maximum = static_cast<Key>(block_reduce_max_key(maximum, warp_keys));
+#else
             if constexpr (sizeof(Key) == 8)
                 maximum = block_reduce_max_key(maximum, storage.sort.warp_maxima);
             else {
@@ -136,6 +153,7 @@ struct ThresholdSelection {
                 maximum = tid < Threads / 32 ? storage.sort.warp_maxima[tid] : 0;
                 if (tid < 32) maximum = __reduce_max_sync(0xffffffffU, maximum);
             }
+#endif
             if (tid == 0) output[0] = maximum;
             return;
         }

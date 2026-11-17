@@ -127,7 +127,9 @@ __launch_bounds__(Threads, 3) __global__ void speculative_sampling_threshold_top
         storage.inputs.prefetch(logits + base + start, history, min(Tile, token_domain - start),
                                 penalties);
         if (penalties) overlay.prepare(drafts[row], col, start);
+#if !NINFER_TARGET_R9700
         cp_wait<0>();
+#endif
         __syncthreads();
         const int cap = greedy ? 1 : sampling_candidate_cap(cfg, token_domain);
         auto* result = workspace.partial_keys + sampling_partial_offset(workspace, col, partial, 0);

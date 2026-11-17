@@ -1,13 +1,13 @@
 #pragma once
 
+#include <cuda_runtime.h>
 #include "ops/sampling/kernels/random.cuh"
 #include "ops/common/numeric/math.h"
 #include "ops/sampling/kernels/workspace.h"
 #include "ops/common/cuda/reduce.cuh"
 #include "ninfer/ops/sampling.h"
 
-#include <cub/block/block_merge_sort.cuh>
-#include <cub/warp/warp_merge_sort.cuh>
+#include "ops/sampling/kernels/target.cuh"
 
 #include <cuda_bf16.h>
 #include <climits>
@@ -46,15 +46,18 @@ inline TokenRows token_rows(const Tensor& tensor) {
 
 template <class S>
 using SamplingPartialSort =
-    cub::BlockMergeSort<unsigned long long, S::kSamplerBlock, S::kSamplerItemsPerThread>;
+    sort_backend::BlockMergeSort<unsigned long long, S::kSamplerBlock, S::kSamplerItemsPerThread>;
 template <class S>
 using SamplingGroupSort =
-    cub::BlockMergeSort<unsigned long long, S::kSamplerGroupBlock, S::kSamplerGroupItemsPerThread>;
+    sort_backend::BlockMergeSort<unsigned long long, S::kSamplerGroupBlock,
+                                 S::kSamplerGroupItemsPerThread>;
 
 template <class S>
-using SamplingTileWarpSort = cub::WarpMergeSort<unsigned long long, S::kSamplerItemsPerThread>;
+using SamplingTileWarpSort =
+    sort_backend::WarpMergeSort<unsigned long long, S::kSamplerItemsPerThread, 32>;
 template <class S>
-using SamplingBf16TileWarpSort = cub::WarpMergeSort<unsigned int, S::kSamplerItemsPerThread>;
+using SamplingBf16TileWarpSort =
+    sort_backend::WarpMergeSort<unsigned int, S::kSamplerItemsPerThread, 32>;
 
 template <class S>
 struct SamplingTileTopKStorage {
@@ -264,7 +267,7 @@ __device__ inline void sampling_normalize_support_values(const SamplingConfig& c
     if (n == 0 || !isfinite(cand_val[0])) {
         // The caller provides nonempty masks. Missing finite support is a model execution
         // failure, not a distribution from which a placeholder token can be published.
-        asm volatile("trap;");
+        sampling_execution_failure();
     } else {
         const float inv_temp = 1.0f / cfg.temperature;
         const float m        = cand_val[0] * inv_temp;

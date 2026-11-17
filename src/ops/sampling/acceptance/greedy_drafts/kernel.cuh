@@ -75,6 +75,13 @@ __launch_bounds__(S::kSamplerBlock) __global__ void speculative_accept_greedy_dr
                     best_index = v;
                 }
             }
+#if NINFER_TARGET_R9700
+            block_reduce_argmax(best_value, best_index);
+            if (tid == 0) {
+                red_val[0] = best_value;
+                red_idx[0] = best_index;
+            }
+#else
             red_val[tid] = best_value;
             red_idx[tid] = best_index;
             __syncthreads();
@@ -86,8 +93,9 @@ __launch_bounds__(S::kSamplerBlock) __global__ void speculative_accept_greedy_dr
                 }
                 __syncthreads();
             }
+#endif
             if (tid == 0) {
-                if (cfg.mask.words && !isfinite(red_val[0])) { asm volatile("trap;"); }
+                if (cfg.mask.words && !isfinite(red_val[0])) { sampling_execution_failure(); }
                 const int selected = red_idx[0];
                 if (i < extent && selected == row_drafts[i]) {
                     a_sh = i + 1;

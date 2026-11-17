@@ -48,6 +48,13 @@ __launch_bounds__(S::kSamplerBlock) __global__
                 }
             }
         }
+#if NINFER_TARGET_R9700
+        block_reduce_argmax(bv, bi);
+        if (tid == 0) {
+            red_val[0] = bv;
+            red_idx[0] = bi;
+        }
+#else
         red_val[tid] = bv;
         red_idx[tid] = bi;
         __syncthreads();
@@ -59,8 +66,9 @@ __launch_bounds__(S::kSamplerBlock) __global__
             }
             __syncthreads();
         }
+#endif
         if (tid == 0) {
-            if (cfg.mask.words && !isfinite(red_val[0])) { asm volatile("trap;"); }
+            if (cfg.mask.words && !isfinite(red_val[0])) { sampling_execution_failure(); }
             out[row] = red_idx[0];
         }
         return;
@@ -199,6 +207,13 @@ __launch_bounds__(256) __global__
                 (!cfg.mask.words || (cfg.mask.words[token / 32] & (1U << (token % 32)))))
                 best = max(best, sampling_bf16_tile_sort_key<TileKey>(logits[base + token], local));
         }
+#if NINFER_TARGET_R9700
+        __shared__ unsigned long long compact_warp_keys[8];
+        best = static_cast<unsigned int>(block_reduce_max_key(best, compact_warp_keys));
+        if (tid == 0)
+            workspace.partial_keys[sampling_partial_offset(workspace, row, partial, 0)] =
+                sampling_expand_bf16_tile_sort_key<TileKey>(best, start);
+#else
         best = __reduce_max_sync(0xffffffffU, best);
         if ((tid & 31) == 0) warp_maxima[tid / 32] = best;
         __syncthreads();
@@ -208,6 +223,7 @@ __launch_bounds__(256) __global__
                 workspace.partial_keys[sampling_partial_offset(workspace, row, partial, 0)] =
                     sampling_expand_bf16_tile_sort_key<TileKey>(best, start);
         }
+#endif
         return;
     }
     __shared__ unsigned long long warp_keys[8];
@@ -253,7 +269,9 @@ __launch_bounds__(Threads) __global__
     storage.inputs.prefetch(logits + base + start,
                             cfg.token_counts ? cfg.token_counts + start : nullptr,
                             min(Tile, token_domain - start), penalties);
+#if !NINFER_TARGET_R9700
     cp_wait<0>();
+#endif
     __syncthreads();
     const int cap = sampling_candidate_cap(cfg, token_domain);
     auto* result  = workspace.partial_keys + sampling_partial_offset(workspace, row, partial, 0);
@@ -341,7 +359,7 @@ __launch_bounds__(S::kSamplerGroupBlock) __global__
                            workspace.partial_keys[sampling_partial_offset(workspace, col, p, 0)]);
             best = block_reduce_max_key(best, greedy_warp_keys);
             if (tid == 0) {
-                if (cfg.mask.words && !isfinite(score_from_order_key(best))) asm volatile("trap;");
+                if (cfg.mask.words && !isfinite(score_from_order_key(best))) sampling_execution_failure();
                 const int picked = id_from_order_key(best);
                 out[col]         = picked;
             }
@@ -372,7 +390,7 @@ __launch_bounds__(S::kSamplerGroupBlock) __global__
         }
         best = block_reduce_max_key(best, greedy_warp_keys);
         if (tid == 0) {
-            if (cfg.mask.words && !isfinite(score_from_order_key(best))) { asm volatile("trap;"); }
+            if (cfg.mask.words && !isfinite(score_from_order_key(best))) { sampling_execution_failure(); }
             const int picked          = id_from_order_key(best);
             out[col]                  = picked;
             workspace.group_done[col] = 0;
