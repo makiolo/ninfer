@@ -49,7 +49,7 @@ user's own words. Historical entries Q-001..Q-007 stay in [docs/plans/QUESTIONS.
   hasta el reinicio de Fable), autores en Codex, revisores y oráculos en Claude; si Codex se agota, se pregunta al
   usuario si lo reinicia. Orden temporal: rige hasta que el usuario la retire.
 
-### Q-011 · open · decision
+### Q-011 · answered · decision
 - Raised: 2026-11-17 05:3x UTC, director del relevo 3
 - Task: R97-08, R97-10..15 (todas compilan en este checkout)
 - Question: La cola de compilación (2 ranuras para todos los proyectos) frena el sprint. Entre las 04:00 y las 05:25
@@ -65,7 +65,8 @@ user's own words. Historical entries Q-001..Q-007 stay in [docs/plans/QUESTIONS.
   riesgo de saturar la máquina
 - Recommendation: A, con las validaciones de ninfer lanzadas por el director sin modelo. B solo si quieres ver el
   modelo generando hoy.
-- Literal answer: —
-- Received by: —
+- Literal answer: "Seguir por orden de llegada (Recomendado)"
+- Received by: sesión saliente del relevo 3 (8dd8dd4a, `ninfer-e1`), 2026-11-17 ~06:1x UTC, en lote al entregar el relevo 4
 - Confirmation in the executing director: not applicable
-- Applied in: —
+- Applied in: sin cambios en la cola; las validaciones de ninfer siguen como entradas sin modelo (EXECUTION,
+  2026-11-17 05:3x UTC). El director activo lo anota en EXECUTION.
