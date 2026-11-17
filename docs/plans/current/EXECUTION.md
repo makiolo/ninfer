@@ -56,3 +56,8 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   5 688 / 0, PINNED 46 082 / 0. Los 4 fallos son un defecto de entrada del oráculo (`threadIdx.x % 9 - 4` sin signo en
   CUDA y HIP; la referencia usa `int`). Decisión del director: autorizado el cast con signo en el test (no cambia
   expectativas). Intento 2 lanzado (506, `card-fix.md`).
+- 2026-11-17 01:xx UTC · R97-09 intento 2 (`80aaf2c5`): ASUS 0 fallos en EXACT/BOUND/PINNED. Revisión 507 (Sonnet 5.5
+  high): ACCEPT WITH CONDITIONS; reejecutado en la ASUS 874 797 checks / 0 fallos; oráculo íntegro (solo `with_pow2` y
+  el cast autorizado). Condición: sin guarda de wave32 en compilación (wave64 truncaría `__ballot_sync` en silencio) →
+  intento 3 (508, `card-fix2.md`). Deuda baja a registrar al cierre: `__reduce_{and,or,xor}_sync` con bucle de
+  shuffles también con máscara completa (rendimiento); `HIP_VISIBLE_DEVICES=0` fijo en `tests/cmake/HipCompatTests.cmake:9`.
