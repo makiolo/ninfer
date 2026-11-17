@@ -483,3 +483,10 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   **Revisión lanzada** (545, Claude Opus 5.5 high; `R97-29/review-card.md`, pre-revisada READY; incluye el arreglo
   de registro de pair y el efecto en las dianas CUDA). Cuota a las 08:40 UTC: Claude 59 %, Fable 82 %, Codex 63 %.
   En cola: gates de R97-08 (en ejecución) y R97-12.
+- 2026-11-17 08:4x UTC · **R97-08 gate: exit 0** tras `e1f750de`: `ctest -L host` **67 de 67** (la tanda anterior,
+  66 de 67; `.agent-tmp/R97-08/gate.log`). La alineación explícita de `RecoveryCostSum` resuelve el fallo de
+  `ninfer_resource_manager_test`. **Revisión lanzada** (547, Claude Sonnet 5.5 high; `R97-08/review-card.md`,
+  pre-revisada READY; revisa uno por uno los 20 excluidos que no son de GPU, los cambios en tests y si la corrección
+  de alineación es completa). Cuota a las 08:44 UTC: Claude 60 %, Fable 83 %, Codex 63 %.
+- 2026-11-17 08:4x UTC · **Descarga de los pesos terminada:** `out/qwen3_8_27b.ninfer`, 20 437 521 664 bytes
+  exactos (curl salida 0). SHA-256 en comprobación contra `out/qwen3_8_27b.SHA256SUMS`.
