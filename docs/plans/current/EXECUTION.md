@@ -149,3 +149,14 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   `exp2f`, `1/x` y vaciado a cero explícito en las variantes `_ftz`; sonda de aceptación con cotas fijadas por el
   director). Notas a los autores en `.agent-tmp/R97-{12,13,14}/DIRECTOR-NOTE.md` (R97-10 leyó la suya). Lanzado
   R97-11 intento 2 (523, Codex `gpt-6.1-sol` high; pre-revisión: una aclaración sobre `sigmoid_approx`, incorporada).
+- 2026-11-17 04:0x UTC · Oráculo de R97-15 (522) aceptado: `e4368ed2` (`tests/ops/sampling/r9700_edges.cpp`, sin
+  registrar ni ejecutar; sintaxis HIP limpia). Alcance: `ops::sample` (`decision.cpp:101,177`),
+  `speculative_accept_greedy_drafts` (`decision.cpp:93`) e `increment_token_counts[_batch]` (`commit.cpp:73,95,135`).
+  Fuera (decisión del director): aceptación dispersa (DFlash2), `candidate_selector_path`, `linear_topk`,
+  `accept_vocabulary_*`; sus tests se excluyen de `r9700` sin tocar su contenido. Contraste en Python: 0
+  discrepancias en 7 comprobaciones (136 de 4 000 casos aleatorios omitidos por caer a menos de 1e-9 de una frontera
+  de top-p, donde la suma depende del orden). Selecciones, empates y aceptación exactos; NaN fuera de contrato; `-inf`
+  legal si queda algún token finito. Aviso: `acceptance/greedy_drafts/kernel.cuh:95` usa `asm volatile("trap;")`.
+  Autor lanzado ya (524, Codex `gpt-6.1-sol` high; ficha READY): sus rutas son disjuntas de las seis en curso, así que
+  no espera a R97-10..14 (cupo dinámico); solo comparte la cola de compilación y la GPU. Cuota a las 04:0x UTC:
+  Claude 30 %, Fable 40 % (2,1 % de la ventana), Codex 15 %.
