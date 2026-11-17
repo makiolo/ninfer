@@ -414,3 +414,21 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   Codex revisa desde el 85 % (Recomendado)». Aplicada: regla añadida a LAUNCH «Modelos, roles y cupo»; el director
   lee la cuota antes de cada revisión u oráculo y, desde que Claude semanal pase del 85 %, los lanza en Codex con un
   modelo distinto del autor. Hoy Claude va por el 55 %: nada cambia todavía. Sin preguntas abiertas.
+- 2026-11-17 08:1x UTC · **Ventana quieta de la máquina, 09:19-09:31 hora local**, pedida por `quantdesk-8b`
+  (medición de reloj de quantdesk elegida por el usuario allí). El director no lanza nada en ese rato y ha puesto en
+  la cola una entrada de espera sin carga (`ninfer-quiet-window`, hasta las 09:31:30) que retiene el candado del
+  checkout; no se mata nada. Avisado: la entrada de R97-29 (ya en la GPU) y un diagnóstico corto de R97-08 estaban
+  delante en la cola. Coste para ninfer: unos 12-15 minutos de cola.
+- 2026-11-17 08:1x UTC · **R97-12 intento 4 (539): las nueve suites ejecutadas por primera vez en la GPU;
+  BLOCKED por el criterio de un oráculo.** `1699f365` crea `ninfer_ops_host_r9700` (los dos ficheros host comunes,
+  sin cambiar su contenido; `ninfer_ops` y `ninfer_gdn_r9700` la enlazan `PUBLIC`). Resultado en la ASUS: **1 732
+  casos, 0 omitidos, 8 fallos**, todos en `ninfer_causal_conv_trajectory_test` (53 casos, del oráculo `96d31157`);
+  las otras ocho suites pasan (335, 278, 148, 181, 9, 196, 230 y 302; las tres exactas, con 0 diferencias). En los
+  ocho fallos el valor de la GPU en el índice señalado es el BF16 más cercano a la referencia FP64 (comprobado por
+  el director con los valores del log); el autor demuestra para dos casos que el L2 relativo mínimo posible supera
+  la cota `1.85e-3` (`.agent-tmp/R97-12/attempt4-diagnostics.md`). Mismo patrón que R97-11. **Decisión del
+  director:** lo resuelve el oráculo, no el autor: `R97-12/oracle-card-2.md` (Claude Opus 5.5 high, pre-revisada
+  READY; viabilidad del criterio caso por caso con la salida BF16 ideal; corrige solo la cota de los inalcanzables y
+  devuelve al autor los alcanzables). Se lanza al acabar la ventana quieta. Nota del autor para la revisión:
+  ninguna suite de `r9700` ejercita `exp2_approx` (`prepare.cu`, la ruta por trozos con MMA, queda fuera; `r9700`
+  usa siempre la recurrencia, con `expf`).
