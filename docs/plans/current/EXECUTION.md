@@ -234,3 +234,16 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   `ninfer-e1`). En vuelo, todo adoptable: revisión de R97-14 (528), autores intento 2 de R97-08 (525), R97-10 (527)
   y R97-12 (526), y gates sin modelo de R97-11, R97-13 y R97-15. Cuota a las 06:01 UTC: Claude 43 %, Fable 58 %,
   Codex 48 % (con el 2,3-3,6 % de la semana). Abierta: Q-011.
+- 2026-11-17 06:1x UTC · **Relevo 4 aceptado** (sesión `c988ac27`, `ninfer-48`, Fable 5.2 high, contexto inicial
+  25,5 %). `deps.py`: 0 dependencias, READY. Adoptados vivos los autores de R97-08/10/12 y los gates de
+  R97-11/13/15; vigía `ws://127.0.0.1:8791/` rearmado. INBOX sin entradas nuevas. Cuota: Fable 59 %, Codex 48 %.
+  Cola de compilación: las 6 entradas de ninfer esperan (la primera, `R97-08-attempt2-build`, 1 h 52 min); las dos
+  ranuras siguen en `quantdesk` y `quantdesk-network` (Q-011 abierta).
+- 2026-11-17 06:1x UTC · **R97-14 cerrada** (`d2008b61`, `acadec71`). Revisión 528 (Claude Opus 5.5 high): ACCEPT.
+  Contraste del director con el código: (1) `tests/` solo cambia `tests/ops/kv_cache/tests.cmake` (registro del
+  oráculo y enlace a `ninfer_kv_cache_r9700`), confirmado con `git show --stat`; (2) hallazgo bajo cierto: el
+  rechazo de INT8/NVFP4/K8V4 en `src/ops/kv_cache/kernels/write.cu:155-159` no lo ejercita ningún caso de la suite
+  de KV; el fichero es de R97-13, así que va a su ficha de revisión; (3) hallazgo bajo cierto:
+  `context_materialize` sigue en `ninfer_ops` sin flags estrictos (`src/ops/kv_cache/sources.cmake:11`), fuera de
+  alcance hasta que se porte el drafter. Condición anotada: si R97-13 cambia los kernels de escritura o las
+  conversiones tras su revisión, se repiten las dos suites de KV. Fila en PLAN_OPS §5.
