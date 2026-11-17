@@ -10,6 +10,11 @@ namespace {
 
 Instance select_instance(Epilogue kind, Operands operands, std::int32_t sms) {
     const auto [d, rows, aligned] = operands;
+#if NINFER_TARGET_R9700
+    // The HIP scalar route owns every positive D and natural BF16 alignment,
+    // including subnormal epsilon and inputs outside the vector routes' range.
+    return Instance::Generic;
+#endif
     if (aligned < 4) return Instance::Generic;
 #if NINFER_TARGET_RTX5090
     if (!gated(kind) && d == 20480 && aligned >= 8) {

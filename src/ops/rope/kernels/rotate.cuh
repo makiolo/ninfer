@@ -1,4 +1,5 @@
 #pragma once
+#include "core/platform.h"
 
 #include "ops/rope/kernels/phase.cuh"
 #include "ops/common/numeric/convert.cuh"
@@ -52,6 +53,15 @@ __device__ __forceinline__ void fixed_sincos(const std::int32_t* positions, int 
                                              int pair, float* sine, float* cosine) {
     if constexpr (Mode == RopeKernelMode::D128R128) {
         rope_d128_theta1e7_sincos(positions, token, pair, sine, cosine);
+#if NINFER_TARGET_R9700
+    } else if constexpr (Mode == RopeKernelMode::D256R64 ||
+                         Mode == RopeKernelMode::MropeD256R64) {
+        // R64 frequencies are the even entries of the FP64 R128 table.
+        // Keep frequency and position multiplication in FP64 until range reduction.
+        const int axis = Mode == RopeKernelMode::MropeD256R64 ? pair % 3 : 0;
+        rope_d128_theta1e7_sincos(positions + static_cast<std::int64_t>(axis) * tokens,
+                                 token, pair * 2, sine, cosine);
+#endif
     } else {
         int axis = 0;
         float frequency;
@@ -236,11 +246,23 @@ static __global__ void rope_generic_kernel(const std::int32_t* positions, std::i
             int axis       = 0;
             float exponent = 0.0F;
             generic_axis_frequency(axes, head_dim, rotary_dim, pair, &axis, &exponent);
+#if NINFER_TARGET_R9700
+            const double precise_exponent = axes == 2 ?
+                -2.0 * (pair % (head_dim / 4)) / (head_dim / 2) : -2.0 * pair / rotary_dim;
+            const double angle =
+                static_cast<double>(positions[static_cast<std::int64_t>(axis) * tokens + token]) *
+                pow(static_cast<double>(theta), precise_exponent);
+            double sine, cosine;
+            sincos(angle, &sine, &cosine);
+            sin_cache[pair] = static_cast<float>(sine);
+            cos_cache[pair] = static_cast<float>(cosine);
+#else
             const float frequency = powf(theta, exponent);
             const float angle =
                 static_cast<float>(positions[static_cast<std::int64_t>(axis) * tokens + token]) *
                 frequency;
             sincosf(angle, &sin_cache[pair], &cos_cache[pair]);
+#endif
         }
     }
     __syncthreads();

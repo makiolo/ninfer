@@ -39,6 +39,10 @@ __launch_bounds__(kArgmaxBlock) __global__
         }
     }
 
+#if NINFER_TARGET_R9700
+    block_reduce_argmax(best_value, best_index);
+    if (threadIdx.x == 0) { out[t] = best_index; }
+#else
     __shared__ float values[kArgmaxBlock];
     __shared__ std::int32_t indices[kArgmaxBlock];
     values[threadIdx.x]  = best_value;
@@ -59,6 +63,7 @@ __launch_bounds__(kArgmaxBlock) __global__
     }
 
     if (threadIdx.x == 0) { out[t] = indices[0]; }
+#endif
 }
 
 template <int MaxBlock, int Items>
