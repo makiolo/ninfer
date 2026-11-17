@@ -65,3 +65,7 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   en la pasada de dispositivo `r9700`; el director comprobó las dos ramas (wave32 compila, `-mwavefrontsize64` falla con
   el mensaje). Test en la ASUS 874 797 / 0. **R97-09 cerrada** (registro en PLAN_OPS). Siguientes: R97-10..15
   (OPS) y R97-08 (HOST, con ISSUE-002).
+- 2026-11-17 01:xx UTC · Codex al 97 % (R97-09 costó ~1 punto). Decisión del director: las suites de Ops ya usan
+  referencia FP64 independiente (op-development.md), así que los oráculos de R97-10..15 auditan esa referencia,
+  contrastan con Python y añaden casos de riesgo `r9700` (solo tests nuevos). Lanzados los oráculos de R97-10 (Opus
+  5.5 high, 509) y R97-11 (Sonnet 5.5 high, 510); fichas pre-revisadas READY. Claude al 15 %.

@@ -43,9 +43,11 @@
 ## In flight
 | Child | ID | Model | Process or task | Output | Task card | Pending check |
 |---|---|---|---|---|---|---|
-| none | | | | | | |
+| r97-10-oracle | R97-10 | Claude Opus 5.5 high | lanza pid 35204 (attempt 509) | `.git/concertino/sprint-01/R97-10/oracle-events.jsonl`, `lz-oracle.fin` | `.git/concertino/sprint-01/R97-10/oracle-card.md` | revisar auditoría y casos; ficha del autor Codex `gpt-6-astra` xhigh |
+| r97-11-oracle | R97-11 | Claude Sonnet 5.5 high | lanza pid 30124 (attempt 510) | `.git/concertino/sprint-01/R97-11/oracle-events.jsonl`, `lz-oracle.fin` | `.git/concertino/sprint-01/R97-11/oracle-card.md` | revisar auditoría y casos; ficha del autor Codex `gpt-6.1-sol` high |
 
-(R97-09 cerrada en `dec8d874`; siguiente: elegir entre R97-08 y R97-10..15 según PLAN_OPS §4 y la cuota de Codex.)
+(R97-09 cerrada en `dec8d874`. Las suites de Ops ya tienen referencia FP64 independiente: en R97-10..15 el oráculo
+audita esa referencia y añade casos de riesgo `r9700`, no reescribe. Codex al 97 %: si se agota, parar y preguntar.)
 
 (Actualizado 00:3x UTC: R97-07 cerrada, oráculo de R97-09 aceptado.)
 
