@@ -272,7 +272,10 @@ int accept_case(const char* label, int k, int domain, std::vector<AcceptRow> row
             for (int v = 1; v < domain; ++v)
                 if (logits[(static_cast<std::size_t>(b) * cols + i) * domain + v] >
                     logits[(static_cast<std::size_t>(b) * cols + i) * domain + best]) best = v;
-            targets[b * cols + i] = raw_targets ? best : -1; // only raw rows consume them
+            // Contract (speculative_accept.h): raw greedy rows without penalties consume exact raw
+            // argmax targets; every other row must ignore them, so it gets -1.
+            const bool raw_row = raw_targets || (row.config.temperature <= 0.0f && pres == 0.0f && freq == 0.0f);
+            targets[b * cols + i] = raw_row ? best : -1;
         }
     }
     const auto bits = to_bits(logits);
