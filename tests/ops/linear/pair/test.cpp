@@ -22,6 +22,8 @@
 #include <string>
 #include <vector>
 
+void add_rejection_cases(ninfer::test::linear_suite::Suite& suite);
+
 namespace {
 using namespace ninfer;
 using namespace ninfer::test;
@@ -503,6 +505,15 @@ int main(int argc, char** argv) {
                   });
     constexpr std::array<std::int32_t, 2> kK5120RouteStarts{86, 961};
     constexpr std::array<std::int32_t, 3> kK5120RouteInteriors{24, 512, 1024};
+    constexpr std::array<std::int32_t, 8> kSmallT{2, 3, 4, 5, 8, 24, 512, 1024};
+    add_shape(suite, ShapeCase{.k               = 5120,
+                               .seed            = 439U,
+                               .parents         = WeightParents::Shared,
+                               .parent_rows     = 14336,
+                               .first_row       = 6144,
+                               .second_row      = 13312,
+                               .route_starts    = kK5120RouteStarts,
+                               .route_interiors = kSmallT});
     add_shape(suite, ShapeCase{.k               = 5120,
                                .seed            = 431U,
                                .parents         = WeightParents::Separate,
@@ -530,5 +541,6 @@ int main(int argc, char** argv) {
                                .second_row      = 5120,
                                .route_starts    = kK2048RouteStarts,
                                .route_interiors = kK2048RouteInteriors});
+    add_rejection_cases(suite);
     return suite.main(argc, argv);
 }

@@ -1,4 +1,5 @@
 #include "ops/linear/pair/dispatch.h"
+#include "core/platform.h"
 #include "ops/common/host/operands.h"
 #include <cstddef>
 #include <stdexcept>
@@ -52,6 +53,10 @@ LinearPairLaunch select_linear_pair(int k, int tokens) {
 }
 
 void validate_pair_weights(const Weight& first, const Weight& second, int max_tokens) {
+#if NINFER_TARGET_R9700
+    if (first.qtype != QType::Q8_G32_FP16 || second.qtype != QType::Q8_G32_FP16)
+        throw std::invalid_argument("linear_pair: r9700 requires Q8 row-split weights");
+#endif
     if (first.qtype == QType::BF16 && second.qtype == QType::BF16) {
         if (max_tokens <= 0 || (first.n != 4096 && first.n != 8192) || first.k != 128 ||
             second.n != first.n || second.k != first.k)

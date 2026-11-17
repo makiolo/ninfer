@@ -57,6 +57,7 @@ void add_preparation_cases(Suite& suite);
 void add_segmented_cases(Suite& suite);
 void add_two_output_cases(Suite& suite);
 void add_multi_output_cases(Suite& suite);
+void add_q4_q5_rowsplit_cases(Suite& suite);
 
 void add_bank_cases(Suite& suite);
 

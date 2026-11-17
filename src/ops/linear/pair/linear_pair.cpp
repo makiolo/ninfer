@@ -1,4 +1,5 @@
 #include "ninfer/ops/linear_pair.h"
+#include "core/platform.h"
 #include "ops/linear/pair/dispatch.h"
 #include "ops/common/host/operands.h"
 #include "ops/linear/projection/q8/q8_dispatch.h"
@@ -51,6 +52,10 @@ std::size_t linear_pair_workspace_capacity_bytes(const Weight& first, const Weig
 
 std::size_t linear_pair_workspace_capacity_bytes(LinearProfile first, LinearProfile second,
                                                  std::int32_t min_tokens, std::int32_t max_tokens) {
+#if NINFER_TARGET_R9700
+    if (first.qtype != QType::Q8_G32_FP16 || second.qtype != QType::Q8_G32_FP16)
+        throw std::invalid_argument("linear_pair: r9700 requires Q8 row-split weights");
+#endif
     if (min_tokens <= 0 || max_tokens < min_tokens || first.qtype != second.qtype ||
         first.n != second.n || first.k != second.k)
         throw std::invalid_argument("linear_pair: invalid matrix profiles or token interval");

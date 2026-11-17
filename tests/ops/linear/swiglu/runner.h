@@ -44,6 +44,7 @@ void add_negative_gate(Suite& suite, const Profile& profile, std::span<const std
 
 void add_bf16_cases(Suite& suite);
 void add_q4_cases(Suite& suite);
+void add_q4_gate_extreme_cases(Suite& suite);
 void add_q8_cases(Suite& suite);
 void add_nvfp4_cases(Suite& suite);
 void add_fp8_cases(Suite& suite);

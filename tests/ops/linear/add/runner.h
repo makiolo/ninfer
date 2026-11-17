@@ -58,6 +58,7 @@ void add_shape(Suite& suite, QType format, const ShapeCase& shape);
 void add_bf16_cases(Suite& suite);
 void add_q4_cases(Suite& suite);
 void add_q5_cases(Suite& suite);
+void add_q5_signed_cases(Suite& suite);
 void add_q8_cases(Suite& suite);
 void add_nvfp4_cases(Suite& suite);
 void add_fp8_cases(Suite& suite);

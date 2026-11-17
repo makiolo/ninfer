@@ -6,6 +6,7 @@ int main(int argc, char** argv) {
     add_bf16_cases(suite);
     add_q4_cases(suite);
     add_q5_cases(suite);
+    add_q5_signed_cases(suite);
     add_q8_cases(suite);
     add_nvfp4_cases(suite);
     add_fp8_cases(suite);
