@@ -89,8 +89,15 @@ __device__ __forceinline__ std::uint32_t pack_f16x2(float lo, float hi) {
 
 __device__ __forceinline__ std::uint32_t bf16x2_bits_to_f16x2_bits(std::uint32_t bits) {
     const __nv_bfloat162 source = load_vec<__nv_bfloat162>(&bits);
+#if NINFER_TARGET_R9700
+    // HIP has ambiguous direct BF16 -> half constructors. FP32 widening is exact;
+    // the SDK conversion performs the one observable FP16 RNE rounding.
+    const __half2 converted = __floats2half2_rn(__bfloat162float(__low2bfloat16(source)),
+                                               __bfloat162float(__high2bfloat16(source)));
+#else
     const __half2 converted =
         __halves2half2(__half(__low2bfloat16(source)), __half(__high2bfloat16(source)));
+#endif
     return load_vec<std::uint32_t>(&converted);
 }
 

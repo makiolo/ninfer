@@ -1,11 +1,14 @@
 #include "ops/kv_cache/kernels/write.h"
 #include "core/device.h"
+#include "core/platform.h"
 #include "ops/common/numeric/math.h"
 #include "ops/kv_cache/kernels/write/bf16.cuh"
 #include "ops/kv_cache/kernels/write/fp8.cuh"
+#if !NINFER_TARGET_R9700
 #include "ops/kv_cache/kernels/write/int8.cuh"
 #include "ops/kv_cache/kernels/write/k8v4.cuh"
 #include "ops/kv_cache/kernels/write/nvfp4.cuh"
+#endif
 
 #include <stdexcept>
 #include <type_traits>
@@ -43,18 +46,22 @@ void launch_quantized(const WriteArguments& a, Metadata metadata, cudaStream_t s
     constexpr bool Page   = Instance == PagedWriteInstance::Page8x256;
     constexpr bool Batch  = Instance == PagedWriteInstance::BatchRows256;
     constexpr auto kernel = [] {
+#if !NINFER_TARGET_R9700
         if constexpr (Storage == KvCacheStorage::Int8Group64) {
             if constexpr (Page)
                 return write_i8_page_kernel<G, Metadata>;
             else
                 return write_i8_kernel<G, Metadata, Batch>;
-        } else if constexpr (Storage == KvCacheStorage::Fp8E4m3fnGroup128Ue8m0) {
+        } else
+#endif
+        if constexpr (Storage == KvCacheStorage::Fp8E4m3fnGroup128Ue8m0) {
             if constexpr (Page)
                 return write_fp8_page_kernel<G, Metadata>;
             else if constexpr (Batch)
                 return write_fp8_batch_kernel<G, Metadata::masked>;
             else
                 return write_fp8_kernel<G, Metadata>;
+#if !NINFER_TARGET_R9700
         } else if constexpr (Storage == KvCacheStorage::Nvfp4Group16) {
             if constexpr (Page)
                 return write_nvfp4_page_kernel<G, Metadata>;
@@ -66,6 +73,7 @@ void launch_quantized(const WriteArguments& a, Metadata metadata, cudaStream_t s
                 return write_k8v4_page_kernel<G, Metadata>;
             else
                 return write_k8v4_kernel<G, Metadata, Batch>;
+#endif
         }
     }();
     using Code =
@@ -132,15 +140,24 @@ void storage_dispatch(KvCacheStorage storage, PagedWriteInstance instance, const
     switch (storage) {
     case KvCacheStorage::BFloat16:
         return launch_instance<KvCacheStorage::BFloat16, G>(instance, a, metadata, stream);
+#if !NINFER_TARGET_R9700
     case KvCacheStorage::Int8Group64:
         return launch_instance<KvCacheStorage::Int8Group64, G>(instance, a, metadata, stream);
+#endif
     case KvCacheStorage::Fp8E4m3fnGroup128Ue8m0:
         return launch_instance<KvCacheStorage::Fp8E4m3fnGroup128Ue8m0, G>(instance, a, metadata,
                                                                           stream);
+#if !NINFER_TARGET_R9700
     case KvCacheStorage::Nvfp4Group16:
         return launch_instance<KvCacheStorage::Nvfp4Group16, G>(instance, a, metadata, stream);
     case KvCacheStorage::Fp8KeyNvfp4Value:
         return launch_instance<KvCacheStorage::Fp8KeyNvfp4Value, G>(instance, a, metadata, stream);
+#else
+    case KvCacheStorage::Int8Group64:
+    case KvCacheStorage::Nvfp4Group16:
+    case KvCacheStorage::Fp8KeyNvfp4Value:
+        throw std::invalid_argument("KV write: r9700 supports only BF16 and FP8 caches");
+#endif
     }
     throw std::logic_error("KV write: unsupported storage");
 }

@@ -25,7 +25,8 @@ __device__ __forceinline__ std::uint16_t fp8_quant_fp32_pair(float2 value, float
 }
 
 __device__ __forceinline__ unsigned fp8_e4m3x2_to_bf16x2_bits(unsigned packed) {
-#if __CUDACC_VER_MAJOR__ > 13 || (__CUDACC_VER_MAJOR__ == 13 && __CUDACC_VER_MINOR__ >= 2)
+#if !NINFER_TARGET_R9700 && \
+    (__CUDACC_VER_MAJOR__ > 13 || (__CUDACC_VER_MAJOR__ == 13 && __CUDACC_VER_MINOR__ >= 2))
     // PTX 9.2 exposes the native pair widening on the project's sm_120a target.
     unsigned result;
     asm("cvt.rn.bf16x2.e4m3x2 %0, %1;" : "=r"(result) : "h"(static_cast<std::uint16_t>(packed)));
@@ -41,8 +42,15 @@ __device__ __forceinline__ unsigned fp8_e4m3x2_to_bf16x2_bits(unsigned packed) {
         unsigned bits;
     } result;
 
+#if NINFER_TARGET_R9700
+    // E4M3 values widen exactly through FP16/FP32. Avoid HIP's ambiguous
+    // half -> BF16 constructor while retaining the represented bit pattern.
+    result.pair = __floats2bfloat162_rn(__half2float(__low2half(half_pair)),
+                                       __half2float(__high2half(half_pair)));
+#else
     result.pair = __halves2bfloat162(__nv_bfloat16(__low2half(half_pair)),
                                      __nv_bfloat16(__high2half(half_pair)));
+#endif
     return result.bits;
 #endif
 }
