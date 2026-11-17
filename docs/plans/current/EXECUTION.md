@@ -41,3 +41,10 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   ejecutara como scripts ficheros del repo (eventos de hijos, Markdown, fuentes). Parado a los ~2 min; daños: un fichero
   vacío basura (borrado) y `build/r9700-dev` reconfigurado (ignorado por git); sin commits, sin procesos sueltos, hijos
   intactos. Regla: texto Markdown solo con Write/Edit.
+- 2026-11-17 00:2x UTC · Oráculo de R97-09 entregado (`040f2a3a`; contraste C++/Python 0 discrepancias en 1154 casos).
+  El `.cu` no lo compiló el oráculo (no encontró `hipcc`); el director lo analizó con `clang++ -x hip`: para en
+  `memory.cuh:51` y `reduce.cuh:4` (trabajo del autor). Decisiones: PINNED debe pasar; `float4 atomicAdd`, `mma`,
+  `pipeline` y afines fuera. Autor Codex lanzado (intento 505; ficha pre-revisada READY). Codex al 96 %.
+- 2026-11-17 00:3x UTC · R97-07 revisión 504: ACCEPT WITH CONDITIONS (documentar). **R97-07 cerrada.** Nuevos
+  ISSUE-002 (árbol vcpkg de `r9700` en `.agent-tmp/R97-03`, dueño R97-08) e ISSUE-003 (endurecimiento de
+  `media_acquire`, preexistente, backlog). R97-08 desbloqueada (R97-05..07 cerradas).

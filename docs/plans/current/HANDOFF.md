@@ -43,8 +43,9 @@
 ## In flight
 | Child | ID | Model | Process or task | Output | Task card | Pending check |
 |---|---|---|---|---|---|---|
-| r97-07-review | R97-07 | Claude Sonnet 5.5 high | lanza pid 34956 (attempt 504) | `.git/concertino/sprint-01/R97-07/review-events.jsonl`, `lz-review.fin` | `.git/concertino/sprint-01/R97-07/review-card.md` (+ `card.md`) | contrastar hallazgos (sobre todo: ¿configura desde limpio sin tocar Dependencies/presets?); condiciones → `card-fix.md` + intento 2 en Codex; cerrar R97-07; `attempt end 502/504` |
-| r97-09-oracle | R97-09 | Claude Sonnet 5.5 high | lanza pid 39264, hijo 2748 (attempt 503) | `.git/concertino/sprint-01/R97-09/oracle-events.jsonl`, `lz-oracle.fin` | `.git/concertino/sprint-01/R97-09/oracle-card.md` | revisar el oráculo; después ficha del autor Codex de R97-09 |
+| r97-09-author | R97-09 | Codex gpt-6.1-sol high | lanza pid 13916 (attempt 505) | `.git/concertino/sprint-01/R97-09/author-events.jsonl`, `author-output.md`, `lz-author.fin` | `.git/concertino/sprint-01/R97-09/card.md` (oráculo `040f2a3a`) | revisión Sonnet 5.5 high (L6): ¿test del oráculo intacto?, PINNED sin `--no-pinned`, log de GPU; `attempt end 505` |
+
+(Actualizado 00:3x UTC: R97-07 cerrada, oráculo de R97-09 aceptado.)
 
 Vigía vivo: wsvigia pid 37076 en `ws://127.0.0.1:8791/`, lista `.git/concertino/vigia/fins.txt`.
 Lanzamiento de hijos: `lanza.py` + `hijo.py` (ver `lz-*-events.jsonl` en `.git/concertino/sprint-01/<ID>/`);
