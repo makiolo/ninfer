@@ -5,7 +5,7 @@ add_library(ninfer_text STATIC
 )
 ninfer_internal_includes(ninfer_text)
 if(WIN32)
-  target_compile_definitions(ninfer_text PRIVATE UTF8PROC_STATIC)
+  target_compile_definitions(ninfer_text PUBLIC UTF8PROC_STATIC)
 endif()
 target_link_libraries(ninfer_text PRIVATE ninfer::json)
 target_include_directories(ninfer_text PRIVATE ${PROJECT_SOURCE_DIR}/third_party)
