@@ -1,3 +1,7 @@
+if(NINFER_TARGET_R9700)
+  return()
+endif()
+
 target_sources(ninfer_ops PRIVATE
   "${CMAKE_CURRENT_LIST_DIR}/tail_extract.cu"
   "${CMAKE_CURRENT_LIST_DIR}/prepare/prepare.cpp"

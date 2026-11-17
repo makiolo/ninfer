@@ -1,3 +1,7 @@
+if(NINFER_TARGET_R9700)
+  return()
+endif()
+
 target_sources(ninfer_ops PRIVATE
   "${CMAKE_CURRENT_LIST_DIR}/norm_combine.cpp"
   "${CMAKE_CURRENT_LIST_DIR}/operands.cpp")

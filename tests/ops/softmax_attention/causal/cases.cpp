@@ -455,7 +455,12 @@ void add_storage_cases(OpSuite& suite, KvCacheStorage storage) {
 void add_cases(OpSuite& suite) {
     for (auto storage : {KvCacheStorage::BFloat16, KvCacheStorage::Int8Group64,
                          KvCacheStorage::Fp8E4m3fnGroup128Ue8m0, KvCacheStorage::Nvfp4Group16,
-                         KvCacheStorage::Fp8KeyNvfp4Value})
+                         KvCacheStorage::Fp8KeyNvfp4Value}) {
+#if NINFER_TARGET_R9700
+        if (storage != KvCacheStorage::BFloat16 &&
+            storage != KvCacheStorage::Fp8E4m3fnGroup128Ue8m0) continue;
+#endif
         add_storage_cases(suite, storage);
+    }
 }
 } // namespace ninfer::test::causal_attention

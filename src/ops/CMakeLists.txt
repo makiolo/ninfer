@@ -1,5 +1,8 @@
 # Compile policy is owned here; each semantic family explicitly contributes sources.
 add_library(ninfer_ops SHARED)
+if(NINFER_TARGET_R9700)
+  set_target_properties(ninfer_ops PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
 ninfer_internal_includes(ninfer_ops)
 ninfer_cuda_library(ninfer_ops)
 target_link_libraries(ninfer_ops PUBLIC ninfer_core PRIVATE ninfer_ops_non_rdc)

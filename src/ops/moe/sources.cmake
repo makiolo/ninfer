@@ -1,3 +1,9 @@
+if(NINFER_TARGET_R9700)
+  # Host profile construction is used by qwen3_5 independently of CUDA MoE execution.
+  target_sources(ninfer_ops PRIVATE "${CMAKE_CURRENT_LIST_DIR}/weights.cpp")
+  return()
+endif()
+
 target_sources(ninfer_ops PRIVATE
   "${CMAKE_CURRENT_LIST_DIR}/weights.cpp"
   "${CMAKE_CURRENT_LIST_DIR}/operands.cpp"

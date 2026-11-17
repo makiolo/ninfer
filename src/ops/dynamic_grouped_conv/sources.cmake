@@ -1,3 +1,8 @@
+if(NINFER_TARGET_R9700)
+  target_sources(ninfer_ops PRIVATE "${CMAKE_CURRENT_LIST_DIR}/r9700/unsupported.cpp")
+  return()
+endif()
+
 target_sources(ninfer_ops PRIVATE
   "${CMAKE_CURRENT_LIST_DIR}/operands.cpp"
   "${CMAKE_CURRENT_LIST_DIR}/finish/finish.cpp"

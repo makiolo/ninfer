@@ -1,3 +1,7 @@
+if(NINFER_TARGET_R9700)
+  return()
+endif()
+
 ninfer_add_op_test(ninfer_qsa_tail_extract_test
   SOURCES "${CMAKE_CURRENT_LIST_DIR}/test_tail_extract.cpp"
   LIBRARIES ninfer_ops)

@@ -27,3 +27,5 @@ include("${CMAKE_CURRENT_LIST_DIR}/../../projection/q4/sources.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/../../projection/q5/sources.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/../../projection/q8/sources.cmake")
 unset(ninfer_linear_projection_target)
+
+target_sources(ninfer_linear_projection_r9700 PRIVATE "${CMAKE_CURRENT_LIST_DIR}/../../topk/r9700/unsupported.cpp")

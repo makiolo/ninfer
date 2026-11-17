@@ -868,6 +868,10 @@ void add_full_append_cases(ninfer::test::OpSuite& suite) {
     for (auto storage : {KvCacheStorage::BFloat16, KvCacheStorage::Int8Group64,
                          KvCacheStorage::Fp8E4m3fnGroup128Ue8m0, KvCacheStorage::Nvfp4Group16,
                          KvCacheStorage::Fp8KeyNvfp4Value}) {
+#if NINFER_TARGET_R9700
+        if (storage != KvCacheStorage::BFloat16 &&
+            storage != KvCacheStorage::Fp8E4m3fnGroup128Ue8m0) continue;
+#endif
         const std::string format = kv_cache_storage_name(storage);
         for (int heads : {4, 2})
             suite.add("append/full/" + format + "/h" + std::to_string(heads) + "/t3",

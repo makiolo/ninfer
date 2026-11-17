@@ -1,3 +1,7 @@
+if(NINFER_TARGET_R9700)
+  return()
+endif()
+
 if(NINFER_TARGET STREQUAL "dgx_spark")
   ninfer_add_op_test(ninfer_kpool_chain_test
     SOURCES "${CMAKE_CURRENT_LIST_DIR}/test_chain.cpp"

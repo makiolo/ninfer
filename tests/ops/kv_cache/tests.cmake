@@ -12,7 +12,15 @@ ninfer_add_op_test(ninfer_kv_cache_append_test
 ninfer_add_op_test(ninfer_kv_cache_append_r9700_test SOURCES "${CMAKE_CURRENT_LIST_DIR}/append_r9700_edges.cpp" LIBRARIES ${ninfer_kv_cache_append_test_library})
 unset(ninfer_kv_cache_append_test_library)
 
+if(NINFER_TARGET_R9700)
+  ninfer_add_op_test(ninfer_kv_cache_append_r9700_rejection_test
+    SOURCES "${CMAKE_CURRENT_LIST_DIR}/append_r9700_rejection.cpp"
+    LIBRARIES ninfer_ops)
+endif()
+
+if(NOT NINFER_TARGET_R9700)
 ninfer_add_op_test(ninfer_context_kv_materialize_test
   SOURCES "${CMAKE_CURRENT_LIST_DIR}/context_kv_materialize.cpp"
           "${CMAKE_CURRENT_LIST_DIR}/context_kv_materialize_bf16.cpp"
   LIBRARIES ninfer_ops)
+endif()

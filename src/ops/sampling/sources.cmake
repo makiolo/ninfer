@@ -32,3 +32,7 @@ if(NOT NINFER_TARGET_R9700)
     "${CMAKE_CURRENT_LIST_DIR}/candidate_path/launch.cu")
 endif()
 unset(ninfer_sampling_target)
+
+if(NINFER_TARGET_R9700)
+  target_sources(ninfer_sampling_r9700 PRIVATE "${CMAKE_CURRENT_LIST_DIR}/r9700/unsupported.cpp")
+endif()

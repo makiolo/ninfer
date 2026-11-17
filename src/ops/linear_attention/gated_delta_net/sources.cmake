@@ -1,10 +1,6 @@
 include("${CMAKE_CURRENT_LIST_DIR}/control/sources.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/input_conv/sources.cmake")
 
-if(NINFER_TARGET_R9700)
-  include("${CMAKE_CURRENT_LIST_DIR}/r9700/sources.cmake")
-  return()
-endif()
 target_sources(ninfer_ops PRIVATE
   "${CMAKE_CURRENT_LIST_DIR}/recurrence/chunked/prepare.cu"
   "${CMAKE_CURRENT_LIST_DIR}/recurrence/chunked/recurrence.cu"

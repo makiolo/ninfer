@@ -1,3 +1,8 @@
+if(NINFER_TARGET_R9700)
+  # native_formats.cu requires CSF32/NVFP4 CUDA pipeline and PTX codecs.
+  return()
+endif()
+
 ninfer_add_op_test(ninfer_native_weight_codec_test
   SOURCES "${CMAKE_CURRENT_LIST_DIR}/native_formats.cu"
   LIBRARIES ninfer_core)
