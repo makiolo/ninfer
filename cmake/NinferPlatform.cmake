@@ -116,7 +116,7 @@ function(ninfer_validate_platform)
     # Only forward headers whose APIs cuda_compat.h already supplies.
     foreach(ninfer_cuda_header IN ITEMS
         cuda_runtime.h cuda_runtime_api.h cuda_bf16.h cuda_fp16.h cuda_fp8.h
-        cuda_profiler_api.h)
+        cuda_profiler_api.h math_constants.h)
       file(CONFIGURE OUTPUT "${PROJECT_BINARY_DIR}/generated/${ninfer_cuda_header}"
         CONTENT "#pragma once\n#include \"core/cuda_compat.h\"\n" @ONLY)
     endforeach()

@@ -48,22 +48,10 @@ template <class T> struct Dev {
 };
 void sync() { CK(cudaGetLastError()); CK(cudaDeviceSynchronize()); }
 
-template <class F> void with_pow2(const std::vector<int>& sizes, F&& f) {
-    for (int s : sizes) {
-        switch (s) {
-        case 1: f(std::integral_constant<int, 1>{}); break;
-        case 2: f(std::integral_constant<int, 2>{}); break;
-        case 4: f(std::integral_constant<int, 4>{}); break;
-        case 8: f(std::integral_constant<int, 8>{}); break;
-        case 16: f(std::integral_constant<int, 16>{}); break;
-        case 32: f(std::integral_constant<int, 32>{}); break;
-        case 64: f(std::integral_constant<int, 64>{}); break;
-        case 128: f(std::integral_constant<int, 128>{}); break;
-        case 256: f(std::integral_constant<int, 256>{}); break;
-        case 512: f(std::integral_constant<int, 512>{}); break;
-        case 1024: f(std::integral_constant<int, 1024>{}); break;
-        }
-    }
+// Instantiate only the listed sizes: a runtime switch also instantiates invalid
+// warp widths (>32) and invalid block sizes (<32), even when never selected.
+template <int... Sizes, class F> void with_pow2(F&& f) {
+    (f(std::integral_constant<int, Sizes>{}), ...);
 }
 bool same_bits_or_nan(float a, float b) { return (std::isnan(a) && std::isnan(b)) || bits_of(a) == bits_of(b); }
 
@@ -84,7 +72,7 @@ template <unsigned Mask> __global__ void k_warp_partial(const float* s, float* x
 void test_warp_reductions() {
     if (skip("warp_reductions")) return;
     const auto cases = make_vec_cases();
-    with_pow2({1, 2, 4, 8, 16, 32}, [&](auto wc) {
+    with_pow2<1, 2, 4, 8, 16, 32>([&](auto wc) {
         constexpr int W = decltype(wc)::value;
         Dev<float> ds(32), dm(32), dxr(32), ddn(32), dmx(32);
         for (const auto& c : cases) {
@@ -146,7 +134,7 @@ template <int B> __global__ void k_block_max(const float* x, int n, float* out) 
 void test_block_reductions() {
     if (skip("block_reductions")) return;
     const auto cases = make_vec_cases();
-    with_pow2({32, 64, 128, 256, 512, 1024}, [&](auto bc) {
+    with_pow2<32, 64, 128, 256, 512, 1024>([&](auto bc) {
         constexpr int B = decltype(bc)::value;
         Dev<float> dout(B);
         for (const auto& c : cases) {

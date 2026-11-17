@@ -11,6 +11,83 @@
 
 #define CUDART_INF_F HIP_INF_F
 
+#include "core/platform.h"
+
+#if NINFER_TARGET_R9700
+// CUDA uses 32-bit masks; HIP 7.2's sync intrinsics require an explicit
+// 64-bit mask even in wave32. Keep that translation here, retaining the SDK's
+// participation checks, width semantics and wavefront memory fences.
+template <class T>
+__device__ __forceinline__ T __shfl_sync(unsigned mask, T value, int lane, int width = warpSize) {
+    return __shfl_sync<unsigned long long, T>(mask, value, lane, width);
+}
+template <class T>
+__device__ __forceinline__ T __shfl_up_sync(unsigned mask, T value, unsigned delta, int width = warpSize) {
+    return __shfl_up_sync<unsigned long long, T>(mask, value, delta, width);
+}
+template <class T>
+__device__ __forceinline__ T __shfl_down_sync(unsigned mask, T value, unsigned delta, int width = warpSize) {
+    return __shfl_down_sync<unsigned long long, T>(mask, value, delta, width);
+}
+template <class T>
+__device__ __forceinline__ T __shfl_xor_sync(unsigned mask, T value, int lane_mask, int width = warpSize) {
+    return __shfl_xor_sync<unsigned long long, T>(mask, value, lane_mask, width);
+}
+__device__ __forceinline__ unsigned __ballot_sync(unsigned mask, int predicate) {
+    return static_cast<unsigned>(__ballot_sync<unsigned long long>(mask, predicate));
+}
+__device__ __forceinline__ void __syncwarp(unsigned mask) {
+    __syncwarp<unsigned long long>(mask);
+}
+__device__ __forceinline__ int __all_sync(unsigned mask, int predicate) {
+    return __all_sync<unsigned long long>(mask, predicate);
+}
+__device__ __forceinline__ int __any_sync(unsigned mask, int predicate) {
+    return __any_sync<unsigned long long>(mask, predicate);
+}
+template <class T>
+__device__ __forceinline__ unsigned __match_any_sync(unsigned mask, T value) {
+    return static_cast<unsigned>(__match_any_sync<unsigned long long, T>(mask, value));
+}
+
+#define NINFER_HIP_REDUCE_MASK_OVERLOAD(name, type)                         \
+    __device__ __forceinline__ type name(unsigned mask, type value) {      \
+        return name<unsigned long long>(mask, value);                     \
+    }
+NINFER_HIP_REDUCE_MASK_OVERLOAD(__reduce_add_sync, int)
+NINFER_HIP_REDUCE_MASK_OVERLOAD(__reduce_add_sync, unsigned)
+NINFER_HIP_REDUCE_MASK_OVERLOAD(__reduce_min_sync, int)
+NINFER_HIP_REDUCE_MASK_OVERLOAD(__reduce_min_sync, unsigned)
+NINFER_HIP_REDUCE_MASK_OVERLOAD(__reduce_max_sync, int)
+NINFER_HIP_REDUCE_MASK_OVERLOAD(__reduce_max_sync, unsigned)
+#undef NINFER_HIP_REDUCE_MASK_OVERLOAD
+
+namespace ninfer::hip_compat {
+// HIP 7.2's sparse-mask bit reductions use logical operators in their fallback
+// tree. Gather participating lanes with SDK shuffles and apply bitwise operators.
+template <char Op>
+__device__ __forceinline__ unsigned reduce_bits(unsigned mask, unsigned value) {
+    unsigned result = Op == '&' ? ~0u : 0u;
+    for (unsigned remaining = mask; remaining; remaining &= remaining - 1) {
+        const unsigned other = __shfl_sync(mask, value, __ffs(remaining) - 1);
+        if constexpr (Op == '&') result &= other;
+        if constexpr (Op == '|') result |= other;
+        if constexpr (Op == '^') result ^= other;
+    }
+    return result;
+}
+} // namespace ninfer::hip_compat
+__device__ __forceinline__ unsigned __reduce_and_sync(unsigned mask, unsigned value) {
+    return ninfer::hip_compat::reduce_bits<'&'>(mask, value);
+}
+__device__ __forceinline__ unsigned __reduce_or_sync(unsigned mask, unsigned value) {
+    return ninfer::hip_compat::reduce_bits<'|'>(mask, value);
+}
+__device__ __forceinline__ unsigned __reduce_xor_sync(unsigned mask, unsigned value) {
+    return ninfer::hip_compat::reduce_bits<'^'>(mask, value);
+}
+#endif // NINFER_TARGET_R9700
+
 // HIP 7.2 has separate OCP and FNUZ types. gfx12 uses OCP E4M3FN:
 // signed zero, subnormals, max finite 448, and NaN at +/-0x7f.
 using __nv_bfloat16 = __hip_bfloat16;
