@@ -356,5 +356,7 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   `gpt-6.1-sol` high; `R97-30/card-fix.md`, pre-revisada READY).
 - 2026-11-17 07:4x UTC · **Relevo 5 del director** escrito por contexto (68 %; sesión saliente `c988ac27`,
   `ninfer-48`). En vuelo, todo adoptable: autores de R97-08 (534), R97-12 (531) y R97-30 (535), oráculo de R97-29
-  (532) y gates sin modelo de R97-15 y R97-11. Cuota a las 07:34 UTC: Claude 53 %, Fable 73 %, Codex 56 % (con el
+  (532), revisión de R97-15 (536) y gate sin modelo de R97-11. **R97-15 gate: exit 0** a las 07:35 UTC (79/79 en
+  dos pasadas seguidas, 0 omitidos; la variable del plazo llegó al script); revisión lanzada (536, Claude Sonnet 5.5
+  high; `R97-15/review-card.md`, incluye la corrección del director `b86077c3`). Cuota a las 07:34 UTC: Claude 53 %, Fable 73 %, Codex 56 % (con el
   4,5 % de la semana). Abierta: Q-012.

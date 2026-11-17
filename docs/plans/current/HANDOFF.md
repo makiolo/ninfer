@@ -41,8 +41,8 @@ paths without a root are relative to this repo's root)
   ISSUE-005). Motivo: `ninfer_ops` entero no enlaza hoy en `r9700` (MoE, PLE, QSA, `pdl.cuh`, `mma.cuh`); cada
   familia portada se valida con una biblioteca propia (`ninfer_*_r9700`) y sus tests enlazados a ella.
 - En curso: R97-08 (autor, intento 3), R97-11 (gate tras la corrección del oráculo `637377e9`), R97-12 (autor,
-  intento 3; 0 de 9 suites ejecutadas hasta ahora), R97-15 (gate relanzado), R97-29 (oráculo), R97-30 (autor,
-  intento 2).
+  intento 3; 0 de 9 suites ejecutadas hasta ahora), R97-15 (gate en verde, 79/79 dos veces; en revisión), R97-29
+  (oráculo), R97-30 (autor, intento 2).
 - Pendientes: autor de R97-29 (tras su oráculo), R97-31, INTEGRATION R97-16..18, verificación final de R97-28.
 - Issues: ISSUE-001 (nvtx3 → R97-08), ISSUE-002 (borrar `.agent-tmp/R97-03/` tras aceptar R97-08; ya copiado a
   `G:\vcpkg_root\installed-ninfer-r9700`), ISSUE-003 (backlog), **ISSUE-004** (atención con más de 128 consultas y
@@ -60,7 +60,7 @@ paths without a root are relative to this repo's root)
 | r97-12-author3 | R97-12 | Codex gpt-6-astra xhigh | lanza pid 29864 (attempt 531) | `R97-12/author3-output.md`, `lz-author3.fin` | `R97-12/card-fix-3.md` | nueve suites en verde → revisión Opus 5.5 high (incluye `numeric/math.h` `e9cc0212`, la biblioteca propia y el `constexpr`→`const` de dos tests); sin plazo → gate sin modelo con `.agent-tmp/R97-12/run-gate.py build` y `gpu` |
 | r97-30-author2 | R97-30 | Codex gpt-6.1-sol high | lanza pid 7212 (attempt 535) | `R97-30/author2-output.md`, `lz-author2.fin` | `R97-30/card-fix.md` (+ `card.md`) | dos suites en verde → revisión Sonnet 5.5 high (independencia de las suites, `__grid_constant__` en `cuda_compat.h`, `elementwise/sources.cmake`); sin plazo → gate sin modelo con `.agent-tmp/R97-30/run-gate.py` |
 | r97-29-oracle | R97-29 | Claude Opus 5.5 high | lanza pid 11052 (attempt 532) | `R97-29/oracle-events.jsonl` (evento `type=result`), `lz-oracle.fin` | `R97-29/oracle-card.md` | contrastar el informe; escribir la ficha del autor (modelo `R97-14/card.md`; Codex gpt-6-astra xhigh; biblioteca propia en `r9700`; epílogo de `rowsplit.cuh:73`; formas reales del 27B según el informe; `run-gate.py` sin plazos), pre-revisarla y lanzarla; `attempt end 532` |
-| r97-15-gate | R97-15 | sin modelo (cola) | lanza pid 34448, etiqueta `R97-15-gate` | `.agent-tmp/R97-15/gate.log`, `gpu-run{1,2}.log`; `R97-15/lz-gate2.fin` | `R97-15/card.md` | comprobar que `gate.log` no dice `NOT RUN` (plazo ampliado con `R9715_DEADLINE_UTC`; si la variable no llegó, relanzar poniéndola dentro de la orden); exit 0 (79/79, dos pasadas) → lanzar `R97-15/review-card.md` (lista y pre-revisada; Sonnet 5.5 high); exit ≠ 0 → intento 2 del autor |
+| r97-15-review | R97-15 | Claude Sonnet 5.5 high | lanza pid 35428 (attempt 536) | `R97-15/review-events.jsonl` (evento `type=result`), `lz-review.fin` | `R97-15/review-card.md` | el gate pasó (79/79 en dos pasadas, `.agent-tmp/R97-15/gate.log`); contrastar cada hallazgo con el código; cerrar (fila en PLAN_OPS §5, `attempt end 536`, tablero) o intento corto del autor con `card-fix.md` |
 | r97-11-gate | R97-11 | sin modelo (cola) | lanza pid 37668, etiqueta `R97-11-gate` | `.agent-tmp/R97-11/gate.log`; `R97-11/lz-gate2.fin` | `R97-11/card.md` + `card-fix.md` | exit 0 (normalización 447/447) → lanzar `R97-11/review-card.md` (lista; Sonnet 5.5 high; incluye la corrección del oráculo `637377e9` y el uso de sondas); exit ≠ 0 → intento 3 del autor con el log |
 
 Rutas relativas a `.git/concertino/sprint-01/`. Vigía: wsvigia pid 37076 en `ws://127.0.0.1:8791/`, lista
@@ -103,6 +103,7 @@ ISSUE-004, ISSUE-005, QUESTIONS). Sigue vigente la memoria del proyecto `model-l
 
 ## Next step
 Adoptar los seis procesos (comprobar pids y `.fin`), armar `Monitor` sobre `ws://127.0.0.1:8791/` y atender el
-primero que termine. Lo más probable es el oráculo de R97-29: contrastar su informe y lanzar al autor de R97-29. Las
-fichas de revisión de R97-11 y R97-15 ya están escritas: se lanzan en cuanto su gate salga con 0. Antes de cada
+primero que termine. Lo más probable es la revisión de R97-15 (leer su evento `type=result`, contrastar y cerrar) o
+el oráculo de R97-29 (contrastar su informe y lanzar al autor de R97-29). La ficha de revisión de R97-11 ya está
+escrita: se lanza en cuanto su gate salga con 0. Antes de cada
 revisión con Claude, leer la cuota y mirar si Q-012 tiene respuesta.
