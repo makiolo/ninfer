@@ -1,7 +1,7 @@
 # Serving performance methodology
 
 This document defines measurement and publication for the serving campaigns linked from the
-[performance index](../performance.md), including RTX 5090 and single-/dual-Spark deployments.
+[performance index](../performance.md), including RTX 5090, AMD R9700 and single-/dual-Spark deployments.
 Model pages own measured values and run-specific conditions. Current resource controls are
 described in [startup configuration](../startup-configuration.md).
 

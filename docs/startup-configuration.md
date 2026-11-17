@@ -11,6 +11,11 @@ cp examples/configs/rtx5090-qwen3_8-27b-nvfp4.toml ninfer.local.toml
 ./build/rtx5090-release/apps/ninfer --config ninfer.local.toml --prompt "Hello" --max-tokens 1024
 ```
 
+For the AMD R9700, start from the
+[R9700 example](../examples/configs/r9700-qwen3_8-27b-groupwise.toml) and use
+`build/r9700-release/apps/`. That target has no Vision, DFlash, CPU expert offload or `[distributed]`
+deployment; the same fields otherwise apply.
+
 Configuration is printed at INFO level before loading, with file/command-line/default sources.
 After preparation, the log reports resolved resources and rank information. API keys are redacted.
 Personal TOML files are ignored by Git; the root reference and `examples/configs/*.toml` are tracked.

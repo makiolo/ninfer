@@ -11,6 +11,9 @@ and pass it to the Spark executable:
 ```
 
 On two Sparks, run this once on the coordinator. The configured workers start automatically.
+On the AMD R9700, use `build/r9700-release/apps/ninfer.exe` with the
+[R9700 example](../examples/configs/r9700-qwen3_8-27b-groupwise.toml) and the `groupwise-int`
+artifact. The R9700 target runs Text with MTP; Vision and `--spec dflash`/`dflash2` are not available.
 The same model, resource and deployment settings work with `ninfer-serve`.
 
 ## Text input
@@ -296,6 +299,8 @@ Flash Next's conversion recipe needs approximately 63.3 GiB of Host Main-expert 
 path, plus other runtime/system memory. Its NF4 PLE rows are read from the artifact on disk.
 On one Spark, experts are GPU resident and PLE remains disk-backed; on two Sparks, the PLE table is
 sharded across Device memory. These placements are selected by the model deployment.
+
+The R9700 target does not offload experts.
 
 The default prefill chunk is listed in [startup configuration](startup-configuration.md#model-and-execution).
 Use a positive multiple of 128 to choose it explicitly. The Host context-cache budget is separate

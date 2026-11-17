@@ -8,11 +8,11 @@ run the CLI or HTTP server.
 | Document | Purpose |
 |---|---|
 | [Startup configuration](startup-configuration.md) | shared CLI/serve TOML schema, defaults, overrides, resource controls and startup display |
-| [Deployment configurations](../examples/configs/) | RTX 5090, single Spark and dual-Spark TOML examples |
+| [Deployment configurations](../examples/configs/) | RTX 5090, AMD R9700, single Spark and dual-Spark TOML examples |
 | [CLI](cli.md) | text, chat-history, image/video input, output streams, sampling, MTP, and common runtime options |
 | [HTTP serving](serving.md) | OpenAI Responses/Chat Completions, Anthropic Messages, state, streaming, token counting, authentication, and tool calls |
 | [Dashboard](../dashboard/README.md) | independent monitoring service, shared history, deployment and display semantics |
-| [Performance](performance.md) | RTX 5090 measurement coverage, per-model serving results, methodology, and publication rules |
+| [Performance](performance.md) | RTX 5090 and R9700 measurement coverage, per-model serving results, methodology, and publication rules |
 | [Weight conversion](weight-conversion.md) | official recipes, custom formats and sources, conversion methods, optional components and artifact output |
 | [Perplexity](perplexity.md) | fixed-corpus and custom-text causal perplexity, comparison rules, progress, and reports |
 | [CLI examples](../examples/cli/) | committed text, multimodal, thinking, long-decode, and long-context inputs |

@@ -161,7 +161,9 @@ The [GLM5Next reference](maintainer/glm5next-model.md) records the model's repre
 
 CUDA self-quantization compiles its encoder on first use and needs a CUDA toolkit, a C++ compiler
 and Ninja. Use a CUDA-enabled PyTorch build for the selected GPU architecture. The same converter
-runs on RTX 5090 and Spark; no inference service is needed.
+runs on RTX 5090 and Spark; no inference service is needed. `groupwise-int` conversion uses plain
+PyTorch operations, needs no CUDA toolkit and also runs with `--device cpu`, so an artifact for the
+AMD R9700 can be converted without the R9700 installed.
 
 Built-in methods size batches by row width to target about 16 MiB of working input or output,
 with alignment where the encoding requires it. One reader prefetches the next source batch while

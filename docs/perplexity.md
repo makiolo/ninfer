@@ -29,6 +29,8 @@ The default evaluation uses a 4,096-token context and a 2,048-token stride. Use 
 `--stride` to change that protocol, or score one UTF-8 file with `--text FILE`. The available Main
 KV representations are `bf16`, `int8`, `fp8`, `nvfp4`, and `k8v4`.
 The PPL entry defaults to FP8 KV; explicit TOML or command-line settings override it.
+The R9700 target scores the `groupwise-int` artifact with `bf16` or `fp8` KV, using
+`build/r9700-release/apps/ninfer-perplexity.exe`.
 
 `--context` defines the metric's scoring window. `--max-context` sets the Engine capacity limit:
 it defaults to the scoring window when absent from both TOML and the command line. An explicit

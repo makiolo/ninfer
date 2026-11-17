@@ -1,0 +1,27 @@
+# r9700-qwen3_8-27b-groupwise: CLI/Serve deployment example.
+# Set model.path to your artifact entry file before use.
+# Requires an artifact containing Text, MTP and the optimized proposal head.
+# One AMD R9700 (32 GB); Vision, DFlash and CPU expert offload are not available on this target.
+
+[model]
+path = "C:/models/qwen3_8_27b.ninfer"
+
+[engine]
+max_context = 131072 # Per-request limit; shared physical capacity is planned separately.
+max_concurrency = 2
+kv_dtype = "fp8"
+context_capacity = "auto"
+memory_headroom = "1GiB" # Windows keeps part of the 32 GB for the display and other processes.
+prefill_chunk = 1024
+cuda_graph = true
+
+[speculative]
+backend = "mtp"
+draft_tokens = 3
+proposal_head = "optimized"
+
+[server]
+host = "127.0.0.1" # Use 0.0.0.0 for LAN access.
+port = 8080
+model_id = "qwen3.8-27b"
+# api_key = "replace-with-your-key"

@@ -1,7 +1,7 @@
 # Serving performance
 
-Recorded measurements cover RTX 5090 and single-/dual-DGX Spark deployments through NInfer's public
-HTTP serving route. Each model page contains its run conditions, results, completion outcomes,
+Recorded measurements cover RTX 5090 and single-/dual-DGX Spark deployments, with a reserved slot for
+the AMD R9700, through NInfer's public HTTP serving route. Each model page contains its run conditions, results, completion outcomes,
 and reproduction commands.
 
 Read the [measurement and publication rules](performance/methodology.md) for workload definitions,
@@ -36,6 +36,15 @@ Qwen3.8-27B and Qwen3.6-35B-A3B C=1 corpus points also supply their single-reque
 The Qwen3.6-27B NVFP4 MTP3 phase table comes from a corpus C=1 point whose full makespan is
 not published here. These Qwen3.8-27B measurements use FP8 E4M3 row-256 KV; the Qwen3.6 measurements
 use INT8 group-64 KV. Each model page records its build and run conditions.
+
+### AMD R9700
+
+The R9700 campaign uses the same workloads as RTX 5090 on one GPU, with the `groupwise-int` artifact only
+(no NVFP4, DFlash2 or Vision). Values are pending; the structure is fixed in the model page.
+
+| Model / weights | MTP0 context profile | Single-request speculative decode | Corpus makespan | MTP3 decode saturation |
+|---|---|---|---|---|
+| Qwen3.8-27B / `groupwise-int` | [8K–256K](performance/qwen3.8-27b.md#r9700-context-profile) | Pending | Pending | [C=1, 2, 4, 8](performance/qwen3.8-27b.md#r9700-decode-saturation) |
 
 GLM has no published performance page here. Product support is listed in the
 [README](../README.md#supported-models-and-deployments).

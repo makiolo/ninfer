@@ -13,6 +13,7 @@ resources required by that capacity; decode batches use the requests currently r
 | Model | Architecture | Deployment | Speculative backends |
 |---|---|---|---|
 | Qwen3.6-27B / Qwen3.8-27B | Qwen3.5 Dense | RTX 5090 | MTP; DFlash2 for Qwen3.8-27B with companion weights |
+| Qwen3.8-27B `groupwise-int` | Qwen3.5 Dense | One AMD R9700 | MTP |
 | Qwen3.6-35B-A3B | Qwen3.5 MoE | RTX 5090, resident or CPU expert offload | MTP or DFlash with companion weights |
 | Qwen3.8-Flash-Next | Qwen4Exp | RTX 5090 with CPU expert offload; one or two Sparks | MTP |
 | GLM-5.3-Flash | GLM5Next | Two Sparks | MTP or DFlash2 with companion weights |
@@ -22,6 +23,11 @@ Vision and speculative decoding require the corresponding components in the arti
 enabled at startup. Scoring loads Text only. CPU expert offload applies to the RTX 5090 target;
 Spark execution keeps selected weights on the GPU. Flash Next offload also needs substantial system
 RAM for expert weights; see the [CLI guide](docs/cli.md#cpu-expert-offload).
+
+The R9700 row is limited to one GPU and the Qwen3.8-27B `groupwise-int` artifact. It runs Text with
+MTP, BF16 or FP8 (OCP e4m3fn) KV, tools, constrained output and perplexity scoring. Vision, DFlash/DFlash2,
+NVFP4, the MoE and Flash Next models, GLM, CPU expert offload and multi-GPU execution are not available
+on the R9700 target.
 
 Dual-Spark Flash Next uses TP2, optionally with EP2. GLM uses TP2 plus attention DP2, optionally
 with EP2. The [deployment guide](docs/startup-configuration.md#distributed-deployment) explains
@@ -125,6 +131,14 @@ Run one request on RTX 5090:
   --max-context 8192 --max-tokens 1024 --kv-dtype fp8
 ```
 
+On the R9700, use the `groupwise-int` artifact and the R9700 build:
+
+```bash
+./build/r9700-release/apps/ninfer.exe models/qwen3_8_27b.ninfer \
+  --prompt "Explain prefill and decode briefly." \
+  --max-context 8192 --max-tokens 1024 --kv-dtype fp8
+```
+
 Answer content goes to stdout; reasoning, startup information and the result report go to stderr.
 Use `--messages FILE` and `--vision` for image/video input. See the [CLI guide](docs/cli.md).
 
@@ -139,6 +153,8 @@ cp examples/configs/rtx5090-qwen3_8-27b-nvfp4.toml ninfer.local.toml
 The example enables Vision, FP8 KV, MTP3 and the optimized draft head. It sets a per-request
 context limit of 240,000 tokens; the actual shared KV/State capacity depends on available memory.
 The startup log reports the Context pool size and an estimated token capacity.
+For the R9700, start from `examples/configs/r9700-qwen3_8-27b-groupwise.toml` and
+`build/r9700-release/apps/ninfer-serve.exe`; it has no Vision or DFlash.
 
 ```bash
 curl http://127.0.0.1:8080/v1/chat/completions \

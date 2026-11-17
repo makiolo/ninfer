@@ -1,14 +1,15 @@
 # Deployment configurations
 
-These TOML files are starting points for the product CLI and HTTP server. All enable Vision,
-FP8 KV, CUDA Graph decode, MTP3 and the optimized proposal head. The artifact must contain those
-components. Model sampling defaults are retained. Download the corresponding artifacts from the
+These TOML files are starting points for the product CLI and HTTP server. All enable
+FP8 KV, CUDA Graph decode, MTP3 and the optimized proposal head; all except the R9700 example also
+enable Vision. The artifact must contain the enabled components. Model sampling defaults are retained. Download the corresponding artifacts from the
 [weight table](../../README.md#get-weights); Flash Next and GLM require every storage part.
 
 | Configuration | Hardware | Per-request context limit | Active requests |
 |---|---|---:|---:|
 | [Qwen3.8-27B NVFP4](rtx5090-qwen3_8-27b-nvfp4.toml) | RTX 5090 | 240,000 | 2 |
 | [Qwen3.8-27B groupwise](rtx5090-qwen3_8-27b-groupwise.toml) | RTX 5090 | 262,144 | 2 |
+| [Qwen3.8-27B groupwise](r9700-qwen3_8-27b-groupwise.toml) | One AMD R9700 | 131,072 | 2 |
 | [Flash Next](spark-qwen3_8-flash-next.toml) | One Spark | 262,144 | 8 |
 | [Flash Next TP2](spark2-qwen3_8-flash-next.toml) | Two Sparks | 262,144 | 8 |
 | [GLM-5.3-Flash TP2/ADP2](spark2-glm5_3-flash.toml) | Two Sparks | 1,048,576 | 8 |
@@ -19,6 +20,10 @@ it together. Read the startup pool size and token-capacity estimate for the actu
 MTP3 is a useful starting configuration; the best draft count depends on workload and concurrency.
 The listed concurrency values are example settings. Larger resident capacities are supported when
 their required working sets fit the deployment.
+
+The R9700 example targets one GPU on Windows with the `groupwise-int` artifact. It has no Vision,
+DFlash or CPU expert offload because the R9700 target does not provide them. Its context limit and
+headroom are conservative starting values for 32 GB; adjust them from the startup log.
 
 The GLM topology also works with an FP4 Local artifact: change `model.path` and both node artifact
 paths to that artifact. If it contains DFlash2, select `backend = "dflash2"` and the desired
@@ -35,7 +40,8 @@ cp examples/configs/rtx5090-qwen3_8-27b-nvfp4.toml ninfer.local.toml
 ./build/rtx5090-release/apps/ninfer-serve --config ninfer.local.toml
 ```
 
-Use `build/dgx-spark-release/apps/` on Spark. For a single CLI request, use the same configuration:
+Use `build/dgx-spark-release/apps/` on Spark, or `build/r9700-release/apps/ninfer-serve.exe` on the
+R9700 with `r9700-qwen3_8-27b-groupwise.toml`. For a single CLI request, use the same configuration:
 
 ```bash
 ./build/rtx5090-release/apps/ninfer --config ninfer.local.toml \

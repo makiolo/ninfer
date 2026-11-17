@@ -141,8 +141,8 @@ retain their stated MTP configurations and revisions.
 ## Requirements
 
 - Current [NInfer](https://github.com/Neroued/ninfer) checkout, built from source;
-- 64-bit Linux;
-- NVIDIA GeForce RTX 5090 (`sm_120a`);
+- 64-bit Linux with an NVIDIA GeForce RTX 5090 (`sm_120a`), or 64-bit Windows with one AMD Radeon
+  AI PRO R9700 (`gfx1201`; Text and MTP only, no Vision or DFlash2);
 - Build dependencies from the [build guide](https://github.com/Neroued/ninfer#build).
 
 Already have the official v2 file? [Upgrade it locally](https://github.com/Neroued/ninfer/blob/master/docs/weight-conversion.md#upgrade-an-existing-v2-artifact)
@@ -240,7 +240,7 @@ card reports no AIME results.
 
 ## Limits
 
-- This artifact targets one RTX 5090. Resident request capacity is configured at startup and
+- This artifact targets one RTX 5090 or one R9700. Resident request capacity is configured at startup and
   checked against the available resources.
 - KV and continuation state share the startup Context pool. Usable context depends on the
   selected KV type, enabled components, concurrency and available memory.

@@ -9,7 +9,9 @@ example set, not a second correctness framework.
 recommended runtime budgets, and prepared-prompt token counts. Standalone exploratory prompts may
 also live beside them when they deliberately have no frozen output oracle.
 
-For deployment configurations, including dual Spark, see [configs](../configs/). The commands below
+For deployment configurations, including dual Spark and the AMD R9700, see [configs](../configs/).
+On the R9700, replace `CLI` with `./build/r9700-release/apps/ninfer.exe`, use a `groupwise-int` Qwen3.8-27B
+artifact, and skip the image, video and mixed multimodal cases (no Vision on that target). The commands below
 use Qwen and its non-thinking mode; GLM requires thinking, and token counts depend on its own tokenizer.
 
 ## Quick start

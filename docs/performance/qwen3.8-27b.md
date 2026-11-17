@@ -8,7 +8,7 @@ that campaign's engine revision. For current builds and startup flags, use the
 
 On this page: [run records](#scope-and-run-records), [context profile](#no-speculation-context-profile),
 [single-request decode](#single-request-speculative-decode), [corpus makespan](#corpus-makespan),
-[decode saturation](#decode-saturation), [completion outcomes](#completion-outcomes),
+[decode saturation](#decode-saturation), [AMD R9700](#amd-r9700), [completion outcomes](#completion-outcomes),
 [reproduction](#reproduction-and-reports).
 
 ## Scope and run records
@@ -212,6 +212,33 @@ intervals; acceptance covers the entire wave, and wave makespan includes ramp-up
 | 2 | 54.00 | 2.00 | 291.0 | 48.7% | 56.52 |
 | 4 | 60.00 | 4.00 | 522.2 | 45.8% | 63.11 |
 | 8 | 69.00 | 8.00 | 922.4 | 46.1% | 72.00 |
+
+## AMD R9700
+
+This section is reserved for the one-R9700 campaign: Windows, `gfx1201`, the `groupwise-int` artifact,
+FP8 E4M3 row-256 KV, a 1,024-token prefill chunk, CUDA Graph (hipGraph) decode, disabled prefix reuse and
+the [common stochastic sampling profile](methodology.md#common-serving-profile). It follows the same
+methods as the RTX 5090 sections above. Vision, DFlash2 and NVFP4 are not available on this target, so
+the DFlash2 and `nvfp4` tables have no R9700 counterpart. The campaign has not been measured yet; the
+tables below fix their structure only.
+
+### R9700 context profile
+
+| Prompt tokens | Samples | Prefill phase (tok/s) | Server TTFT (ms) | Decode phase (tok/s) |
+|---|---|---|---|---|
+| 7,680 | 5 | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> |
+| 64,512 | 5 | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> |
+| 130,048 | 5 | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> |
+| 260,096 | 5 | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> |
+
+### R9700 decode saturation
+
+| C | Steady (s) | Avg batch | Steady decode (tok/s) | MTP acceptance (wave) | Wave makespan (s) |
+|---|---|---|---|---|---|
+| 1 | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> |
+| 2 | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> |
+| 4 | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> |
+| 8 | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> | <!-- R97-19..21: medir y rellenar --> |
 
 ## Completion outcomes
 

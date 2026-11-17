@@ -14,7 +14,8 @@ and launch it on the coordinator:
 ./build/rtx5090-release/apps/ninfer-serve --config ninfer.local.toml
 ```
 
-Use `build/dgx-spark-release/apps/ninfer-serve` on Spark. Dual-node deployments automatically start
+Use `build/dgx-spark-release/apps/ninfer-serve` on Spark, or
+`build/r9700-release/apps/ninfer-serve.exe` on the AMD R9700 (Text with MTP, one GPU; no Vision). Dual-node deployments automatically start
 local and remote workers; see [distributed launch](startup-configuration.md#distributed-deployment).
 A minimal command without a file is:
 
