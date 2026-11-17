@@ -101,3 +101,8 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   ninfer van por turnos (R97-11 lo tenía 39 min); se amplía con hijos que no compilan. Lanzados los oráculos de R97-12
   (515), R97-13 (516) y R97-14 (517), Opus 5.5 high, fichas READY. En curso: 3 autores Codex + 3 oráculos.
   Progreso de los autores: `563e4526` (shim de errores de R97-10), `c666530a` (registro de oráculos de R97-11).
+- 2026-11-17 02:5x UTC · Oráculo de R97-13 (516) aceptado: `b5117b4b` (alcance: solo `causal_softmax_attention`, texto
+  `text.cpp:175` + MTP `mtp.cpp:210`; cachés bf16 y fp8; contraste 9 casos / 0, logits ±600). Las cabezas 24/4 del 27B
+  no salen de un config del repo (se confirman con los pesos en R97-17). Decisión del director: los planes densos
+  `bf16`/`fp8` incluyen `ops/kv_cache/kernels/write.h`, así que **R97-13 porta los kernels de escritura de KV** y R97-14
+  (append, materialize, Hadamard) los consume y valida. Autor lanzado (Codex `gpt-6-astra` xhigh, 518; ficha READY).
