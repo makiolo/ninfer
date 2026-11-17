@@ -365,3 +365,11 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   de R97-12 dejó el commit `afe640fb` (biblioteca propia de la familia) y espera turno en la cola junto con las
   validaciones de R97-08 y R97-30; el gate de R97-11 tiene la ranura. `deps.py`: sin dependencias. INBOX sin
   entradas nuevas. Cuota a las 07:40 UTC: Claude 54 %, Fable 74 %, Codex 56 %. Abierta: Q-012.
+- 2026-11-17 07:4x UTC · **R97-15 cerrada.** Revisión (536, Sonnet 5.5 high): ACCEPT, sin hallazgos bloqueantes ni
+  dudas. El director contrastó la corrección `b86077c3` con el contrato (`speculative_accept.h:37-38`: solo las
+  filas greedy sin penalizaciones ni máscaras consumen el target, con argmax exacto) y el log del gate (79/79, 0
+  omitidos, dos pasadas). Fila en PLAN_OPS §5. Observaciones bajas anotadas allí: `r9700_edges.cpp` sin compilar en
+  CUDA; las Ops excluidas no tienen definición en `r9700`.
+- 2026-11-17 07:4x UTC · **R97-11 gate: exit 0** (segunda entrada, tras `637377e9`): sonda de `math.cuh` con salida 0,
+  embedding 85, normalización **447/447**, RoPE 40, elementwise 20, reducción 28; 0 omitidos
+  (`.agent-tmp/R97-11/gate.log`). **Revisión lanzada** (537, Claude Sonnet 5.5 high; `R97-11/review-card.md`).
