@@ -28,7 +28,7 @@ ctest --test-dir build/rtx5090-dev -N
 ctest --test-dir build/rtx5090-dev -R 'ninfer_context_capacity' --output-on-failure
 ```
 
-Spark 使用 `dgx-spark-dev`；`*-ops` 注册对应基础与 Op suites。
+Spark 使用 `dgx-spark-dev`，R9700 使用 `r9700-dev`；`*-ops` 注册对应基础与 Op suites。
 Python interpreter 在本地 CMake preset 中显式选择。完整目标与链接规则见
 [构建系统](../docs/maintainer/build-system.md)。
 

@@ -15,7 +15,7 @@ cmake --build build/rtx5090-dev -j
 ./build/rtx5090-dev/bench/ninfer_bench --help
 ```
 
-Spark 使用 `dgx-spark-dev`；分布式配置需启用分布式构建。`*-ops` 只提供对应基础和 Op benches。
+Spark 使用 `dgx-spark-dev`，R9700 使用 `r9700-dev`；分布式配置需启用分布式构建。`*-ops` 只提供对应基础和 Op benches。
 参数和支持点由各 executable 的 `--help` 与源文件维护。临时输入、CSV、报告和 profiler 产物
 统一写入 `.agent-tmp/<task>/`。
 

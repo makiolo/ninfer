@@ -1,6 +1,6 @@
 # NInfer
 
-> Native C++/CUDA inference for selected models on RTX 5090 and DGX Spark.
+> Native C++/CUDA inference for selected models on RTX 5090, DGX Spark and AMD Radeon AI PRO R9700.
 
 NInfer runs text and image/video generation through a local CLI or OpenAI- and
 Anthropic-compatible HTTP APIs. It supports single-device execution and model-parallel execution
@@ -31,6 +31,8 @@ deployments, including Vision, FP8 KV, MTP3 and the optimized draft head.
 ## Build
 
 Build natively on Linux: x86-64 / `sm_120a` for RTX 5090, AArch64 / `sm_121a` for DGX Spark.
+For the AMD Radeon AI PRO R9700, build natively on Windows: x86-64 / `gfx1201` with ROCm HIP and its `clang++`;
+host dependencies come from vcpkg (see [build organization](docs/maintainer/build-system.md)).
 Dependencies are a CUDA toolkit supporting the target, CMake 3.28+, a C++20 host compiler,
 Ninja, `pkg-config`, libjpeg development headers, FFmpeg development libraries
 (`libavformat`, `libavcodec`, `libavutil`, `libswscale`), `hwloc >= 2.5`, `liburing >= 2.5`,
@@ -41,6 +43,13 @@ git clone https://github.com/Neroued/ninfer.git
 cd ninfer
 cmake --preset rtx5090-release
 cmake --build build/rtx5090-release -j
+```
+
+For the R9700:
+
+```bash
+cmake --preset r9700-release
+cmake --build build/r9700-release -j
 ```
 
 For a single Spark, use `dgx-spark-release` and `build/dgx-spark-release`.
@@ -60,7 +69,7 @@ Product binaries are `apps/ninfer`, `apps/ninfer-serve`, `apps/ninfer-perplexity
 distributed execution enabled, `apps/ninfer-worker`. Run them from the build tree; keep its `lib/`
 directory alongside `apps/` when moving outputs. There is no installed C++ SDK.
 
-Product presets omit tests and benchmarks. The `rtx5090-dev` / `dgx-spark-dev` presets enable
+Product presets omit tests and benchmarks. The `rtx5090-dev` / `dgx-spark-dev` / `r9700-dev` presets enable
 both; the corresponding `-ops` presets build only the lower-level libraries and their checks.
 See [build organization](docs/maintainer/build-system.md) for development options.
 
