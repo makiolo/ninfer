@@ -354,3 +354,7 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   y se permite el cambio mínimo en `src/ops/elementwise/sources.cmake` para que se compile una sola vez, en su
   biblioteca (las demás fuentes de `elementwise` son de R97-11 y no se tocan). **Intento 2 lanzado** (535, Codex
   `gpt-6.1-sol` high; `R97-30/card-fix.md`, pre-revisada READY).
+- 2026-11-17 07:4x UTC · **Relevo 5 del director** escrito por contexto (68 %; sesión saliente `c988ac27`,
+  `ninfer-48`). En vuelo, todo adoptable: autores de R97-08 (534), R97-12 (531) y R97-30 (535), oráculo de R97-29
+  (532) y gates sin modelo de R97-15 y R97-11. Cuota a las 07:34 UTC: Claude 53 %, Fable 73 %, Codex 56 % (con el
+  4,5 % de la semana). Abierta: Q-012.
