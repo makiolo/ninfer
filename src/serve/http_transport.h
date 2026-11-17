@@ -46,7 +46,7 @@ public:
     void write(const std::vector<std::string>& items, Clock::time_point now = Clock::now());
 
     // Called by the Engine wait loop. Besides observing an already-closed socket, a quiet stream
-    // periodically writes an SSE comment so TCP_USER_TIMEOUT has traffic with which to detect an
+    // periodically writes an SSE comment so the socket's liveness policy can detect an
     // unacknowledged peer. A failed probe marks the request for cancellation.
     [[nodiscard]] bool poll(Clock::time_point now = Clock::now());
 

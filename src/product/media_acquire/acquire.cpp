@@ -1,10 +1,18 @@
 #include "product/media_acquire/acquire.h"
 
-#include <curl/curl.h>
+#if defined(_WIN32)
+#    ifndef NOMINMAX
+#        define NOMINMAX
+#    endif
+#    include <winsock2.h>
+#    include <ws2tcpip.h>
+#else
+#    include <arpa/inet.h>
+#    include <netdb.h>
+#    include <sys/socket.h>
+#endif
 
-#include <arpa/inet.h>
-#include <netdb.h>
-#include <sys/socket.h>
+#include <curl/curl.h>
 
 #include <algorithm>
 #include <array>
@@ -147,7 +155,16 @@ std::string resolve_public(const UrlParts& url, bool allow_private) {
     hints.ai_family   = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     addrinfo* raw     = nullptr;
+#if defined(_WIN32)
+    // CURLU retains IPv6 URL brackets; Winsock takes the bare literal.
+    std::string host = url.host;
+    if (host.starts_with('[') && host.ends_with(']')) {
+        host = host.substr(1, host.size() - 2);
+    }
+    const int rc      = getaddrinfo(host.c_str(), url.port.c_str(), &hints, &raw);
+#else
     const int rc      = getaddrinfo(url.host.c_str(), url.port.c_str(), &hints, &raw);
+#endif
     if (rc != 0) {
         throw Error(ErrorKind::RemoteUnavailable,
                     "failed to resolve media URL host: " + std::string(gai_strerror(rc)));
@@ -203,6 +220,8 @@ std::vector<std::uint8_t> fetch_url(std::string url, const Policy& policy) {
     if (!policy.allow_remote) { throw std::invalid_argument("remote media URLs are disabled"); }
     static std::once_flag init;
     std::call_once(init, [] {
+        // This process-lifetime initialization also owns Winsock for media acquisition.
+        // Do not depend on a serve instance (or duplicate cpp-httplib's WSAStartup).
         if (curl_global_init(CURL_GLOBAL_DEFAULT) != CURLE_OK) {
             throw std::runtime_error("failed to initialize libcurl");
         }
@@ -215,8 +234,14 @@ std::vector<std::uint8_t> fetch_url(std::string url, const Policy& policy) {
         check_control(policy);
         std::string resolve = parts.host + ":" + parts.port + ":";
         resolve += ip.find(':') == std::string::npos ? ip : "[" + ip + "]";
-        curl_slist* resolve_list = curl_slist_append(nullptr, resolve.c_str());
-        if (resolve_list == nullptr) { throw std::bad_alloc(); }
+#if defined(_WIN32)
+        // A literal is already pinned by the URL and was checked above. Older curl
+        // versions cannot parse an IPv6 HOST in CURLOPT_RESOLVE (minimum is 7.85).
+        if (parts.host.starts_with('[')) { resolve.clear(); }
+#endif
+        curl_slist* resolve_list =
+            resolve.empty() ? nullptr : curl_slist_append(nullptr, resolve.c_str());
+        if (!resolve.empty() && resolve_list == nullptr) { throw std::bad_alloc(); }
         std::unique_ptr<curl_slist, decltype(&curl_slist_free_all)> resolve_guard(
             resolve_list, curl_slist_free_all);
         std::unique_ptr<CURL, decltype(&curl_easy_cleanup)> curl(curl_easy_init(),
@@ -287,7 +312,8 @@ std::vector<std::uint8_t> read_path(const Source& source, const Policy& policy) 
     if (!policy.media_root.empty()) {
         const std::filesystem::path root = std::filesystem::weakly_canonical(policy.media_root, ec);
         const auto relative              = std::filesystem::relative(path, root, ec);
-        if (ec || relative.empty() || relative.native().starts_with("..")) {
+        if (ec || relative.empty() ||
+            relative.native().starts_with(std::filesystem::path("..").native())) {
             throw std::invalid_argument("media path is outside configured media root");
         }
     }

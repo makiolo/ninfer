@@ -106,7 +106,15 @@ bool SseTransport::poll(Clock::time_point now) {
 }
 
 void configure_http_server_socket(socket_t socket) noexcept {
-#if defined(__linux__)
+#if defined(_WIN32)
+    // Windows SO_REUSEADDR permits a second active listener. Keep the bind exclusive.
+    // cpp-httplib owns Winsock startup/cleanup and reports failed sends (no SIGPIPE).
+    httplib::set_socket_opt(socket, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, 1);
+    httplib::set_socket_opt(socket, SOL_SOCKET, SO_KEEPALIVE, 1);
+    httplib::set_socket_opt(socket, IPPROTO_TCP, TCP_KEEPIDLE, 10);
+    httplib::set_socket_opt(socket, IPPROTO_TCP, TCP_KEEPINTVL, 3);
+    httplib::set_socket_opt(socket, IPPROTO_TCP, TCP_KEEPCNT, 3);
+#elif defined(__linux__)
     const int enabled = 1;
     // Reuse closed connections' addresses while keeping the active listener exclusive.
     set_socket_option(socket, SOL_SOCKET, SO_REUSEADDR, enabled);

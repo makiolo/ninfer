@@ -62,6 +62,17 @@ ninfer_add_test(ninfer_http_transport_test
   SOURCES "${CMAKE_CURRENT_LIST_DIR}/../test_http_transport.cpp"
   LIBRARIES ninfer_serve)
 
+if(NINFER_TARGET_R9700)
+  ninfer_add_test(ninfer_http_loopback_test
+    SOURCES "${CMAKE_CURRENT_LIST_DIR}/../host_serve/test_http_loopback.cpp"
+    LIBRARIES ninfer_serve)
+  ninfer_add_test(ninfer_media_acquire_host_test
+    SOURCES "${CMAKE_CURRENT_LIST_DIR}/../host_serve/test_media_acquire.cpp"
+    LIBRARIES ninfer_serve ninfer_media_acquire)
+  set_tests_properties(ninfer_http_loopback_test ninfer_media_acquire_host_test
+    PROPERTIES LABELS host TIMEOUT 30)
+endif()
+
 if(TARGET ninfer-serve)
   add_test(NAME ninfer_serve_shutdown_real_test
     COMMAND ${Python3_EXECUTABLE} -B "${CMAKE_CURRENT_LIST_DIR}/../test_serve_shutdown_real.py"

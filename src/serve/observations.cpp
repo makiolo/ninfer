@@ -4,7 +4,11 @@
 
 #include <algorithm>
 #include <cmath>
-#include <unistd.h>
+#if defined(_WIN32)
+#    include <process.h>
+#else
+#    include <unistd.h>
+#endif
 
 namespace ninfer::serve {
 namespace {
@@ -90,7 +94,12 @@ ServiceObservations::ServiceObservations() {
     const auto micros = std::chrono::duration_cast<std::chrono::microseconds>(
                             std::chrono::system_clock::now().time_since_epoch())
                             .count();
-    instance_id_ = "serve-" + std::to_string(::getpid()) + '-' + std::to_string(micros);
+#if defined(_WIN32)
+    const auto process_id = ::_getpid();
+#else
+    const auto process_id = ::getpid();
+#endif
+    instance_id_ = "serve-" + std::to_string(process_id) + '-' + std::to_string(micros);
 }
 
 void ServiceObservations::attach(EngineSnapshot baseline) {

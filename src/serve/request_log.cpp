@@ -20,8 +20,6 @@
 #include <system_error>
 #include <utility>
 
-#include <unistd.h>
-
 namespace ninfer::serve {
 namespace {
 
@@ -828,6 +826,9 @@ std::string format_throughput_json(const std::string& server_instance_id, std::u
 ServerLogEnvironment query_server_log_environment(int device) {
     ServerLogEnvironment environment;
     environment.device               = device;
+#if defined(CUDART_VERSION)
+    // HIP compatibility headers do not advertise a CUDA toolkit version. Keep CUDA
+    // version fields empty there rather than interpreting HIP versions as CUDA.
     environment.cuda_compile_version = cuda_version_string(CUDART_VERSION);
 
     int runtime_version = 0;
@@ -838,6 +839,7 @@ ServerLogEnvironment query_server_log_environment(int device) {
     if (cudaDriverGetVersion(&driver_version) == cudaSuccess) {
         environment.cuda_driver_version = cuda_version_string(driver_version);
     }
+#endif
     cudaDeviceProp properties{};
     if (cudaGetDeviceProperties(&properties, device) == cudaSuccess) {
         environment.gpu_name                  = properties.name;
