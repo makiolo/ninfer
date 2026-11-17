@@ -432,3 +432,17 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   devuelve al autor los alcanzables). Se lanza al acabar la ventana quieta. Nota del autor para la revisión:
   ninguna suite de `r9700` ejercita `exp2_approx` (`prepare.cu`, la ruta por trozos con MMA, queda fuera; `r9700`
   usa siempre la recurrencia, con `expf`).
+- 2026-11-17 08:2x UTC · **Ventana quieta terminada antes de tiempo** (aviso de `quantdesk-8b` a las 09:21 hora
+  local): retirada la entrada de espera terminando solo su proceso de sueño; la cola liberó el candado sin residuos.
+- 2026-11-17 08:2x UTC · **R97-29 intento 1 (538): seis de siete ejecuciones en verde; BLOCKED en `pair` por un
+  identificador duplicado.** `505fb8ab` (sobre `1699f365`). En la ASUS: split `q4_q5` 215, swiglu `q4` 82, add `q5`
+  215 y, sin regresión, proyección `q4` 654, `q5` 514 y `q8` 1 742; 0 fallos, 0 omitidos. `ninfer_linear_pair_test`
+  aborta al registrar: la forma real del 27B que pidió el oráculo (padre compartido, K = 5120) repite el
+  identificador `q8/1024x5120/workspace-domain/a16/t0/eager` de una forma existente. **Decisión del director:**
+  aplicado el parche que preparó el autor (`.agent-tmp/R97-29/pair-registration-fix.patch`): el identificador de
+  ese caso lleva la semilla de la forma; comprobaciones, esperados y casos intactos (`3b3f26cd`; cambia el nombre
+  de los casos `workspace-domain` de pair en todas las dianas, va a la revisión). **Validación sin modelo lanzada**
+  (`R97-29-gate`: compilar y las siete ejecuciones; `.agent-tmp/R97-29/gate.log`).
+- 2026-11-17 08:2x UTC · **Oráculo de R97-12, intento 2, lanzado** (541, Claude Opus 5.5 high;
+  `R97-12/oracle-card-2.md`). Cuota a las 08:22 UTC: Claude 57 % (por debajo del 85 % de Q-012), Fable 79 %,
+  Codex 62 %.
