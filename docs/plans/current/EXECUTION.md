@@ -164,3 +164,17 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   registro `637de1f9`): «Sí, exclusivas (Recomendado)». Las dos R9700 serán exclusivas de ninfer durante R97-22 y
   desde R97-24 (SPRINT-02). Aplicado en `next/SPRINT.md` §4 y `next/PLAN_TP.md` §5. No cambia SPRINT-01: la Sapphire
   (HIP 1) sigue prohibida para los hijos hasta entonces. Sin preguntas abiertas.
+- 2026-11-17 04:1x UTC · **R97-08 intento 1 (511): BLOCKED**, `b8fd7fe2`. Árbol vcpkg en
+  `G:\vcpkg_root\installed-ninfer-r9700` (420 ficheros verificados; el de `.agent-tmp/R97-03/` se conserva hasta
+  aceptar); nvtx con marcadores vacíos en `r9700`; 67 tests host registrados, **0 ejecutados**, 135 excluidos. Pidió
+  dos ficheros fuera de sus rutas. **Decisión del director:** autorizados `src/text/CMakeLists.txt`
+  (`UTF8PROC_STATIC`, con `if(WIN32)` y no con la diana) y `third_party/llama-jinja/jinja/value.cpp`
+  (`localtime_s` bajo `_WIN32`). Intento 2 lanzado (525, Codex `gpt-6.1-sol` high; ficha READY): ejecutar
+  `ctest -L host` y agrupar los 135 excluidos por causa.
+- 2026-11-17 04:1x UTC · **Cola de compilación, medida:** 10 entradas de ninfer en espera. Las 2 ranuras de la máquina
+  las tenían `quantdesk-network` (`S02-cierre`, `cargo test` del workspace desde las 03:22 UTC, límite 240 min) y
+  `radiance-win` (`W1-probe`, límite 40 min); R97-14 retenía el candado de ninfer 49 min esperando ranura (la cola da
+  primero el candado del checkout y luego la ranura). Entradas recientes de ninfer: 17-28 min de espera para fallar en
+  2-30 s por errores de compilación. Mitigación del director (nota en `.agent-tmp/R97-1{0..5}/DIRECTOR-NOTE.md` y en
+  las fichas nuevas): pasada de sintaxis `-fsyntax-only` fuera de la cola antes de pedir turno (un proceso a la vez),
+  una sola entrada por autor y compilar + ejecutar en la misma entrada. La capacidad (2 ranuras) es del usuario.
