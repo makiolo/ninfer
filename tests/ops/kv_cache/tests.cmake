@@ -4,6 +4,8 @@ ninfer_add_op_test(ninfer_kv_cache_append_test
           "${CMAKE_CURRENT_LIST_DIR}/append_prefix.cpp"
   LIBRARIES ninfer_ops)
 
+ninfer_add_op_test(ninfer_kv_cache_append_r9700_test SOURCES "${CMAKE_CURRENT_LIST_DIR}/append_r9700_edges.cpp" LIBRARIES ninfer_ops)
+
 ninfer_add_op_test(ninfer_context_kv_materialize_test
   SOURCES "${CMAKE_CURRENT_LIST_DIR}/context_kv_materialize.cpp"
           "${CMAKE_CURRENT_LIST_DIR}/context_kv_materialize_bf16.cpp"
