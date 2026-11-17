@@ -280,3 +280,13 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
     (`R97-15/lz-gate2`), misma orden.
   Cola a las 06:59 UTC: las dos ranuras vuelven a ser de `quantdesk` y `quantdesk-network`; esperan `R97-08-gate` y
   `R97-15-gate`. R97-12 intento 2 ya usó su turno y sigue trabajando.
+- 2026-11-17 07:1x UTC · **R97-10 cerrada** (`7f252ce2`, con `563e4526`, `7adc091d` y `3402c172`). Revisión 529
+  (Claude Opus 5.5 high): ACCEPT WITH CONDITIONS, ninguna sobre el código. Contraste del director: (1) cierto que
+  `src/ops/linear/sources.cmake:1-4` sale antes de `split` y `swiglu` en `r9700` y que
+  `kernels/common/r9700/rowsplit.cuh:73` fija `LinearIdentityEpilogue`: condiciona `linear/swiglu` y va en su ficha;
+  (2) los casos nuevos del oráculo no se han ejecutado en CUDA: no se puede en esta máquina (CONCERTINO §11), queda
+  anotado como pendiente en PLAN_OPS §5. **Hueco detectado al preparar `linear/swiglu`:** el modelo incluye también
+  `linear_split`, `linear_add`, `linear_pair` y `linear_topk` (`src/models/qwen3_5`), que hoy no se compilan en
+  `r9700` y no tienen tarea. Lanzado un análisis de solo lectura (subagente Sonnet 5.5 en sesión) que lista las Ops
+  que llama el camino de texto del 27B con MTP y cuáles no tienen implementación en `r9700`; con su resultado se
+  fija el alcance de la tarea de `linear/swiglu` y de lo que falte antes de R97-16.
