@@ -247,12 +247,36 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   `context_materialize` sigue en `ninfer_ops` sin flags estrictos (`src/ops/kv_cache/sources.cmake:11`), fuera de
   alcance hasta que se porte el drafter. Condición anotada: si R97-13 cambia los kernels de escritura o las
   conversiones tras su revisión, se repiten las dos suites de KV. Fila en PLAN_OPS §5.
-- 2026-11-17 06:5x UTC · **R97-08 intento 2 (525): BLOCKED por plazo y cola.** Commits `e9f25fff`, `69e094d3`,
+- 2026-11-17 06:4x UTC · **R97-08 intento 2 (525): BLOCKED por plazo y cola.** Commits `e9f25fff`, `69e094d3`,
   `034bc7f9` (parches de texto/Jinja autorizados y test de `strftime_now`). Tras ~130 min de cola compiló 102 de 192
   pasos sin errores y se le acabó el plazo; CTest no llegó a arrancar (203 registrados, 73 host, 0 ejecutados).
   Excluidos, ahora 130 por causa: 116 necesitan GPU, 9 por enlace transitivo con Ops, 3 por arnés ELF/Windows, 2 por
   otras dependencias host (`.agent-tmp/R97-08/excluded.md`). Continuación lanzada sin modelo (`R97-08-gate`:
   `attempt2.py build` y `attempt2.py ctest` en una sola entrada; log `.agent-tmp/R97-08/gate.log`). Fichas de
   revisión de R97-11, R97-13 y R97-15 escritas y pre-revisadas (Gemini Flash: READY las tres), a la espera de sus
-  gates. Cola a las 06:5x UTC: ninfer tiene una ranura (R97-12 intento 2 en ejecución); detrás, R97-10, los gates
+  gates. Cola a las 06:4x UTC: ninfer tiene una ranura (R97-12 intento 2 en ejecución); detrás, R97-10, los gates
   de R97-11, R97-15 y R97-13, y ahora el de R97-08.
+- 2026-11-17 06:5x UTC · **Cuatro resultados seguidos** (ninfer tuvo una ranura de 06:35 a 06:58 UTC):
+  - **R97-10 intento 2 (527): entregada completa**, sin commits nuevos (`563e4526`, `7adc091d`, `7f252ce2`, más la
+    corrección del director `3402c172`). En la ASUS: Q4 654 casos, Q5 514, Q8 1 742, 0 fallos, 0 omitidos (GEMV y
+    SIMT contra FP64 con las cotas A16/A8/A4); 28 comprobaciones de rechazo. Revisión lanzada (529, Claude Opus 5.5
+    high; `R97-10/review-card.md`, pre-revisada READY).
+  - **R97-13 gate: exit 0.** BF16 oficial completo, 180 casos (1 + 40 + 25 + 70 + 44), 0 omitidos; rechazos
+    explícitos de INT8, NVFP4 y K8V4 comprobados. Con el FP8 198/198 del intento 1, entrega completa. Revisión
+    lanzada (530, Claude Opus 5.5 high; `R97-13/review-card.md`): añade el hallazgo abierto de R97-14 (rechazo de
+    `write.cu` sin caso), el reinicio del driver y el pico de RAM.
+  - **R97-11 gate: exit 1.** Compila; sonda de `math.cuh` 16 548 evaluaciones, 0 fallos; embedding 85/85, RoPE
+    40/40, elementwise 20/20, reducción 28/28. **Normalización: 444/447**: fallan tres casos de borde del oráculo
+    (`rmsnorm/edge/2`, `13` y `35`; d=33 y d=127, escalas 1e8, 1e17 y casi 0) por el criterio de reducción
+    `{1.85e-3, 0, 3.95e-3}`. Observación del director: en los tres, el valor de la GPU en el índice de error máximo
+    es el BF16 más cercano a la referencia; con D pequeño y mantisas cercanas a 1,0 un redondeo BF16 perfecto puede
+    superar 1,85e-3 de L2 relativo, así que el criterio puede ser inalcanzable (defecto del test, no del port). Para
+    decidirlo sin gastar un turno de cola: **oráculo intento 3** (Claude Sonnet 5.5 high, solo host;
+    `R97-11/oracle-card-3.md`, pre-revisada READY) calcula las estadísticas de la salida ideal de cada caso; si el
+    criterio es inalcanzable corrige solo la cota, con prueba de que sigue rechazando un error real; si es
+    alcanzable, entrega el objetivo para el intento 3 del autor.
+  - **R97-15 gate: exit 124, no ejecutó nada.** El `run.py` del autor lleva dentro el plazo de su intento
+    (`R9715_DEADLINE_UTC`, 06:27 UTC) y se negó a compilar. Relanzado con el plazo ampliado por variable de entorno
+    (`R97-15/lz-gate2`), misma orden.
+  Cola a las 06:59 UTC: las dos ranuras vuelven a ser de `quantdesk` y `quantdesk-network`; esperan `R97-08-gate` y
+  `R97-15-gate`. R97-12 intento 2 ya usó su turno y sigue trabajando.
