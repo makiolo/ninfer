@@ -114,7 +114,7 @@ enum class ColumnDomain { Text, RawPatch, Merger };
 
 struct Geometry {
     int n, k;
-    std::initializer_list<int> boundaries;
+    std::vector<int> boundaries; // owns the list: an initializer_list member dangles once copied
     ColumnDomain domain = ColumnDomain::Text;
 };
 
