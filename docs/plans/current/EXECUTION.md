@@ -129,3 +129,12 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   de Vision, DFlash, NVFP4, offload ni multi-GPU en la R9700, sin cifras visibles. Un hallazgo corregido por el
   director: `README.md:21` decía «All rows support text, Vision…» y contradecía la fila nueva. Queda **parcial** hasta
   la verificación final tras R97-18 (lista en PLAN_INTEGRATION §5).
+- 2026-11-17 03:3x UTC · R97-10: el autor pidió permiso para tocar `tests/ops/linear/projection/cases_bf16.cpp`
+  (fuera de sus rutas): el ejecutable cae con ACCESS_VIOLATION incluso con `--list`. Causa: defecto latente del
+  upstream (`91972187`), `Geometry::boundaries` es un `std::initializer_list<int>` que queda colgando al copiarse a
+  `std::array` (GCC lo tolera, el `clang++` de ROCm no). **Decisión del director:** autorizado y aplicado por el
+  director con una línea (`std::vector<int> boundaries`), que cubre los dos sitios con el defecto; no cambia ningún
+  caso ni tolerancia. Sin compilar por el director: lo valida la compilación de R97-10 y lo comprueba su revisión; va
+  en el commit de aceptación de R97-10. Nota al autor en `.agent-tmp/R97-10/DIRECTOR-NOTE.md`.
+  Observación de cola: R97-10 retuvo el candado 1 h 05 min con un bucle de diagnóstico dentro de `build_queue run`;
+  las fichas siguientes lo prohíben (una entrada = una compilación o una tanda de tests).
