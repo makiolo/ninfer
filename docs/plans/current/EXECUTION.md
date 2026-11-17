@@ -516,3 +516,13 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   83 % y sube unos 10 puntos por hora (regla del perfil «cuando se te esté acabando lo cambias a Opus 5.5»;
   interpretación del director saliente del umbral). Cuota a las 08:50 UTC: Claude 60 %, Fable 83 %, Codex 64 %. Sin
   preguntas abiertas.
+- 2026-11-17 08:5x UTC · **Relevo 6 aceptado** (sesión `698c3d33`, `ninfer-b9`, Opus 5.5 high; `2e936550`). Cuota a
+  las 08:55 UTC: Claude 60 %, Fable 84 %, Codex 64 %. Vigía `wsvigia` pid 37076 adoptado (puerto 8791).
+- 2026-11-17 09:0x UTC · **R97-12 gate: exit 0** (tras `b279a0c5`; `.agent-tmp/R97-12/gate.log`): nueve suites,
+  **1 732 casos**, 0 omitidos, salida 0 (`gated_delta_net` 335, `replay_record` 278, `replay_fold` 148,
+  `causal_conv1d_silu` 181, `gdn_trajectory` 9, `causal_conv_trajectory` 53, `gdn_control` 196,
+  `input_proj_conv_snapshot` 230, `input_proj_conv_record` 302). **Revisión lanzada** (551, Claude Opus 5.5 high, Claude
+  al 60 % < 85 %, regla de Q-012; `R97-12/review-card.md`, pre-revisada READY) con los puntos obligados del relevo 6.
+- 2026-11-17 09:1x UTC · **R97-08 cerrada.** `static_assert` de la condición 1 (`1e4cff7a`); gate sin modelo
+  (`.agent-tmp/R97-08/gate4.log`): recompila `ninfer_resource_manager_test` y `ctest -L host` 67 de 67, 0 omitidos,
+  salida 0. ISSUE-006 creada (backlog, inyección de fallos COFF; condición 3). Fila en PLAN_HOST §5.
