@@ -230,3 +230,7 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   Hadamard 272 filas, 69 632 valores exactos, 0 discrepancias. Tests: solo registro del oráculo y el arreglo de
   enlace. Revisión lanzada (528, Claude Opus 5.5 high; `R97-14/review-card.md`): incluye los kernels de escritura y
   las conversiones de `f061bd98` (R97-13) en lo que toca a KV; sin recompilar salvo duda concreta (cola saturada).
+- 2026-11-17 06:0x UTC · **Relevo 4 del director** escrito por contexto (68,6 %; sesión saliente `8dd8dd4a`,
+  `ninfer-e1`). En vuelo, todo adoptable: revisión de R97-14 (528), autores intento 2 de R97-08 (525), R97-10 (527)
+  y R97-12 (526), y gates sin modelo de R97-11, R97-13 y R97-15. Cuota a las 06:01 UTC: Claude 43 %, Fable 58 %,
+  Codex 48 % (con el 2,3-3,6 % de la semana). Abierta: Q-011.

@@ -1,13 +1,12 @@
-# Director HANDOFF — handoff 3
+# Director HANDOFF — handoff 4
 
 ## Handoff
-- Number: 3
-- Outgoing: session 7465607f-8fd1-4ee1-bd16-b45d644937e5, claude-opus-5-5, context 70.9 %
-- Written: 2026-11-17T04:11:24+01:00
-- HEAD at writing: 8feb44d136e1a6bbc39ebc9daa3e7c876e6e0bbb
+- Number: 4
+- Outgoing: session 8dd8dd4a-994d-4e58-af0e-0410fe296001, claude-fable-5-2, context 68.6 %
+- Written: 2026-11-17T07:01:08+01:00
+- HEAD at writing: 016b61b52bb52719c2aa1870fd9f8b6ddb8b081d
 - LAUNCH: docs/plans/current/LAUNCH.md · coordinator block: «Director prompt» (sección final de LAUNCH.md)
 - Previous handoffs: `git log --follow -- docs/plans/current/HANDOFF.md`
-- Accepted: session 8dd8dd4a-994d-4e58-af0e-0410fe296001, 2026-11-17T04:12:41+01:00, initial context 25.3 %
 
 ## Boot
 0. If the user's private profile exists (config `profile`, default ~/.concertino/profile.md), read it first; its rules
@@ -18,7 +17,7 @@ paths without a root are relative to this repo's root)
 2. Read only this: this file, the coordinator block of the LAUNCH, `docs/plans/CONCERTINO.md`, the `concertino` skill
    (`S:/Projects/concertino/skills/concertino/SKILL.md`, `references/launch.md`, `references/handoff.md`) and the cards of the children in flight.
    Everything else when needed, delegating.
-3. `git status`, the state of the gate or locks of CONCERTINO.md "Commands" and `git log --oneline 8feb44d136e1..HEAD`.
+3. `git status`, the state of the gate or locks of CONCERTINO.md "Commands" and `git log --oneline 016b61b52bb5..HEAD`.
 4. Adopt the children in flight: check their process and output and watch it; never relaunch a live ID.
 5. One watcher per director, no shell loops: start `S:/Projects/concertino/skills/concertino/tools/vigia/wsvigia.py` detached with
    `S:/Projects/concertino/skills/concertino/tools/lanza/lanza.py` and subscribe to it (in Claude Code, `Monitor` on its `ws://` URL; its 30-minute
@@ -33,55 +32,73 @@ paths without a root are relative to this repo's root)
 9. Commit the HANDOFF with the acceptance and continue with "Next step".
 
 ## State
-- Cerradas en total: R97-01..07 y R97-09 (en este tramo: R97-07 `535693be`, registro `c7200927`; R97-09 `dec8d874`,
-  registro `e4486663`). Registros en PLAN_HOST/PLAN_OPS §5; detalle en `docs/plans/current/EXECUTION.md`.
-- Oráculos aceptados (Claude, solo tests nuevos): R97-10 `0ab0acdc`, R97-11 `778d8840`+`3c796e59`, R97-12 `96d31157`,
-  R97-13 `b5117b4b`, R97-14 `d6fe1304`. En R97-10..15 el oráculo audita la referencia FP64 existente de las suites y
-  añade casos de riesgo `r9700`; no reescribe.
-- En curso: 6 autores Codex (R97-08, 10, 11, 12, 13, 14) y R97-28 (docs, Claude). Pendientes: R97-15 (sampling/MTP,
-  tras R97-10..14), `linear/swiglu` (sacada de R97-11; asignar al cerrar R97-10), INTEGRATION R97-16..18.
-- Issues: ISSUE-001 (parte nvtx3 → R97-08), ISSUE-002 (árbol vcpkg en `.agent-tmp/R97-03`, → R97-08; borrar ese árbol
-  tras aceptar), ISSUE-003 (media_acquire, backlog).
-- Cuello de botella: la cola de compilación (un candado por checkout, 2 ranuras globales, 4 núcleos). Las fichas
-  nuevas obligan a compilar solo objetivos propios; R97-08/10/11 se lanzaron sin esa regla.
+- Cerradas en total: R97-01..07 y R97-09 (ninguna nueva en este tramo). R97-28 parcial (`68f00ba3` + `79321953`;
+  verificación final tras R97-18, lista en PLAN_INTEGRATION §5). Detalle de todo en `docs/plans/current/EXECUTION.md`.
+- Entregada y en revisión: **R97-14** (`d2008b61`, `acadec71`; 172 casos en GPU, 0 omitidos; Hadamard exacta).
+- Validación en cola sin modelo (el autor ya terminó): **R97-11** (`21cf7c6d`, `de3aa33f` = `math.cuh`; 0 suites en
+  GPU todavía), **R97-13** (`f061bd98`, `bf4d695c`, `bdbec359`; FP8 198/198, BF16 oficial 136/180 por plazo, con
+  arnés de diagnóstico 180/180), **R97-15** (`a35c3613`; 76/79 en GPU; los 3 fallos eran del test del oráculo,
+  corregido por el director en `b86077c3`, sin ejecutar aún).
+- Intento 2 de autor en curso: **R97-08** (parches de texto/Jinja autorizados; `e9f25fff`, `69e094d3`, `034bc7f9`),
+  **R97-10** (solo aceptación numérica; compila 72/72, 0 casos numéricos), **R97-12** (`numeric/math.h` autorizado;
+  `e9cc0212`).
+- Pendientes: `linear/swiglu` (asignar al cerrar R97-10), INTEGRATION R97-16..18, verificación final de R97-28.
+- Issues: ISSUE-001 (nvtx3 → R97-08), ISSUE-002 (árbol vcpkg: ya copiado a `G:\vcpkg_root\installed-ninfer-r9700`;
+  borrar `.agent-tmp/R97-03/` tras aceptar R97-08), ISSUE-003 (media_acquire, backlog).
+- **Cuello de botella: la cola de compilación** (2 ranuras para todos los proyectos, un candado por checkout). Un
+  turno tarda 45-120 min. Por eso las validaciones van como entradas sin modelo (memoria `model-less-gates`).
+- Cuota a las 06:01 UTC: Claude 43 %, Fable 58 %, Codex 48 % (con el 2,3-3,6 % de la semana: la cartera entera gasta
+  rápido; Fable ≥ 85 % o Codex agotado piden decisión según el perfil y Q-010).
+- Máquina: reinicio del driver de AMD (evento Display 4101, 03:55:27 UTC) durante un lote FP8 de R97-13, no repetido;
+  RAM libre llegó a 9 MB durante un BF16 de diagnóstico (EXECUTION).
 
 ## In flight
 | Child | ID | Model | Process or task | Output | Task card | Pending check |
 |---|---|---|---|---|---|---|
-| r97-08-author | R97-08 | Codex gpt-6.1-sol high | lanza pid 25796 (attempt 511) | `.git/concertino/sprint-01/R97-08/author-output.md`, `lz-author.fin` | `R97-08/card.md` | revisión Sonnet 5.5 high; si ISSUE-002 queda resuelto, borrar `.agent-tmp/R97-03/` |
-| r97-10-author | R97-10 | Codex gpt-6-astra xhigh | lanza pid 22300 (attempt 513) | `R97-10/author-output.md`, `lz-author.fin` | `R97-10/card.md` | revisión Opus 5.5 high (L7); luego asignar `linear/swiglu` |
-| r97-11-author | R97-11 | Codex gpt-6.1-sol high | lanza pid 24304 (attempt 514) | `R97-11/author-output.md`, `lz-author.fin` | `R97-11/card.md` | revisión Sonnet 5.5 high |
-| r97-12-author | R97-12 | Codex gpt-6-astra xhigh | lanza pid 30760 (attempt 519) | `R97-12/author-output.md`, `lz-author.fin` | `R97-12/card.md` | revisión Opus 5.5 high |
-| r97-13-author | R97-13 | Codex gpt-6-astra xhigh | lanza pid 26548 (attempt 518) | `R97-13/author-output.md`, `lz-author.fin` | `R97-13/card.md` (dueña de kernels de escritura KV y de `cudaMemcpy2D`/`Default`) | revisión Opus 5.5 high |
-| r97-14-author | R97-14 | Codex gpt-6-astra xhigh | lanza pid 19288 (attempt 520) | `R97-14/author-output.md`, `lz-author.fin` | `R97-14/card.md` | revisión Opus 5.5 high |
-| r97-28-author | R97-28 | Claude Sonnet 5.5 high | lanza pid 33356 (attempt 521) | `R97-28/author-events.jsonl`, `lz-author.fin` | `R97-28/card.md` | el director contrasta cada afirmación con el alcance; verificación final tras R97-18 |
+| r97-14-review | R97-14 | Claude Opus 5.5 high | lanza pid 39252 (attempt 528) | `R97-14/review-events.jsonl` (evento `type=result`), `lz-review.fin` | `R97-14/review-card.md` | contrastar cada hallazgo con el código; cerrar (registro en PLAN_OPS §5, `attempt end 528`, tablero) o intento corto con `card-fix.md` |
+| r97-08-author2 | R97-08 | Codex gpt-6.1-sol high | lanza pid 28008 (attempt 525) | `R97-08/author2-output.md`, `lz-author2.fin` | `R97-08/card-fix.md` (+ `card.md`) | revisión Sonnet 5.5 high; revisar los 135 excluidos por causa; después borrar `.agent-tmp/R97-03/` |
+| r97-10-author2 | R97-10 | Codex gpt-6-astra xhigh | lanza pid 4408 (attempt 527) | `R97-10/author2-output.md`, `lz-author2.fin` | `R97-10/card-fix.md` (+ `card.md`) | si deja `.agent-tmp/R97-10/run-acceptance.md`, lanzarla como gate sin modelo; revisión Opus 5.5 high; luego asignar `linear/swiglu` |
+| r97-12-author2 | R97-12 | Codex gpt-6-astra xhigh | lanza pid 41572 (attempt 526) | `R97-12/author2-output.md`, `lz-author2.fin` | `R97-12/card-fix.md` (+ `card.md`) | revisión Opus 5.5 high (incluye `numeric/math.h`, `e9cc0212`) |
+| r97-11-gate | R97-11 | sin modelo (cola) | lanza pid 44140, etiqueta `R97-11-gate` | `.agent-tmp/R97-11/gate.log`, `build-v2.log`, `math-probe.log`, `gpu-*-v2.log`; `R97-11/lz-gate.fin` | `R97-11/card.md` + `card-fix.md` | exit 0 → revisión Sonnet 5.5 high (incluye `math.cuh`, `de3aa33f`); exit ≠ 0 → intento 3 del autor con los logs (cerrar attempt 523 ya hecho: `blocked`) |
+| r97-13-gate | R97-13 | sin modelo (cola) | lanza pid 15668, etiqueta `R97-13-gate` | `.agent-tmp/R97-13/gate.log`, `gpu-bf16.log`; `R97-13/lz-gate.fin` | `R97-13/card.md` | exit 0 → revisión Opus 5.5 high (atención densa, `convert.cuh`/`fp8.cuh`, traducciones de `cuda_compat.h`; reinicio de driver y RAM); exit ≠ 0 → intento 2 del autor |
+| r97-15-gate | R97-15 | sin modelo (cola) | lanza pid 16140, etiqueta `R97-15-gate` | `.agent-tmp/R97-15/gate.log`, `gpu-sampling.log`, `gpu-run{1,2}.log`; `R97-15/lz-gate.fin` | `R97-15/card.md` | exit 0 (79/79, dos pasadas) → revisión Sonnet 5.5 high (incluye la corrección del director `b86077c3` al test del oráculo); exit ≠ 0 → intento 2 del autor |
 
 Rutas relativas a `.git/concertino/sprint-01/`. Vigía: wsvigia pid 37076 en `ws://127.0.0.1:8791/`, lista
-`.git/concertino/vigia/fins.txt`. Lanzamiento: `lanza.py` + `hijo.py` (ver cualquier `lz-*-events.jsonl`); revisores
-con `hijo.py --claude` y `claude -p --model ... --effort high --permission-mode bypassPermissions --output-format
-stream-json --verbose`; intentos con `S:/Projects/concertino/skills/concertino/scripts/dashboard.py attempt start|end`
-(resultado `accepted|rejected|failed|blocked`). Pre-revisión de fichas: `tools/claude_agy.py run --model
-gemini-3.8-flash-high`. Trampas: texto Markdown solo con Write/Edit; órdenes de shell solo en ASCII (memoria
-`bash-heredoc-backticks`). Resultado de un hijo Claude: evento `type=result` de su `*-events.jsonl`.
+`.git/concertino/vigia/fins.txt` (al lanzar algo, sustituir o añadir su `.fin` ahí). Lanzamiento: `lanza.py` +
+`hijo.py` (ver cualquier `lz-*-events.jsonl`); gates sin modelo: `lanza.py` + `build_queue.py run` +
+`.agent-tmp/director/gate.py` (ver `R97-11/lz-gate-events.jsonl`). Intentos: `scripts/dashboard.py attempt
+start|end` (`accepted|rejected|failed|blocked`). Pre-revisión de fichas: `tools/claude_agy.py run --model
+gemini-3.8-flash-high --mode plan --prompt-file <ficha con el prefijo de R97-14/prereview-prompt.md>`. Modelo de
+ficha de revisión: `R97-14/review-card.md`. Notas a autores Codex en marcha: `.agent-tmp/<ID>/DIRECTOR-NOTE.md`.
+Trampas: texto Markdown solo con Write/Edit; órdenes de shell solo en ASCII; `cd` persiste entre órdenes de Bash.
+Sin compromisos abiertos con otros directores.
 
 ## Decisions
-- Usuario: GPU ASUS (HIP 0) reservada; aviso enviado a los 8 INBOX (EXECUTION). «Lanza con Codex, quiero gastarlo»;
-  reset de Codex hecho (0 %, reinicio 24-11). Cupo **dinámico** (LAUNCH.md). Subir todo al fork: remoto `fork`
-  (`git@github.com:makiolo/ninfer.git`, SSH), rama `fork_R9700`; el director hace `git push fork fork_R9700` tras cada
-  commit de registro; hijos sin push. R9700 en README/bench/tests (`8a792933`) y tarea R97-28 «asumiendo el sprint
-  implementado» (PLAN_INTEGRATION). Objetivo: Qwen3.8-27B (arquitectura `Qwen3_5ForCausalLM`, `src/models/qwen3_5`).
-- Director (EXECUTION): oráculos de Ops auditan + amplían; `gated_residual`, drafter DFlash, Vision fuera de R97-11..14;
-  R97-13 porta los kernels de escritura KV que consume R97-14; `gdn_input_proj_conv_*`/`gdn_control` en R97-12;
-  NaN y |x|>1,8e19 fuera de contrato; ninfer no hace revisión de alertas.
+- Usuario (vigentes, EXECUTION y LAUNCH): GPU ASUS (HIP 0) dedicada; Codex implementa y Claude orquesta y revisa
+  (Q-010); cupo dinámico; push a `fork` (`git push fork fork_R9700`) tras cada commit de registro, hijos sin push.
+  **Q-008 respondida** («Sí, exclusivas»): las dos R9700 para ninfer en R97-22 y desde R97-24; aplicada en
+  `next/SPRINT.md` §4 y `next/PLAN_TP.md` §5 (`200c5a1c`); avisar a los demás proyectos antes de R97-22.
+- Director, este tramo (todas en EXECUTION):
+  - Reparto de cabeceras compartidas de `src/ops/common` que R97-09 no cubrió: `numeric/convert.cuh` y
+    `quant/fp8.cuh` → R97-13; `numeric/math.cuh` → R97-11; `numeric/math.h` (solo la anotación de dispositivo) → R97-12.
+  - Tests corregidos por el director sin cambiar casos ni esperados: `tests/ops/linear/projection/cases_bf16.cpp`
+    (`std::vector<int> boundaries`, defecto del upstream; en `3402c172`) y `tests/ops/sampling/r9700_edges.cpp`
+    (targets de filas greedy sin penalizaciones; `b86077c3`).
+  - R97-08: autorizados `src/text/CMakeLists.txt` (`UTF8PROC_STATIC`, `if(WIN32)`) y
+    `third_party/llama-jinja/jinja/value.cpp` (`localtime_s`).
+  - R97-15: fuera de `r9700` la aceptación dispersa (DFlash2), `candidate_selector_path`, `linear_topk` y
+    `accept_vocabulary_*`; su autor se lanzó sin esperar a R97-10..14 (rutas disjuntas).
+  - Validaciones como entradas de cola sin modelo; pasada de sintaxis fuera de la cola antes de pedir turno.
 
 ## Open questions to the user
-- Q-008 (decision, R97-22/R97-24..27, SPRINT-02): ¿se libera también la segunda GPU para tensor parallel? No bloquea SPRINT-01.
+- Q-011 (decision, R97-08 y R97-10..15): ¿cómo se reparte la cola de compilación entre proyectos? No bloquea.
 
 ## Promoted knowledge
-Memoria del proyecto: `bash-heredoc-backticks` (comillas invertidas en heredocs y órdenes no ASCII rompen la
-herramienta Bash). Lo demás quedó versionado en EXECUTION, PLAN_* §5 e issues.
+Memoria del proyecto: `model-less-gates` (validaciones sin modelo con la cola saturada y notas a los autores Codex
+por `DIRECTOR-NOTE.md`). Lo demás quedó versionado en EXECUTION, PLAN_INTEGRATION §5 y QUESTIONS.
 
 ## Next step
-Adoptar los 7 hijos (comprobar sus pids y `lz-*.fin`), armar `Monitor` sobre `ws://127.0.0.1:8791/` y, en cuanto
-termine cada autor, leer su informe, escribir su `review-card.md` (modelo de las de R97-07/R97-09) y lanzar la revisión
-(L6 Sonnet 5.5 high, L7 Opus 5.5 high); contrastar hallazgos y cerrar o lanzar intento corto con `card-fix.md`.
+Adoptar los 7 procesos (comprobar pids y `.fin`), armar `Monitor` sobre `ws://127.0.0.1:8791/` y atender el primero
+que termine. Lo más probable es la revisión de R97-14: leer su evento `type=result`, contrastar cada hallazgo con el
+código y cerrar R97-14 (fila en PLAN_OPS §5, commit de registro, push) o lanzar un intento corto. Para cada gate sin
+modelo que acabe en 0, escribir su ficha de revisión con el modelo de `R97-14/review-card.md` y lanzarla.
