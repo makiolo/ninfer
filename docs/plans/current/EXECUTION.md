@@ -138,3 +138,14 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   en el commit de aceptación de R97-10. Nota al autor en `.agent-tmp/R97-10/DIRECTOR-NOTE.md`.
   Observación de cola: R97-10 retuvo el candado 1 h 05 min con un bucle de diagnóstico dentro de `build_queue run`;
   las fichas siguientes lo prohíben (una entrada = una compilación o una tanda de tests).
+- 2026-11-17 03:4x UTC · Oráculo de R97-15 lanzado (522, Claude Sonnet 5.5 high; ficha READY): audita
+  `tests/ops/sampling` y añade casos de riesgo `r9700`; no compila ni usa la GPU.
+- 2026-11-17 03:5x UTC · **R97-11 intento 1 (514): BLOCKED**, 0 suites en GPU. Commits `c666530a` (registro de
+  oráculos) y `21cf7c6d`. Causa: tres cabeceras de `src/ops/common` que R97-09 no cubrió y que no tenían dueño:
+  `numeric/math.cuh:16,24,31,39` (instrucciones PTX `.approx`), `numeric/convert.cuh:93` y `quant/fp8.cuh:44-45`
+  (conversiones BF16/FP16 ambiguas en HIP). R97-14 preguntó por las mismas; R97-13 ya las había arreglado en el árbol.
+  **Decisión del director:** `convert.cuh` y `fp8.cuh` → dueña R97-13 (su arreglo: FP32 exacto y un solo redondeo
+  RNE, equivalente bit a bit a la conversión directa); `math.cuh` → R97-11 intento 2 (rama `r9700` con `tanhf`,
+  `exp2f`, `1/x` y vaciado a cero explícito en las variantes `_ftz`; sonda de aceptación con cotas fijadas por el
+  director). Notas a los autores en `.agent-tmp/R97-{12,13,14}/DIRECTOR-NOTE.md` (R97-10 leyó la suya). Lanzado
+  R97-11 intento 2 (523, Codex `gpt-6.1-sol` high; pre-revisión: una aclaración sobre `sigmoid_approx`, incorporada).
