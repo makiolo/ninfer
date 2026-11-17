@@ -16,6 +16,16 @@
 #if NINFER_TARGET_R9700
 #define cudaErrorNoDevice hipErrorNoDevice
 #define cudaErrorInsufficientDriver hipErrorInsufficientDriver
+#define cudaMemcpy2D hipMemcpy2D
+#define cudaMemcpyDefault hipMemcpyDefault
+#define cudaStreamCaptureModeGlobal hipStreamCaptureModeGlobal
+
+// The legacy CUDA graph overload is still used by Op contract tests. HIP has
+// the matching diagnostics signature; keep it alongside the flags overload.
+inline hipError_t cudaGraphInstantiate(hipGraphExec_t* exec, hipGraph_t graph,
+                                      hipGraphNode_t* error_node, char* log, size_t log_size) {
+    return hipGraphInstantiate(exec, graph, error_node, log, log_size);
+}
 
 #if defined(__HIP_DEVICE_COMPILE__)
 // Clang exposes ballot_w32 only with the wavefrontsize32 target feature.
