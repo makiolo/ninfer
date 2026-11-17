@@ -14,6 +14,8 @@
 #include "core/platform.h"
 
 #if NINFER_TARGET_R9700
+// HIP has no CUDA grid-constant attribute; const kernel arguments remain passed by value.
+#define __grid_constant__
 #define cudaErrorNoDevice hipErrorNoDevice
 #define cudaErrorInsufficientDriver hipErrorInsufficientDriver
 #define cudaMemcpy2D hipMemcpy2D
