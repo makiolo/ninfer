@@ -185,7 +185,11 @@ struct FoldAccess {
 
 template <class Geometry, class Rows = GdnReplayFoldKernelRows>
 __global__ void __launch_bounds__(common::kWarpSize* kNumWarps, 2)
-    recurrent_fold_kernel(const __grid_constant__ FoldAccess<Geometry, Rows> access) {
+    recurrent_fold_kernel(const
+#if !NINFER_TARGET_R9700
+                          __grid_constant__
+#endif
+                          FoldAccess<Geometry, Rows> access) {
     const RecurrentCoordinates coord = access.coordinates();
     const std::int32_t valid         = access.active_columns(coord);
     if (valid == 0) { return; }
