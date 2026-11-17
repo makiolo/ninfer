@@ -28,6 +28,12 @@ struct Case {
     double scale;
     std::uint32_t seed;
     std::vector<double> inverse; // per row, from the independent reference
+    // Relative-L2 bound. Default 1.85e-3 (rmsnorm.cpp BF16 profile). The three cases below it
+    // exceed it even for the ideal output (BF16 RNE of the exact x*inv*gain; D<=127 leaves few
+    // mantissas to average over), so their bound is that ideal L2 + ~1% (see criterion-feasibility.md):
+    // #2 ideal 1.9073e-3, #13 ideal 1.8598e-3, #35 ideal 2.0204e-3. A FP32-chain error of 1e-4
+    // (12x the D<=127 budget) still stays under them; inv off by 1e-3 or +1 BF16 ulp does not.
+    double relative_l2 = 1.85e-3;
 };
 
 std::vector<std::uint16_t> lcg_bf16(std::uint32_t& state, std::size_t n, double scale) {
@@ -43,7 +49,7 @@ const std::vector<Case>& cases() {
     static const std::vector<Case> all = {
         {33, 2, false, 0x358637bdu, 4.0, 1137u, {0.5141492704679775, 0.4147725408952401}},
         {33, 2, false, 0x358637bdu, 1e+17, 2137u, {1.7513118536279406e-17, 1.633286368555553e-17}},
-        {33, 2, false, 0x358637bdu, 100000000.0, 3137u, {1.6169149984041365e-08, 2.013582813943277e-08}},
+        {33, 2, false, 0x358637bdu, 100000000.0, 3137u, {1.6169149984041365e-08, 2.013582813943277e-08}, 1.93e-3},
         {33, 2, false, 0x358637bdu, 0.003, 4137u, {495.8082334653294, 533.940843819777}},
         {63, 2, false, 0x358637bdu, 4.0, 5137u, {0.44219047144762225, 0.4248667946056124}},
         {63, 2, false, 0x358637bdu, 1e+17, 6137u, {2.0041819490969875e-17, 1.6173392646879693e-17}},
@@ -54,7 +60,7 @@ const std::vector<Case>& cases() {
         {65, 2, false, 0x358637bdu, 100000000.0, 11137u, {1.851102284238111e-08, 1.8324863178287078e-08}},
         {65, 2, false, 0x358637bdu, 0.003, 12137u, {489.2091271878807, 533.7022205519131}},
         {127, 2, false, 0x358637bdu, 4.0, 13137u, {0.4641958823818496, 0.4332380335941816}},
-        {127, 2, false, 0x358637bdu, 1e+17, 14137u, {1.621785026511225e-17, 1.8381883227712456e-17}},
+        {127, 2, false, 0x358637bdu, 1e+17, 14137u, {1.621785026511225e-17, 1.8381883227712456e-17}, 1.88e-3},
         {127, 2, false, 0x358637bdu, 100000000.0, 15137u, {1.7560693758135128e-08, 1.684744301787355e-08}},
         {127, 2, false, 0x358637bdu, 0.003, 16137u, {512.2504931723199, 488.8467869993255}},
         {131, 2, false, 0x358637bdu, 4.0, 17137u, {0.4242532899709577, 0.41379007394185086}},
@@ -76,7 +82,7 @@ const std::vector<Case>& cases() {
         {128, 3, true, 0x03aa2425u, 1e-15, 33137u, {1737280084870695.8, 1799739588359504.8, 1696040057629085.2}},
         {131, 2, false, 0x00000001u, 1e-39, 34137u, {2.671373890628154e+22, 2.671373890628154e+22}},
         {64, 2, true, 0x358637bdu, 1e-39, 35137u, {1000.0000012623786, 1000.0000012623786}},
-        {33, 2, false, 0x0da24260u, 1e-20, 36137u, {999999998400031.2, 999999998398229.0}},
+        {33, 2, false, 0x0da24260u, 1e-20, 36137u, {999999998400031.2, 999999998398229.0}, 2.04e-3},
     };
     return all;
 }
@@ -111,7 +117,7 @@ int run_case(std::size_t index) {
 
     const std::string label = "rmsnorm edge #" + std::to_string(index) + " d=" + std::to_string(c.d) +
                               " scale=" + std::to_string(c.scale) + (c.unit_offset ? " unit" : " plain");
-    const ReductionCriterion criterion{1.85e-3, 0.0, 3.95e-3};
+    const ReductionCriterion criterion{c.relative_l2, 0.0, 3.95e-3};
     int failures = verify_reduction(label, got, reference, criterion);
     failures += verify_exact((label + " preserves input").c_str(),
                              from_device<std::uint16_t>(input.data(), x_words.size()), x_words);
