@@ -14,6 +14,13 @@
 #include "core/platform.h"
 
 #if NINFER_TARGET_R9700
+#if defined(__HIP_DEVICE_COMPILE__)
+// Clang exposes ballot_w32 only with the wavefrontsize32 target feature.
+// Query that feature without the deprecated __AMDGCN_WAVEFRONT_SIZE macros.
+static_assert(__has_builtin(__builtin_amdgcn_ballot_w32),
+              "NINFER_TARGET_R9700 requires wave32 device compilation (32-lane wavefronts)");
+#endif
+
 // CUDA uses 32-bit masks; HIP 7.2's sync intrinsics require an explicit
 // 64-bit mask even in wave32. Keep that translation here, retaining the SDK's
 // participation checks, width semantics and wavefront memory fences.
