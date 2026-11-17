@@ -224,3 +224,9 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   repitió en tres repeticiones del caso ni en la pasada oficial; causa sin resolver. (2) Durante el BF16 de
   diagnóstico la RAM libre del sistema bajó a 9 MB (proceso de test: 6,4 GB de pico). A las 05:5x UTC hay 10,9 GB
   libres de 31,9 GB.
+- 2026-11-17 06:0x UTC · **R97-14 intento 1 (520): entregada completa**, la primera de PLAN_OPS. Commits `d2008b61`
+  (aritmética FP32 estricta en `src/ops/kv_cache` para `r9700`) y `acadec71` (enlace de las suites KV a su biblioteca
+  de producción). En la ASUS (HIP 0, bus 6, wave32): los dos ejecutables oficiales, **172 casos, 0 omitidos**;
+  Hadamard 272 filas, 69 632 valores exactos, 0 discrepancias. Tests: solo registro del oráculo y el arreglo de
+  enlace. Revisión lanzada (528, Claude Opus 5.5 high; `R97-14/review-card.md`): incluye los kernels de escritura y
+  las conversiones de `f061bd98` (R97-13) en lo que toca a KV; sin recompilar salvo duda concreta (cola saturada).
