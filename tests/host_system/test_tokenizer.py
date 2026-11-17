@@ -16,7 +16,7 @@ def resource():
     alphabet.update({b: chr(256 + i) for i, b in enumerate(b for b in range(256) if b not in visible)})
     vocab = {symbol: b for b, symbol in alphabet.items()}
     vocab['ab'] = 256
-    pattern = r"(?i:'s|'t|'re|'ve|'m|'ll|'d)|[^\r\n\p{L}\p{N}]?[\p{L}\p{M}]+|\p{N}| ?[^\s\p{L}\p{N}]+[\r\n]*|\s*[\r\n]+|\s+(?!\S)|\s+"
+    pattern = r"(?i:'s|'t|'re|'ve|'m|'ll|'d)|[^\r\n\p{L}\p{N}]?[\p{L}\p{M}]+|\p{N}| ?[^\s\p{L}\p{M}\p{N}]+[\r\n]*|\s*[\r\n]+|\s+(?!\S)|\s+"
     return dict(
         version='1.0', normalizer={'type': 'NFC'},
         pre_tokenizer={'type': 'Sequence', 'pretokenizers': [
@@ -55,7 +55,9 @@ def main():
                 dict(exact=2, stable=2), dict(exact=3, stable=3)])])
         process = subprocess.run([sys.argv[1], str(directory)],
                                  input=''.join(json.dumps(c, ensure_ascii=False) + '\n' for c in cases),
-                                 encoding='utf-8', capture_output=True, check=True)
+                                 encoding='utf-8', capture_output=True)
+        if process.returncode:
+            raise RuntimeError(process.stderr)
         actual = [json.loads(line) for line in process.stdout.splitlines()]
         if actual != expected:
             raise AssertionError(json.dumps(dict(actual=actual, expected=expected), ensure_ascii=False, indent=2))

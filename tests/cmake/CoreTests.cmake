@@ -39,7 +39,16 @@ foreach(mode flags IN ZIP_LISTS sync_modes sync_flags)
     ENVIRONMENT "NINFER_CUDA_SYNC=${mode}" SKIP_RETURN_CODE 77)
 endforeach()
 foreach(mode IN ITEMS invalid empty)
-  add_test(NAME ninfer_device_sync_${mode}_test COMMAND ninfer_device_test --invalid-sync)
+  if(NINFER_TARGET_R9700 AND mode STREQUAL "empty")
+    # CTest's Windows environment setter removes an empty value. CreateProcess
+    # can preserve it in the child's initial environment block instead.
+    add_test(NAME ninfer_device_sync_${mode}_test
+      COMMAND "${Python3_EXECUTABLE}" -B
+        "${PROJECT_SOURCE_DIR}/tests/host_system/test_device_sync_empty.py"
+        "$<TARGET_FILE:ninfer_device_test>")
+  else()
+    add_test(NAME ninfer_device_sync_${mode}_test COMMAND ninfer_device_test --invalid-sync)
+  endif()
 endforeach()
 set_tests_properties(ninfer_device_sync_invalid_test PROPERTIES
   ENVIRONMENT "NINFER_CUDA_SYNC=invalid")

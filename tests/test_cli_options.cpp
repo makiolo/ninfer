@@ -39,9 +39,10 @@ std::string rejection(Function&& function) {
 }
 
 struct Files {
-    fs::path root = fs::path(NINFER_SOURCE_DIR) / ".agent-tmp" /
+    fs::path root = (fs::path(NINFER_SOURCE_DIR) / ".agent-tmp" /
                     ("config-test-" +
-                     std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
+                     std::to_string(std::chrono::steady_clock::now().time_since_epoch().count())))
+                       .lexically_normal();
 
     Files() { fs::create_directories(root); }
 
@@ -299,6 +300,8 @@ void test_file_errors_and_example(const Files& files) {
 }
 
 void test_deployment(const Files& files) {
+    const auto worker = (files.root / "ninfer-worker").generic_string();
+    const auto artifact = (files.root / "model.ninfer").generic_string();
     const std::string source = R"(
 model.path = 'model.ninfer'
 cli.prompt = 'hello'
@@ -312,13 +315,13 @@ tp = 2
 ep = 2
 [[distributed.nodes]]
 id = 10
-worker = '/home/neroued/ninfer/build/apps/ninfer-worker'
-artifact = '/home/neroued/ninfer/out/model.ninfer'
+worker = ')" + worker + R"('
+artifact = ')" + artifact + R"('
 [[distributed.nodes]]
 id = 20
 ssh = 'neroued@192.168.100.50'
-worker = '/home/neroued/ninfer/build/apps/ninfer-worker'
-artifact = '/home/neroued/ninfer/out/model.ninfer'
+worker = ')" + worker + R"('
+artifact = ')" + artifact + R"('
 [distributed.nodes.environment]
 NCCL_SOCKET_IFNAME = '=enp1s0f0np0'
 [[distributed.ranks]]
@@ -368,7 +371,8 @@ device = 0
                                                           {"node = 20", "node = 99"},
                                                           {"tp = 2", "tp = 0"},
                                                           {"connect_timeout", "connect_timout"},
-                                                          {"worker = '/", "worker = '"}}) {
+                                                          {"worker = '" + worker + "'",
+                                                           "worker = 'relative-worker'"}}) {
         auto invalid = source;
         invalid.replace(invalid.find(before), before.size(), after);
         const auto file  = files.write(invalid);

@@ -93,14 +93,15 @@ function(ninfer_register_host_tests)
       ninfer_qwen_tool_schema_oracle_test ninfer_tool_call_parser_test
       ninfer_glm5next_frontend_resources_test ninfer_glm5next_chat_template_test
       ninfer_glm5next_preparation_test ninfer_glm5next_output_test
-      ninfer_glm5next_tool_constraints_test ninfer_glm5next_tool_schema_oracle_test
-      ninfer_glm5next_media_test)
+      ninfer_glm5next_tool_constraints_test ninfer_glm5next_tool_schema_oracle_test)
     # glm5next_protocol and openai_schema require generation_service.cpp's Engine
     # consumers; http_error_handler also pulls HTTP handlers and monitor.cpp.
     # request_log constructs a GenerationHandle and pulls operational_log.cpp.
     # Reactivate after R97-16 (HIP Engine) and R97-31 (complete ninfer_ops linkage).
     # sampling_defaults needs qwen3_5/config.cpp -> qwen/vision/parameters.cpp;
     # the latter also defines prepare_vision and requires ninfer_ops (R97-31).
+    # glm5next_media links host providers but needs a PNG-enabled offline FFmpeg
+    # dependency tree (R97-07); the current tree was built with --disable-zlib.
   endif()
   set(host_targets ninfer_device_test)
   foreach(test IN LISTS host_tests)
