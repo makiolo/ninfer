@@ -458,7 +458,8 @@ void add_shape(linear_suite::Suite& suite, const ShapeCase& shape) {
                   return run_q8_a16_shape("LinearPair", shape, chosen);
               });
     suite.add(linear_suite::make_case("q8", kOutputRows, shape.k, 0, ops::LinearPolicy::A16Only,
-                                      linear_suite::Execution::Eager, "workspace-domain"),
+                                      linear_suite::Execution::Eager,
+                                      "workspace-domain/s" + std::to_string(shape.seed)),
               [shape = fixture] {
                   const auto profile = ops::LinearProfile{QType::Q8_G32_FP16, kOutputRows, shape.k};
                   int failures       = 0;
