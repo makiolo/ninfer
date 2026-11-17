@@ -1,3 +1,8 @@
+if(NINFER_TARGET_R9700)
+  include("${CMAKE_CURRENT_LIST_DIR}/common/r9700/sources.cmake")
+  return()
+endif()
+
 include("${CMAKE_CURRENT_LIST_DIR}/kernels/sources.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/projection/sources.cmake")
 include("${CMAKE_CURRENT_LIST_DIR}/split/sources.cmake")

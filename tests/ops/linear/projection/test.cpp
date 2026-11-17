@@ -8,6 +8,7 @@ int main(int argc, char** argv) {
     add_q5_cases(suite);
     add_q6_cases(suite);
     add_q8_cases(suite);
+    add_rowsplit_boundary_cases(suite);
     add_fp8_cases(suite);
     add_nvfp4_cases(suite);
     add_bank_cases(suite);

@@ -1,3 +1,11 @@
+if(NINFER_TARGET_R9700)
+  target_sources(${ninfer_linear_projection_target} PRIVATE
+    "${CMAKE_CURRENT_LIST_DIR}/q4_dispatch.cpp"
+  )
+  include("${CMAKE_CURRENT_LIST_DIR}/r9700/sources.cmake")
+  return()
+endif()
+
 target_sources(ninfer_ops PRIVATE
   "${CMAKE_CURRENT_LIST_DIR}/q4_dispatch.cpp"
   "${CMAKE_CURRENT_LIST_DIR}/shapes/n1024_k5120.cu"

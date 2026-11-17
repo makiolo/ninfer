@@ -1,3 +1,12 @@
+if(NINFER_TARGET_R9700)
+  target_sources(${ninfer_linear_projection_target} PRIVATE
+    "${CMAKE_CURRENT_LIST_DIR}/q8_dispatch.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/dispatch.cpp"
+  )
+  include("${CMAKE_CURRENT_LIST_DIR}/r9700/sources.cmake")
+  return()
+endif()
+
 target_sources(ninfer_ops PRIVATE "${CMAKE_CURRENT_LIST_DIR}/q8_dispatch.cpp")
 target_sources(ninfer_ops PRIVATE
   "${CMAKE_CURRENT_LIST_DIR}/dispatch.cpp"

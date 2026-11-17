@@ -3,7 +3,12 @@ add_library(ninfer_linear_test_support STATIC
   "${CMAKE_CURRENT_LIST_DIR}/weights.cpp")
 ninfer_test_includes(ninfer_linear_test_support)
 ninfer_op_oracle_options(ninfer_linear_test_support)
-target_link_libraries(ninfer_linear_test_support PUBLIC ninfer_ops ninfer_op_test_support)
+if(NINFER_TARGET_R9700)
+  target_link_libraries(ninfer_linear_test_support PUBLIC
+    ninfer_linear_projection_r9700 ninfer_op_test_support)
+else()
+  target_link_libraries(ninfer_linear_test_support PUBLIC ninfer_ops ninfer_op_test_support)
+endif()
 
 function(ninfer_linear_suite family)
   set(target "ninfer_linear_${family}_test")
@@ -15,6 +20,9 @@ function(ninfer_linear_suite family)
   ninfer_test_includes(${target})
   ninfer_op_oracle_options(${target})
   target_link_libraries(${target} PRIVATE ninfer_linear_test_support)
+  if(NINFER_TARGET_R9700 AND NOT family STREQUAL "projection")
+    target_link_libraries(${target} PRIVATE ninfer_ops)
+  endif()
 endfunction()
 
 function(ninfer_linear_format_tests family)
@@ -27,7 +35,7 @@ endfunction()
 
 ninfer_linear_suite(projection
   test.cpp runner.cpp cases_bf16.cpp cases_q4.cpp cases_q5.cpp cases_q6.cpp cases_q8.cpp
-  cases_fp8.cpp cases_nvfp4.cpp cases_bank.cpp cases_native.cpp)
+  cases_fp8.cpp cases_nvfp4.cpp cases_bank.cpp cases_native.cpp cases_rowsplit_boundaries.cpp)
 ninfer_linear_format_tests(projection bf16 q4 q5 q6 q8 fp8 nvfp4)
 if(NINFER_TARGET STREQUAL "dgx_spark")
   ninfer_linear_format_tests(projection mxfp8 fp8_block_fp32 nvfp4_mul)
