@@ -49,6 +49,7 @@ struct alignas(unsigned __int128) RecoveryCostSum {
         return unpriced || finite >= UINT64_MAX ? UINT64_MAX : static_cast<std::uint64_t>(finite);
     }
 };
+static_assert(alignof(std::optional<RecoveryCostSum>) >= alignof(unsigned __int128));
 
 inline std::uint64_t recovery_restore_cost(const ContextMachineCostModel& costs,
                                            const RecoveryRestore& restore, bool replay = false) {
