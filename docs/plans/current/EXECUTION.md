@@ -48,3 +48,7 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
 - 2026-11-17 00:3x UTC · R97-07 revisión 504: ACCEPT WITH CONDITIONS (documentar). **R97-07 cerrada.** Nuevos
   ISSUE-002 (árbol vcpkg de `r9700` en `.agent-tmp/R97-03`, dueño R97-08) e ISSUE-003 (endurecimiento de
   `media_acquire`, preexistente, backlog). R97-08 desbloqueada (R97-05..07 cerradas).
+- 2026-11-17 00:45 UTC · Usuario: «Pide a los otros agentes que necesitas una GPU reservada, creo que el proyecto
+  reinforment_learning pretende usar la gpu». Aviso de reserva exclusiva de la ASUS (HIP 0, bus 6; Q-009) añadido al
+  INBOX de los 8 proyectos restantes y enviado en directo a reinforcement-learning-f5/-0e y deeplearning-dev-8b; la
+  Sapphire (HIP 1) sigue compartida. hipInfo: ambas GPU libres.
