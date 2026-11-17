@@ -10,7 +10,7 @@ function(ninfer_register_host_tests)
   if(NINFER_BUILD_ENGINE)
     ninfer_add_test(ninfer_jinja_time_host_test
       SOURCES "${PROJECT_SOURCE_DIR}/tests/host_system/test_jinja_time.cpp"
-      LIBRARIES ninfer_jinja)
+      LIBRARIES ninfer_jinja ninfer::json)
     set_property(TEST ninfer_jinja_time_host_test APPEND PROPERTY ENVIRONMENT "TZ=UTC0")
     include("${PROJECT_SOURCE_DIR}/tests/host_serve/HostTransport.cmake")
     ninfer_add_host_transport(ninfer_serve_host_transport)
@@ -21,7 +21,7 @@ function(ninfer_register_host_tests)
       set(host_sources)
       foreach(source IN LISTS owner_sources)
         cmake_path(ABSOLUTE_PATH source BASE_DIRECTORY "${owner_directory}" NORMALIZE)
-        if(owner STREQUAL "ninfer_serve" OR source MATCHES "/frontend/|/prefix_identity\\.cpp$|/vision/window\\.cpp$|/glm5next/vision/control\\.cpp$|/glm5next/config\\.cpp$|/token_input\\.cpp$|/common/batch\\.cpp$|/common/context/")
+        if(owner STREQUAL "ninfer_serve" OR source MATCHES "/frontend/|/prefix_identity\\.cpp$|/vision/window\\.cpp$|/glm5next/vision/control\\.cpp$|/glm5next/config\\.cpp$|/common/dflash/config\\.cpp$|/token_input\\.cpp$|/common/batch\\.cpp$|/common/context/")
           list(APPEND host_sources "${source}")
         endif()
       endforeach()
@@ -39,13 +39,6 @@ function(ninfer_register_host_tests)
     endforeach()
     target_link_libraries(ninfer_model_control_host PUBLIC ninfer_model_loading_host)
     target_link_libraries(ninfer_serve_host PUBLIC ninfer_model_control_host)
-    target_sources(ninfer_sampling_defaults_test PRIVATE
-      ${PROJECT_SOURCE_DIR}/src/runtime/contract/sampling.cpp
-      ${PROJECT_SOURCE_DIR}/src/models/qwen3_5/config.cpp)
-    target_link_libraries(ninfer_sampling_defaults_test PRIVATE ninfer_artifact)
-    # The test calls default_sampling, not the config loader's model registry.
-    target_compile_options(ninfer_sampling_defaults_test PRIVATE -ffunction-sections -fdata-sections)
-    target_link_options(ninfer_sampling_defaults_test PRIVATE "LINKER:/OPT:REF")
     add_executable(ninfer_logging_locale_host_test
       "${PROJECT_SOURCE_DIR}/tests/host_system/test_logging_locale.cpp")
     ninfer_test_includes(ninfer_logging_locale_host_test)
@@ -86,13 +79,13 @@ function(ninfer_register_host_tests)
       ninfer_host_timing_test
       ninfer_scheduler_test ninfer_context_cost_test ninfer_placement_policy_test
       ninfer_resource_manager_test ninfer_context_capacity_test
-      ninfer_sampling_defaults_test ninfer_grammar_test ninfer_regex_choice_test
+      ninfer_grammar_test ninfer_regex_choice_test
       ninfer_regex_choice_oracle_test ninfer_json_schema_test ninfer_json_schema_oracle_test
       ninfer_media_decode_test ninfer_prompt_input_test ninfer_pretty_logging_test ninfer_logging_locale_host_test
       ninfer_process_signals_test ninfer_cli_options_test
-      ninfer_openai_schema_test ninfer_openai_responses_test ninfer_openai_responses_store_test
-      ninfer_anthropic_schema_test ninfer_serve_options_test ninfer_request_log_test
-      ninfer_metrics_test ninfer_http_error_handler_test ninfer_http_transport_test
+      ninfer_openai_responses_test ninfer_openai_responses_store_test
+      ninfer_anthropic_schema_test ninfer_serve_options_test
+      ninfer_metrics_test ninfer_http_transport_test
       ninfer_http_loopback_test ninfer_media_acquire_host_test ninfer_tool_streaming_test
       ninfer_bench_support_test ninfer_vision_window_test ninfer_token_input_test
       ninfer_batch_execution_test ninfer_recovery_test ninfer_context_conversion_test
@@ -102,9 +95,12 @@ function(ninfer_register_host_tests)
       ninfer_glm5next_preparation_test ninfer_glm5next_output_test
       ninfer_glm5next_tool_constraints_test ninfer_glm5next_tool_schema_oracle_test
       ninfer_glm5next_media_test)
-    # glm5next_protocol calls request_error_to_api_error in generation_service.cpp,
-    # retaining the real Engine consumers. Reactivate after R97-16 (HIP Engine)
-    # and R97-31 (complete ninfer_ops linkage), without replacing their behavior.
+    # glm5next_protocol and openai_schema require generation_service.cpp's Engine
+    # consumers; http_error_handler also pulls HTTP handlers and monitor.cpp.
+    # request_log constructs a GenerationHandle and pulls operational_log.cpp.
+    # Reactivate after R97-16 (HIP Engine) and R97-31 (complete ninfer_ops linkage).
+    # sampling_defaults needs qwen3_5/config.cpp -> qwen/vision/parameters.cpp;
+    # the latter also defines prepare_vision and requires ninfer_ops (R97-31).
   endif()
   set(host_targets ninfer_device_test)
   foreach(test IN LISTS host_tests)
