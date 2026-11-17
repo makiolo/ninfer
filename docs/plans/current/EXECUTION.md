@@ -72,3 +72,7 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
 - 2026-11-17 01:xx UTC · Usuario: «Lanza con Codex, quiero gastarlo». R97-08 lanzada en Codex `gpt-6.1-sol` high
   (intento 511; ficha READY) con ISSUE-002 (árbol vcpkg estable) y la parte nvtx3 de ISSUE-001 asignadas. Cupo lleno
   (2 oráculos + 1 autor). Los autores de R97-10/11 salen en Codex en cuanto entreguen sus oráculos.
+- 2026-11-17 01:xx UTC · Oráculo de R97-11 (510) parcial por contexto: auditoría (rmsnorm, rope, argmax, Q8, elementwise
+  con oráculos FP64 independientes; criterio de embedding Q8 laxo, 2^-8), contraste 61 casos / 0 discrepancias y
+  `778d8840` (argmax_edge). Decisiones del director: |x|>1,8e19 en RMSNorm y NaN en argmax fuera de contrato;
+  `gated_residual` fuera (0 usos en qwen3_5); caso Q8 bit a bit nuevo. Intento 2 lanzado (512, `oracle-card-2.md`).

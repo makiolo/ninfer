@@ -44,7 +44,7 @@
 | Child | ID | Model | Process or task | Output | Task card | Pending check |
 |---|---|---|---|---|---|---|
 | r97-10-oracle | R97-10 | Claude Opus 5.5 high | lanza pid 35204 (attempt 509) | `.git/concertino/sprint-01/R97-10/oracle-events.jsonl`, `lz-oracle.fin` | `.git/concertino/sprint-01/R97-10/oracle-card.md` | revisar auditoría y casos; ficha del autor Codex `gpt-6-astra` xhigh |
-| r97-11-oracle | R97-11 | Claude Sonnet 5.5 high | lanza pid 30124 (attempt 510) | `.git/concertino/sprint-01/R97-11/oracle-events.jsonl`, `lz-oracle.fin` | `.git/concertino/sprint-01/R97-11/oracle-card.md` | revisar auditoría y casos; ficha del autor Codex `gpt-6.1-sol` high |
+| r97-11-oracle2 | R97-11 | Claude Sonnet 5.5 high | lanza pid 34916 (attempt 512; 510 parcial `778d8840`) | `.git/concertino/sprint-01/R97-11/oracle2-events.jsonl`, `lz-oracle2.fin` | `oracle-card-2.md` (+ `oracle-card.md`) | revisar auditoría y casos; ficha del autor Codex `gpt-6.1-sol` high |
 
 | r97-08-author | R97-08 | Codex gpt-6.1-sol high | lanza pid 25796 (attempt 511) | `.git/concertino/sprint-01/R97-08/author-events.jsonl`, `author-output.md`, `lz-author.fin` | `.git/concertino/sprint-01/R97-08/card.md` | revisión Sonnet 5.5 high; borrar `.agent-tmp/R97-03/` tras aceptar ISSUE-002 |
 
