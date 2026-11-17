@@ -120,3 +120,8 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   `tests/README.md` (`8a792933`). Usuario: «escribelo, asumiendo que el sprint esta implementado, forma parte del
   sprint» → nueva tarea **R97-28** en PLAN_INTEGRATION (docs de producto, TOML de ejemplo, model card; sin cifras
   inventadas). Lanzada en Claude Sonnet 5.5 high (521; ficha READY). Su verificación final va tras R97-18.
+- 2026-11-17 03:12 UTC · **Relevo 3 del director** aceptado (sesión `8dd8dd4a`, `ninfer-e1`, Fable 5.2 high, contexto
+  inicial 25,3 %). Adoptados sin relanzar: los 6 autores Codex (R97-08/10/11/12/13/14, pids vivos) y el vigía
+  (pid 37076, `ws://127.0.0.1:8791/`). `deps.py`: READY. Cuota: Claude 27 %, Fable 37 % (con el 1,9 % de la ventana),
+  Codex 10 %. R97-28 terminó (exit 0, 140 s, `68f00ba3`): pendiente el contraste del director. Cola de compilación:
+  R97-10 tiene el candado del checkout 1 h 05 min; esperan R97-11, 13, 14, 08 y 12. INBOX sin entradas nuevas.

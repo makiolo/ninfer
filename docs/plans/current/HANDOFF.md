@@ -7,6 +7,7 @@
 - HEAD at writing: 8feb44d136e1a6bbc39ebc9daa3e7c876e6e0bbb
 - LAUNCH: docs/plans/current/LAUNCH.md · coordinator block: «Director prompt» (sección final de LAUNCH.md)
 - Previous handoffs: `git log --follow -- docs/plans/current/HANDOFF.md`
+- Accepted: session 8dd8dd4a-994d-4e58-af0e-0410fe296001, 2026-11-17T04:12:41+01:00, initial context 25.3 %
 
 ## Boot
 0. If the user's private profile exists (config `profile`, default ~/.concertino/profile.md), read it first; its rules
