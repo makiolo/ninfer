@@ -405,3 +405,8 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   de `weight_input.cpp`, y `src/ops/common/sources.cmake`; dianas CUDA con el mismo efecto) y R97-29 la consume
   (`.agent-tmp/R97-29/DIRECTOR-NOTE.md`). **Intento 4 lanzado** (539, Codex `gpt-6-astra` xhigh, 240 min;
   `R97-12/card-fix-4.md`, pre-revisada READY). Cuota a las 07:55 UTC: Claude 55 %, Fable 76 %, Codex 59 %.
+- 2026-11-17 08:0x UTC · **R97-30 cerrada.** Revisión (540, Sonnet 5.5 high): ACCEPT, sin hallazgos bloqueantes ni
+  dudas; las suites son un oráculo de host independiente y cubren las siete entradas del camino MTP. El director
+  contrastó las tres notas bajas con los manifiestos (expresión generadora en `elementwise/sources.cmake:5`, orden
+  de inclusión `indexing` → `sequence`, cobertura de `remap_ids_inplace`): quedan como deuda baja para R97-31. Fila
+  en PLAN_OPS §5.
