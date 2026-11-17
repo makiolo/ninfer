@@ -459,3 +459,22 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   `alignas(unsigned __int128)` en `RecoveryCostSum` (`e1f750de`, una línea; sin efecto en Linux, donde ya son 16).
   **Validación sin modelo lanzada** (`R97-08-gate`: `attempt2.py build` y `ctest`; `.agent-tmp/R97-08/gate.log`).
   Si el test sigue fallando, vuelve al autor con `src/runtime/engine/context_cache` autorizado.
+- 2026-11-17 08:3x UTC · **Oráculo de R97-12, intento 2 (541), aceptado:** `b279a0c5`. Los ocho casos son
+  inalcanzables: la salida ideal (BF16 más cercano a su referencia FP64 independiente) falla las mismas 12
+  comparaciones que la GPU, con las mismas estadísticas. Corrige solo el criterio, por llamada, en
+  `tests/ops/linear_attention/causal_conv_trajectory.cpp` (estadística ideal de cada extensión redondeada hacia
+  arriba a tres cifras; el resto conserva `kCriterion`), y demuestra en host que sigue rechazando errores reales
+  (todas las salidas un BF16 arriba, un tap desplazado, estado inicial ignorado). Tabla:
+  `.agent-tmp/R97-12-oracle/criterion-feasibility.md`. **Punto para la revisión:** las entradas del test salen de la
+  STL (la de MSVC trunca el aleatorio a 24 bits), así que las cotas por llamada están ajustadas a las entradas de
+  esta plataforma y en Linux/CUDA pueden no valer. **Validación sin modelo lanzada** (`R97-12-gate`:
+  `run-gate.py build --gpu`, las nueve suites; `.agent-tmp/R97-12/gate.log`).
+- 2026-11-17 08:4x UTC · **Descarga de los pesos adelantada por orden del usuario** (en sesión, a la pregunta del
+  director sobre adelantarla): «creo que el modelo tiene una transformacion y tienes que descargar el gwen 3.8 de
+  ninfer, si no lo encuentras te lo busco». Es el artefacto ya convertido de R97-17: `qwen3_8_27b.ninfer` de
+  `neroued/Qwen3.8-27B-NInfer` (Hugging Face), 20 437 521 664 bytes según el listado del repositorio y su
+  `artifact-manifest.json`, SHA-256 `81f924d4…0375da`. En curso a `out/qwen3_8_27b.ninfer` (`R97-17/lz-download`,
+  curl con reanudación); `SHA256SUMS` y el manifiesto ya están en `out/`. Al terminar se comprueban tamaño exacto y
+  SHA-256. El resto de R97-17 (carga y generación) sigue dependiendo de R97-31 y R97-16.
+- 2026-11-17 08:4x UTC · Consulta de `reinforcement-learning-b3` (S: pierde unos 19 GiB/h): la huella de ninfer en
+  S: es de unos 2,6 GiB y `out/` estaba vacío; respondido, con aviso de la descarga de 19 GiB.
