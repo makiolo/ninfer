@@ -290,3 +290,28 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   `r9700` y no tienen tarea. Lanzado un análisis de solo lectura (subagente Sonnet 5.5 en sesión) que lista las Ops
   que llama el camino de texto del 27B con MTP y cuáles no tienen implementación en `r9700`; con su resultado se
   fija el alcance de la tarea de `linear/swiglu` y de lo que falte antes de R97-16.
+- 2026-11-17 07:1x UTC · **Q-011 respondida** por el usuario en la sesión saliente (`ninfer-e1`, commit `85a498d8`):
+  «Seguir por orden de llegada (Recomendado)». Sin cambios: la cola no se toca y las validaciones de ninfer siguen
+  como entradas sin modelo. No quedan preguntas abiertas.
+- 2026-11-17 07:2x UTC · **R97-13 cerrada** (`bdbec359`, con `f061bd98` y `bf4d695c`). Revisión 530 (Claude Opus
+  5.5 high): ACCEPT WITH CONDITIONS, ninguna pide cambiar el código entregado. Contraste del director: cierto que
+  `causal_cache/r9700/plan.h:13-16` usa una sola partición por encima de 128 consultas; la consecuencia (superar el
+  TDR con contexto largo) es una estimación sin medir → **ISSUE-004** (la mide R97-16). Los 57 casos BF16 fuera de
+  alcance que fallan con `--format bf16` y el rechazo de `write.cu:155-159` sin caso → **ISSUE-005** (registro de
+  tests antes del DoD de R97-18). La revisión no pide cambios en los kernels de escritura ni en las conversiones:
+  no hay que repetir las suites de KV de R97-14. Fila en PLAN_OPS §5.
+- 2026-11-17 07:2x UTC · **R97-11: el fallo era del test.** Oráculo intento 3 (Claude Sonnet 5.5 high, solo host):
+  la salida ideal (BF16 RNE exacto de la referencia) da un L2 relativo de 1,9073e-3 (#2), 1,8598e-3 (#13) y
+  2,0204e-3 (#35), por encima de la cota 1,85e-3: criterio inalcanzable. Corrección `637377e9`, solo
+  `tests/ops/normalization/rmsnorm_edge.cpp`: cota por caso (1,93e-3, 1,88e-3 y 2,04e-3: el L2 ideal más un 1 %);
+  los otros 33 casos conservan 1,85e-3; entradas, inversas, esperados y cota puntual sin tocar. Comprobado en host
+  que la cota nueva rechaza `inv` con un error de 1e-3 y todas las salidas desplazadas un BF16. Validación
+  relanzada sin modelo (`R97-11/lz-gate2`). Dudas del oráculo para la revisión: #34 pasa el L2 por vacuidad
+  (salidas de 1e-36 bajo el suelo de 1e-30 del probador), #28 y #30 quedan justo bajo la cota puntual.
+- 2026-11-17 07:2x UTC · **R97-12 intento 2 (526): BLOCKED.** Commit nuevo `e9cc0212` (`numeric/math.h`); sonda de
+  división en GPU 42/42 exactas. La compilación de sus objetivos falla en 21 unidades ajenas (MoE, PLE, QSA,
+  `sequence`, `indexing`, `mma.cuh`, `pipeline.cuh`, `core/pdl.cuh`) porque sus tests enlazan `ninfer_ops` entero,
+  que en `r9700` arrastra familias sin portar; además dos tests suyos no compilan (`constexpr` con `std::sqrt`).
+  **0 de 9 suites ejecutadas.** Decisión del director: intento 3 con el patrón de R97-13 y R97-14 (biblioteca
+  propia de la familia en `r9700` y tests enlazados a ella) y arreglo de compilación de los dos tests sin cambiar
+  valores; el autor deja la validación preparada y el director la lanza sin modelo.
