@@ -18,7 +18,8 @@ resources required by that capacity; decode batches use the requests currently r
 | Qwen3.8-Flash-Next | Qwen4Exp | RTX 5090 with CPU expert offload; one or two Sparks | MTP |
 | GLM-5.3-Flash | GLM5Next | Two Sparks | MTP or DFlash2 with companion weights |
 
-All rows support text, Vision, tools, constrained output, and offline perplexity scoring.
+All rows support text, tools, constrained output, and offline perplexity scoring; all except the
+R9700 row support Vision.
 Vision and speculative decoding require the corresponding components in the artifact and must be
 enabled at startup. Scoring loads Text only. CPU expert offload applies to the RTX 5090 target;
 Spark execution keeps selected weights on the GPU. Flash Next offload also needs substantial system

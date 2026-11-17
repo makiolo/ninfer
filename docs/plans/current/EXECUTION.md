@@ -125,3 +125,7 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   (pid 37076, `ws://127.0.0.1:8791/`). `deps.py`: READY. Cuota: Claude 27 %, Fable 37 % (con el 1,9 % de la ventana),
   Codex 10 %. R97-28 terminó (exit 0, 140 s, `68f00ba3`): pendiente el contraste del director. Cola de compilación:
   R97-10 tiene el candado del checkout 1 h 05 min; esperan R97-11, 13, 14, 08 y 12. INBOX sin entradas nuevas.
+- 2026-11-17 03:2x UTC · R97-28 (521) contrastada por el director contra el alcance: 14 ficheros, ninguna afirmación
+  de Vision, DFlash, NVFP4, offload ni multi-GPU en la R9700, sin cifras visibles. Un hallazgo corregido por el
+  director: `README.md:21` decía «All rows support text, Vision…» y contradecía la fila nueva. Queda **parcial** hasta
+  la verificación final tras R97-18 (lista en PLAN_INTEGRATION §5).

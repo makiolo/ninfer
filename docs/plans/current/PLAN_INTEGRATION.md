@@ -56,3 +56,4 @@ verificación final va tras R97-18.
 
 | ID | Commit | Tests | Desviaciones |
 |---|---|---|---|
+| R97-28 (parcial: escrita y contrastada con el alcance; falta la verificación final tras R97-18) | `68f00ba3` + corrección del director en `README.md:21` | No aplica (documentación y un TOML); enlaces relativos comprobados por el autor | Pendiente de comprobar con el producto: `cuda_graph = true` (hipGraph, R97-16), TOML arrancando con el modelo (R97-17/18), nombres `*.exe`, conversión `groupwise-int` con `--device cpu` (leída en `tools/convert`, no ejecutada), y si la fila de 260 096 tokens del perfil cabe en la R9700 (el TOML limita a 131 072) |
