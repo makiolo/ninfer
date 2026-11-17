@@ -360,3 +360,8 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   dos pasadas seguidas, 0 omitidos; la variable del plazo llegó al script); revisión lanzada (536, Claude Sonnet 5.5
   high; `R97-15/review-card.md`, incluye la corrección del director `b86077c3`). Cuota a las 07:34 UTC: Claude 53 %, Fable 73 %, Codex 56 % (con el
   4,5 % de la semana). Abierta: Q-012.
+- 2026-11-17 07:4x UTC · **Relevo 5 aceptado** (sesión `35a27144`, `ninfer-f6`, Fable 5.2 high, contexto inicial
+  25 %). Adoptados los seis procesos en vuelo (pids vivos, sin `.fin`) y el vigía (`ws://127.0.0.1:8791/`). El autor
+  de R97-12 dejó el commit `afe640fb` (biblioteca propia de la familia) y espera turno en la cola junto con las
+  validaciones de R97-08 y R97-30; el gate de R97-11 tiene la ranura. `deps.py`: sin dependencias. INBOX sin
+  entradas nuevas. Cuota a las 07:40 UTC: Claude 54 %, Fable 74 %, Codex 56 %. Abierta: Q-012.
