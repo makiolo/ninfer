@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <stdexcept>
 
-#if defined(__CUDACC__)
+#if defined(__CUDACC__) || defined(__HIP__)
 #    define NINFER_KERNEL_HD __host__ __device__
 #else
 #    define NINFER_KERNEL_HD
