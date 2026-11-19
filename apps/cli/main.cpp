@@ -20,6 +20,12 @@
 #include <string>
 #include <string_view>
 
+#if defined(_WIN32)
+#    define NOMINMAX
+#    include <windows.h>
+#    include <vector>
+#endif
+
 #include <spdlog/logger.h>
 
 namespace {
@@ -244,7 +250,11 @@ void print_generation_summary(const ninfer::GenerationResult& result,
 
 } // namespace
 
+#if defined(_WIN32)
+static int cli_main(int argc, char** argv) {
+#else
 int main(int argc, char** argv) {
+#endif
     ninfer::product::CliOptions cli;
     try {
         cli = ninfer::product::parse_cli_options(argc, argv);
@@ -342,3 +352,33 @@ int main(int argc, char** argv) {
         return 1;
     }
 }
+
+#if defined(_WIN32)
+// Windows supplies UTF-16 arguments. Own the UTF-8 storage until the CLI exits,
+// so prompts reach the tokenizer/template in the same encoding as file inputs.
+int wmain(int argc, wchar_t** wide_argv) {
+    std::vector<std::string> arguments;
+    arguments.reserve(argc);
+    for (int i = 0; i < argc; ++i) {
+        const auto bytes = WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, wide_argv[i], -1,
+                                                nullptr, 0, nullptr, nullptr);
+        if (bytes == 0) {
+            std::cerr << "error: cannot convert command line to UTF-8\n";
+            return 1;
+        }
+        std::string argument(bytes, '\0');
+        if (WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS, wide_argv[i], -1,
+                                argument.data(), bytes, nullptr, nullptr) == 0) {
+            std::cerr << "error: cannot convert command line to UTF-8\n";
+            return 1;
+        }
+        argument.pop_back();
+        arguments.push_back(std::move(argument));
+    }
+    std::vector<char*> argv;
+    argv.reserve(arguments.size() + 1);
+    for (auto& argument : arguments) { argv.push_back(argument.data()); }
+    argv.push_back(nullptr);
+    return cli_main(argc, argv.data());
+}
+#endif

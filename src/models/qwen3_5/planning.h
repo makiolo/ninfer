@@ -21,7 +21,11 @@ struct DeviceContext;
 }
 
 namespace ninfer::models::moe {
+#if defined(_WIN32)
+class Plan;
+#else
 struct Plan;
+#endif
 }
 
 namespace ninfer::models::qwen3_5 {
