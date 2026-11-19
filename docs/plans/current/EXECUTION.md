@@ -541,3 +541,12 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   gana casos aquí; `openai_schema_test` y `http_error_handler_test` se reactivan en R97-16 (necesitan el motor); las
   Ops de R97-15 sin definición en `r9700` pasan a rechazo explícito en su módulo dueño. Build en `build/r9700-ops`
   (preset), que es además la primera configuración limpia para ISSUE-002; toda suite de Ops lleva `LABELS "ops"`.
+- 2026-11-17 11:3x UTC · **R97-31 entregada** por el autor: `5af7273c` (47 ficheros), informe en
+  `R97-31/author-output.md` (30 de 30 suites, 7 362 casos, 0 omitidos; 77 Ops llamadas, 0 sin definir).
+- 2026-11-17 12:37 local · **R97-31 gate sin modelo: exit 0** (`.agent-tmp/R97-31/gate.log`): build desde
+  `5af7273c` y `ctest -L ops` en la ASUS, **30 de 30 suites**, 0 fallos, 3 627 s. Ficha de revisión pre-revisada READY,
+  pero la revisión no llegó a lanzarse (relevo interrumpido).
+- 2026-11-19 01:28 UTC · **Recuperación en frío** (relevo 7 rehecho): la sesión `3391608d` murió con «Credit balance
+  is too low» al usar la clave de API; el usuario preguntó «continua sin api key ?». Director e hijos siguen con la
+  suscripción (`ANTHROPIC_API_KEY` fuera del entorno de los hijos). **Revisión de R97-31 lanzada** (Claude Opus 5.5
+  high; Claude 68 % < 85 %, Q-012). Cuota: Claude 68 %, Fable 92 %, Codex 69 %.
