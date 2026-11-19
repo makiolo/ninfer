@@ -590,3 +590,10 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
 - 2026-11-19 03:59 local · **Anuncio del usuario** (INBOX, vía concertino-24): las preguntas al usuario se registran como
   bloqueantes u opcionales (`references/questions.md` §«Blocking or optional»; `ask.py`). En ninfer no hay preguntas
   abiertas; se aplica a las próximas.
+- 2026-11-19 03:4x UTC · **R97-33 entregada** (560): `448da3c4`. Ocho objetivos compilan y enlazan (`ninfer_engine`,
+  `ninfer_serve`, `ninfer`, `ninfer-serve` y los cuatro tests de producto); 56 símbolos resueltos, 7 definiciones host
+  (planificación) y 49 rechazos explícitos en sus módulos dueños (`.agent-tmp/R97-33/undefined-all.md`); sonda en la
+  ASUS: 60 de 60 rechazos; host 71 de 71; 15 suites de Ops compilan y siguen registradas 30; auditoría CUDA sin cambio
+  efectivo. Producto 3 de 4: `ninfer_glm5next_protocol_test` falla al decodificar PNG (FFmpeg de vcpkg con
+  `--disable-zlib`). **Decisión del director:** mismo motivo que `ninfer_glm5next_media_test` (R97-08), medios fuera del
+  objetivo; ambos a **ISSUE-007** (backlog). Pendiente: gate del director y revisión.
