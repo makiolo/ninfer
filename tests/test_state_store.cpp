@@ -146,7 +146,8 @@ int scattered_records(ninfer::DeviceContext& device) {
     const std::array<std::int64_t, 3> offsets{256, std::int64_t(plan.images.image_bytes * 2 + 768),
                                               std::int64_t(plan.images.image_bytes * 4 + 1024)};
     ninfer::DeviceBuffer backing(device.device(), offsets.back() + plan.images.image_bytes);
-    CUDA_CHECK(cudaMemset(backing.data(), 0x42, backing.size()));
+    // Fill on the non-blocking context stream: the legacy stream does not order against it.
+    CUDA_CHECK(cudaMemsetAsync(backing.data(), 0x42, backing.size(), device.stream()));
     ninfer::StateImageStorage images(backing.span(), plan.images);
     ninfer::LinearAttentionStateView state(images, plan.layout);
     for (auto offset : offsets) images.clear(offset, device.execution_view());
