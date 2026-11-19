@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/memory.h"
+#include "core/platform.h"
 
 #include <cuda_runtime.h>
 
@@ -8,6 +9,10 @@
 #include <cstdint>
 #include <limits>
 #include <stdexcept>
+
+#if NINFER_TARGET_R9700
+#include <memory>
+#endif
 
 namespace ninfer {
 
@@ -138,6 +143,8 @@ private:
     cudaStream_t stream_ = nullptr;
 };
 
+// Stream intervals, including idle gaps. Complete the interval before reading it;
+// captured graphs borrow the timer's storage and must be retired and destroyed first.
 class CudaEventTimer {
 public:
     explicit CudaEventTimer(const DeviceContext& ctx);
@@ -151,7 +158,7 @@ public:
 
     void start();
     void record_stop();
-    // Records externally observable timing nodes inside a Graph capture.
+    // Records replay-visible timing boundaries inside a Graph capture.
     void start_external();
     void record_stop_external();
     [[nodiscard]] float elapsed_ms() const;
@@ -161,6 +168,10 @@ private:
     cudaStream_t stream_ = nullptr;
     cudaEvent_t start_   = nullptr;
     cudaEvent_t stop_    = nullptr;
+#if NINFER_TARGET_R9700
+    struct ClockSamples;
+    std::unique_ptr<ClockSamples> clock_samples_;
+#endif
 };
 
 // Reusable non-timing event for worker-driven asynchronous control transactions. The owning

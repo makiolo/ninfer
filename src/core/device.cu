@@ -56,7 +56,51 @@ void destroy_event(cudaEvent_t& event) noexcept {
     }
 }
 
+#if NINFER_TARGET_R9700
+// HIP 7.2/PAL event profiling can report reversed timestamps even for an ordered
+// stream. Read the GPU's constant-frequency clock in the stream itself instead.
+__global__ void record_clock_sample(unsigned long long* sample) {
+    *sample = static_cast<unsigned long long>(wall_clock64());
+}
+#endif
+
 } // namespace
+
+#if NINFER_TARGET_R9700
+struct CudaEventTimer::ClockSamples {
+    explicit ClockSamples(Device selected_device) : device(selected_device) {
+        auto error = hipDeviceGetAttribute(&clock_khz, hipDeviceAttributeWallClockRate, device.index());
+        if (error != cudaSuccess) {
+            throw std::runtime_error(cuda_error_message("GPU wall clock frequency query failed", error));
+        }
+        if (clock_khz <= 0) { throw std::runtime_error("GPU wall clock frequency is unavailable"); }
+        error = hipHostMalloc(reinterpret_cast<void**>(&host), 2 * sizeof(*host), hipHostMallocMapped);
+        if (error != cudaSuccess) {
+            throw std::runtime_error(cuda_error_message("GPU timer mapped allocation failed", error));
+        }
+        error = cudaHostGetDevicePointer(reinterpret_cast<void**>(&mapped), host, 0);
+        if (error != cudaSuccess) {
+            log_cuda_error("cudaFreeHost(timer)", cudaFreeHost(host));
+            throw std::runtime_error(cuda_error_message("GPU timer device mapping failed", error));
+        }
+        host[0] = host[1] = 0;
+    }
+
+    ~ClockSamples() {
+        try {
+            CudaDeviceScope scope(device);
+            log_cuda_error("cudaFreeHost(timer)", cudaFreeHost(host));
+        } catch (const std::exception& error) {
+            std::fprintf(stderr, "GPU timer cleanup failed: %s\n", error.what());
+        }
+    }
+
+    Device device;
+    unsigned long long* host   = nullptr;
+    unsigned long long* mapped = nullptr;
+    int clock_khz = 0;
+};
+#endif
 
 DeviceAllocationError::DeviceAllocationError(const char* operation, std::size_t requested_bytes)
     : std::runtime_error(std::string(operation) + ": insufficient Device memory"),
@@ -234,14 +278,27 @@ CudaEventTimer::CudaEventTimer(const DeviceContext& ctx, cudaStream_t stream) : 
     if (stream == nullptr) { throw std::invalid_argument("CUDA timer stream is null"); }
     ctx.bind_to_current_thread();
 
+#if NINFER_TARGET_R9700
+    clock_samples_ = std::make_unique<ClockSamples>(ctx.device());
+#endif
+
     cudaEvent_t start = nullptr;
     cudaEvent_t stop  = nullptr;
+#if NINFER_TARGET_R9700
+    // Events retain completion/fence semantics; their profiling data is unused.
+    cudaError_t err   = cudaEventCreateWithFlags(&start, cudaEventDisableTiming);
+#else
     cudaError_t err   = cudaEventCreate(&start);
+#endif
     if (err != cudaSuccess) {
         throw std::runtime_error(cuda_error_message("cudaEventCreate(start) failed", err));
     }
 
+#if NINFER_TARGET_R9700
+    err = cudaEventCreateWithFlags(&stop, cudaEventDisableTiming);
+#else
     err = cudaEventCreate(&stop);
+#endif
     if (err != cudaSuccess) {
         destroy_event(start);
         throw std::runtime_error(cuda_error_message("cudaEventCreate(stop) failed", err));
@@ -257,7 +314,11 @@ CudaEventTimer::~CudaEventTimer() {
 }
 
 CudaEventTimer::CudaEventTimer(CudaEventTimer&& other) noexcept
-    : stream_(other.stream_), start_(other.start_), stop_(other.stop_) {
+    : stream_(other.stream_), start_(other.start_), stop_(other.stop_)
+#if NINFER_TARGET_R9700
+      , clock_samples_(std::move(other.clock_samples_))
+#endif
+{
     other.stream_ = nullptr;
     other.start_  = nullptr;
     other.stop_   = nullptr;
@@ -269,6 +330,10 @@ CudaEventTimer& CudaEventTimer::operator=(CudaEventTimer&& other) noexcept {
     destroy_event(stop_);
     destroy_event(start_);
 
+#if NINFER_TARGET_R9700
+    clock_samples_ = std::move(other.clock_samples_);
+#endif
+
     stream_ = other.stream_;
     start_  = other.start_;
     stop_   = other.stop_;
@@ -279,22 +344,53 @@ CudaEventTimer& CudaEventTimer::operator=(CudaEventTimer&& other) noexcept {
     return *this;
 }
 
-void CudaEventTimer::start() { CUDA_CHECK(cudaEventRecord(start_, stream_)); }
+void CudaEventTimer::start() {
+#if NINFER_TARGET_R9700
+    record_clock_sample<<<1, 1, 0, stream_>>>(clock_samples_->mapped);
+    CUDA_CHECK(cudaGetLastError());
+#endif
+    CUDA_CHECK(cudaEventRecord(start_, stream_));
+}
 
-void CudaEventTimer::record_stop() { CUDA_CHECK(cudaEventRecord(stop_, stream_)); }
+void CudaEventTimer::record_stop() {
+#if NINFER_TARGET_R9700
+    record_clock_sample<<<1, 1, 0, stream_>>>(clock_samples_->mapped + 1);
+    CUDA_CHECK(cudaGetLastError());
+#endif
+    CUDA_CHECK(cudaEventRecord(stop_, stream_));
+}
 
 void CudaEventTimer::start_external() {
+#if NINFER_TARGET_R9700
+    record_clock_sample<<<1, 1, 0, stream_>>>(clock_samples_->mapped);
+    CUDA_CHECK(cudaGetLastError());
+#endif
     CUDA_CHECK(cudaEventRecordWithFlags(start_, stream_, cudaEventRecordExternal));
 }
 
 void CudaEventTimer::record_stop_external() {
+#if NINFER_TARGET_R9700
+    record_clock_sample<<<1, 1, 0, stream_>>>(clock_samples_->mapped + 1);
+    CUDA_CHECK(cudaGetLastError());
+#endif
     CUDA_CHECK(cudaEventRecordWithFlags(stop_, stream_, cudaEventRecordExternal));
 }
 
 float CudaEventTimer::elapsed_ms() const {
+#if NINFER_TARGET_R9700
+    CUDA_CHECK(cudaEventQuery(start_));
+    CUDA_CHECK(cudaEventQuery(stop_));
+    const auto begin = clock_samples_->host[0];
+    const auto end   = clock_samples_->host[1];
+    if (begin == 0 || end < begin) {
+        throw std::runtime_error("GPU timer has no completed ordered clock interval");
+    }
+    return static_cast<float>(double(end - begin) / clock_samples_->clock_khz);
+#else
     float ms = 0.0f;
     CUDA_CHECK(cudaEventElapsedTime(&ms, start_, stop_));
     return ms;
+#endif
 }
 
 float CudaEventTimer::stop_ms() {
