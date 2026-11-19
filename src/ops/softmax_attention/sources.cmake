@@ -1,6 +1,7 @@
 if(NINFER_TARGET_R9700)
   include("${CMAKE_CURRENT_LIST_DIR}/dense/causal_cache/r9700/sources.cmake")
   target_sources(ninfer_ops PRIVATE "${CMAKE_CURRENT_LIST_DIR}/sliding_window/r9700/unsupported.cpp")
+  target_sources(ninfer_ops PRIVATE "${CMAKE_CURRENT_LIST_DIR}/sliding_window/r9700/graph_profile.cpp")
   include("${CMAKE_CURRENT_LIST_DIR}/qsa/sources.cmake")
   include("${CMAKE_CURRENT_LIST_DIR}/kpool_mla/sources.cmake")
   return()

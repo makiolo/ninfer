@@ -1,4 +1,5 @@
 if(NINFER_TARGET_R9700)
+  include("${CMAKE_CURRENT_LIST_DIR}/bias/sources.cmake")
   include("${CMAKE_CURRENT_LIST_DIR}/common/r9700/sources.cmake")
   return()
 endif()

@@ -1,4 +1,10 @@
 if(NINFER_TARGET_R9700)
+  target_sources(ninfer_ops PRIVATE
+    "${CMAKE_CURRENT_LIST_DIR}/layout.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/prepare/prepare.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/indexer/indexer.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/sparse_mla/sparse_mla.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/r9700/unsupported.cpp")
   return()
 endif()
 
