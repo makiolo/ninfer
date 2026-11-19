@@ -550,3 +550,11 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   is too low» al usar la clave de API; el usuario preguntó «continua sin api key ?». Director e hijos siguen con la
   suscripción (`ANTHROPIC_API_KEY` fuera del entorno de los hijos). **Revisión de R97-31 lanzada** (Claude Opus 5.5
   high; Claude 68 % < 85 %, Q-012). Cuota: Claude 68 %, Fable 92 %, Codex 69 %.
+- 2026-11-19 01:4x UTC · **R97-31 cerrada.** Revisión (558, Opus 5.5 high, 4 min): ACCEPT WITH CONDITIONS; oráculos y
+  cotas intactos, recuentos cuadrados con PLAN_OPS §5, rechazos explícitos en su módulo dueño y sin diferencia
+  efectiva en CUDA. **Decisiones del director** sobre las condiciones: (a) ISSUE-002 sigue sin verificar (el gate fija
+  `NINFER_R9700_VCPKG_INSTALLED_DIR`): pasa a R97-16, con una configuración `--fresh` sin esa variable (texto de R97-16
+  en PLAN_INTEGRATION §3); (b) limpieza hecha por el director (`1ecb7417`: manifiesto muerto `input_conv/q8/r9700` y
+  alias `ninfer_gdn_test_library`), validada sin modelo (`.agent-tmp/R97-31/gate2.log`: reconfiguración, `ninja: no
+  work to do`, `ctest -N -L ops` lista 30); (c) `ninfer_hip_common_primitives_test` se queda en `-L ops`. Fila en
+  PLAN_OPS §5. Siguiente: ficha de R97-16.

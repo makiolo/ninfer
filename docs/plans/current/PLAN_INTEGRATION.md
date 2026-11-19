@@ -22,6 +22,10 @@ Depende de: HOST (R97-05..08) y OPS (R97-09..15, R97-29..31). Bloquea: PERF.
 - hipGraph para la captura y el replay del decode, streams y eventos, memoria pinned, consultas de memoria del
   planificador de capacidad (contando la reserva de WDDM). Documentar en el cierre el límite de TDR observado.
 - Aceptación: tests de runtime y de capacidad en verde en `r9700`; test de captura y replay de graph.
+- Heredado de R97-08 y R97-31: reactivar `openai_schema_test` y `http_error_handler_test` (necesitan el motor);
+  primer enlace real del motor contra `ninfer_ops` (el inventario de símbolos de R97-31 casa por nombre, no por
+  sobrecarga); y verificar ISSUE-002 con una configuración `--fresh` **sin** `NINFER_R9700_VCPKG_INSTALLED_DIR` en el
+  entorno, para ejercitar la ruta por defecto de `cmake/NinferPlatform.cmake:32`.
 
 ### R97-17 — Carga del modelo y generación
 - Nivel L5 · Riesgo medio · Autor: strong · Revisor: otro proveedor.

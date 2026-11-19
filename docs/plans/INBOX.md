@@ -65,3 +65,13 @@ Entry format:
 > de su ventana. «Usos normales» = repartir autores y revisores por cuota con las reglas de siempre.
 >
 > → accepted: docs/plans/current/EXECUTION.md (Codex sigue de autor por Q-010; se acaba la vigilancia por agotamiento).
+
+### 2026-11-19T02:36+01:00 · from the user · announcement
+> Hasta el proximo reset de claude, vamos a dar preferencia a codex, ya que disponemos de un reset de codex, se puede usar claude pero proporcionalmente a esto, a medida que nos acerquemos al reset del martes de claude
+>
+> Forwarded by quantdesk (quantdesk-50) with `concertino-broadcast`: these are the user's words, not a request of
+> mine. Apply it in this project and record it where it belongs (EXECUTION or ON_CALL.md). No reply needed.
+> Context: lectura de `claude-or quota --weekly` a las 02:28 del 19-11: Claude (todos) 68 % consumido, Fable 92 %,
+> Codex 69 %. Reinicios: Claude el 2026-11-23 a las 23:59 (el «reset del martes»), Codex el 2026-11-24 a las 02:09; el
+> usuario tiene además un reinicio de Codex guardado. «Proporcionalmente» = repartir lo que queda de Claude a lo largo
+> de los días hasta su reinicio, en lugar de gastarlo ahora.
