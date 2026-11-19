@@ -54,10 +54,27 @@ Depende de: HOST (R97-05..08) y OPS (R97-09..15, R97-29..31). Bloquea: PERF.
 - Aceptación: ninguna afirmación fuera de alcance; antes de cerrar el sprint, el director comprueba cada afirmación
   contra R97-17/18 (TOML de ejemplo arrancando con el modelo) y R97-19..21 rellena las cifras.
 
+### R97-32 — `claude-local` con Qwen3.8 de ninfer en la ASUS
+- Nivel L4 · Riesgo medio (herramienta compartida por todos los proyectos) · Autor: Codex · Revisor: otro modelo.
+- Añadida por el usuario (2026-11-19): «cuando terminemos cambia claude-local para poder usarlo desde allí, pudiendo
+  elegir entre 2 modelos, el gwen 3.8 de la asus, y el de la shappire, y comandos para cargar y descargar el modelo de
+  la gpu».
+- Fuera del repo: la fuente única es `~/.claude/skills/sprint/tools/claude_local.py` (los envoltorios de
+  `S:/Apps/bin` no se editan); copia de seguridad antes de tocarlo. Hoy los grados van a LM Studio (`opus` → Qwen 3.8
+  en la ASUS; `sonnet`/`haiku` → Qwen 3.8 en la Sapphire). El cambio: el modelo de la ASUS pasa a servirlo
+  `ninfer-serve` con `out/qwen3_8_27b.ninfer` en HIP 0 (protocolo Anthropic del propio servidor), el de la Sapphire
+  sigue en LM Studio, y se puede elegir cualquiera de los dos. Órdenes nuevas para cargar y descargar el modelo de
+  cada GPU (ninfer: arrancar y parar el servidor; LM Studio: `lms load`/`unload` con su `gpuSplitConfig`), sin romper
+  las ranuras (`~/.claude-local/slots`) que usan los demás proyectos.
+- Aceptación: una sesión `claude-local` contra cada uno de los dos modelos responde y usa herramientas; cargar y
+  descargar dejan la VRAM de la GPU como estaba (medido); los demás proyectos siguen funcionando con sus órdenes.
+- Depende de R97-18 (corrección numérica comprobada). Rendimiento con prompts largos de Claude Code: prefill
+  limitado por ISSUE-004 (TDR) y sin optimizar hasta R97-19..21 (SPRINT-02); se mide y se informa, no se arregla aquí.
+
 ## 4. Orden y paralelismo
 
-R97-16 → R97-17 → R97-18, en serie (GPU y artefacto compartidos). R97-28 en paralelo (solo documentación); su
-verificación final va tras R97-18.
+R97-16 → R97-17 → R97-18 → R97-32, en serie (GPU y artefacto compartidos). R97-28 en paralelo (solo documentación);
+su verificación final va tras R97-18.
 
 ## 5. Registro de cierre
 
