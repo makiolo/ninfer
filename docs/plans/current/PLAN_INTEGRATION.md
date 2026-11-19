@@ -72,9 +72,9 @@ Depende de: HOST (R97-05..08) y OPS (R97-09..15, R97-29..31). Bloquea: PERF.
 - La Sapphire lleva el escritorio (WDDM reserva más VRAM) y la comparten otros proyectos: comprobar que el modelo
   con su contexto cabe allí y fijar el contexto de cada GPU por medida, no por suposición.
 - Aceptación: una sesión `claude-local` contra cada GPU responde y usa herramientas; cargar y descargar dejan la VRAM
-  de esa GPU como estaba (medido); los demás proyectos siguen funcionando con sus órdenes; tabla ninfer frente a LM
-  Studio en cada GPU (tokens/s de prefill y de decode, mismo prompt y contexto). Que ninfer sea más rápido es lo que
-  se espera, no lo que se da por hecho: el informe dice el resultado medido.
+  de esa GPU como estaba (medido); los demás proyectos siguen funcionando con sus órdenes. **Sin benchmarks ni
+  comparaciones con LM Studio** (usuario, 2026-11-19: «no pierdas tiempos, haciendo benchmarks ni comparaciones hasta
+  que optimices primero»): se miden después de R97-19..21.
 - Depende de R97-18 (corrección numérica comprobada). Rendimiento con prompts largos de Claude Code: prefill
   limitado por ISSUE-004 (TDR) y sin optimizar hasta R97-19..21 (SPRINT-02); se mide y se informa, no se arregla aquí.
 
