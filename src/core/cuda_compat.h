@@ -228,6 +228,7 @@ static_assert(sizeof(__nv_fp8_e4m3) == 1 && sizeof(__nv_fp8x2_e4m3) == 2);
 #define cudaStreamQuery hipStreamQuery
 #define cudaStreamWaitEvent hipStreamWaitEvent
 #define cudaStreamGetDevice hipStreamGetDevice
+#define cudaLaunchHostFunc hipLaunchHostFunc
 #define cudaStreamNonBlocking hipStreamNonBlocking
 #define cudaStreamBeginCapture hipStreamBeginCapture
 #define cudaStreamEndCapture hipStreamEndCapture

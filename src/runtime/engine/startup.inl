@@ -18,9 +18,24 @@
 #include <cerrno>
 #include <system_error>
 #include <set>
+#include <string>
 
 namespace ninfer::runtime::detail {
 
+inline void set_local_rank_environment(const std::string& key, const std::string& value) {
+#if defined(_WIN32)
+    // The Windows CRT removes empty assignments. Do not silently turn a
+    // requested empty value into an absent variable (getenv observes the CRT).
+    if (value.empty())
+        throw std::invalid_argument("empty local rank environment values are unsupported on Windows");
+    const auto error = ::_putenv_s(key.c_str(), value.c_str());
+    if (error)
+        throw std::system_error(error, std::generic_category(), "set local rank environment");
+#else
+    if (::setenv(key.c_str(), value.c_str(), 1))
+        throw std::system_error(errno, std::generic_category(), "set local rank environment");
+#endif
+}
 
 template <class Plan>
 struct CalibratedPlan {
@@ -191,9 +206,7 @@ BuiltModel<typename Setup::Types> build_local_model(const artifact::Reader& read
     if (options.deployment && options.deployment->ranks.size() == 1) {
         const auto& node = options.deployment->nodes.front();
         for (const auto& [key, value] : node.environment)
-            if (::setenv(key.c_str(), value.c_str(), 1))
-                throw std::system_error(errno, std::generic_category(),
-                                        "set local rank environment");
+            set_local_rank_environment(key, value);
         rank_reader = std::make_unique<artifact::Reader>(node.artifact);
     }
     Setup setup(reader, rank_reader ? *rank_reader : reader, options, Device::cuda(options.device));

@@ -14,9 +14,7 @@ build_prepared_local_model(const artifact::Reader& reader, EngineOptions& option
     if (options.deployment && options.deployment->ranks.size() == 1) {
         const auto& node = options.deployment->nodes.front();
         for (const auto& [key, value] : node.environment)
-            if (::setenv(key.c_str(), value.c_str(), 1))
-                throw std::system_error(errno, std::generic_category(),
-                                        "set local rank environment");
+            set_local_rank_environment(key, value);
         rank_reader = std::make_unique<artifact::Reader>(node.artifact);
     }
     const auto& local_reader = rank_reader ? *rank_reader : reader;

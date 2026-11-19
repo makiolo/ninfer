@@ -2,6 +2,7 @@
 
 #include "core/device.h"
 #include "core/nvtx.h"
+#include "core/platform.h"
 
 #include <cstdio>
 #include <algorithm>
@@ -16,7 +17,17 @@ void check_graph(cudaError_t error, const char* operation) {
         (void)cudaGetLastError();
         throw DeviceAllocationError(operation);
     }
+#if NINFER_TARGET_R9700
+    // EndCapture also clears an invalidated capture. Propagate the failure after
+    // that cleanup so the owner can report it and reuse the stream.
+    if (error != cudaSuccess) {
+        (void)cudaGetLastError();
+        throw std::runtime_error(std::string(operation) + ": " + cudaGetErrorName(error) +
+                                 ": " + cudaGetErrorString(error));
+    }
+#else
     cuda_check(error, operation, __FILE__, __LINE__);
+#endif
 }
 
 void log_cuda_error(const char* op, cudaError_t err) noexcept {

@@ -6,6 +6,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <limits>
 #include <stdexcept>
 
 namespace ninfer {
@@ -26,9 +27,17 @@ struct DeviceMemorySnapshot {
     std::size_t cuda_free_bytes = 0, total_bytes = 0;
     std::size_t system_available_bytes = 0, system_total_bytes = 0;
     bool shared_physical_memory = false;
+    // Driver residency budget and this process's usage (WDDM local segment).
+    // An unconstrained budget preserves CUDA's cudaMemGetInfo planning contract.
+    std::size_t local_budget_bytes = (std::numeric_limits<std::size_t>::max)();
+    std::size_t local_usage_bytes = 0;
 
     [[nodiscard]] std::size_t available_bytes() const noexcept {
-        if (!shared_physical_memory) return cuda_free_bytes;
+        if (!shared_physical_memory) {
+            const auto budget_free = local_usage_bytes < local_budget_bytes
+                                         ? local_budget_bytes - local_usage_bytes : 0;
+            return cuda_free_bytes < budget_free ? cuda_free_bytes : budget_free;
+        }
         return system_available_bytes < total_bytes ? system_available_bytes : total_bytes;
     }
 };

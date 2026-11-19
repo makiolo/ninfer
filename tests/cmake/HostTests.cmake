@@ -74,6 +74,12 @@ function(ninfer_register_host_tests)
     ninfer_artifact_paths_host_test
     ninfer_context_cost_measure_test)
   if(NINFER_BUILD_ENGINE)
+    # These GPU-free metadata contracts retain their production model/Op links.
+    set(engine_host_tests
+      ninfer_sampling_defaults_test
+      ninfer_qwen3_5_loading_test ninfer_qwen3_5_runtime_mechanisms_test
+      ninfer_qwen3_5_state_image_layout_test)
+    list(APPEND host_tests ${engine_host_tests})
     list(APPEND host_tests
       ninfer_jinja_test ninfer_jinja_time_host_test ninfer_chat_templates_test ninfer_tokenizer_host_test
       ninfer_host_timing_test
@@ -94,14 +100,11 @@ function(ninfer_register_host_tests)
       ninfer_glm5next_frontend_resources_test ninfer_glm5next_chat_template_test
       ninfer_glm5next_preparation_test ninfer_glm5next_output_test
       ninfer_glm5next_tool_constraints_test ninfer_glm5next_tool_schema_oracle_test)
-    # glm5next_protocol and openai_schema require generation_service.cpp's Engine
-    # consumers; http_error_handler also pulls HTTP handlers and monitor.cpp.
-    # request_log constructs a GenerationHandle and pulls operational_log.cpp.
-    # Reactivate after R97-16 (HIP Engine) and R97-31 (complete ninfer_ops linkage).
-    # sampling_defaults needs qwen3_5/config.cpp -> qwen/vision/parameters.cpp;
-    # the latter also defines prepare_vision and requires ninfer_ops (R97-31).
     # glm5next_media links host providers but needs a PNG-enabled offline FFmpeg
     # dependency tree (R97-07); the current tree was built with --disable-zlib.
+    # openai_schema, request_log, http_error_handler and glm5next_protocol still
+    # cannot link Engine: its GLM5Next/MoE consumers need undefined KDA/Kpool/HC
+    # and MoE Op providers. Keep the complete tests registered, outside host.
   endif()
   set(host_targets ninfer_device_test)
   foreach(test IN LISTS host_tests)
@@ -109,13 +112,14 @@ function(ninfer_register_host_tests)
     set_property(TEST ${test} APPEND PROPERTY ENVIRONMENT_MODIFICATION
       "PATH=path_list_prepend:${PROJECT_BINARY_DIR}/lib"
       "PATH=path_list_prepend:${PROJECT_BINARY_DIR}/src/core"
+      "PATH=path_list_prepend:${PROJECT_BINARY_DIR}/src/ops"
       "PATH=path_list_prepend:${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin"
       "PATH=path_list_prepend:$ENV{HIP_PATH}/bin")
     set_property(TEST ${test} APPEND PROPERTY ENVIRONMENT
       "HIP_VISIBLE_DEVICES=-1" "PYTHONUTF8=1" "PYTHONIOENCODING=utf-8")
     if(TARGET ${test})
       list(APPEND host_targets ${test})
-      if(NINFER_BUILD_ENGINE)
+      if(NINFER_BUILD_ENGINE AND NOT test IN_LIST engine_host_tests)
         get_target_property(libraries ${test} LINK_LIBRARIES)
         if(libraries)
           list(TRANSFORM libraries REPLACE "^ninfer_serve$" "ninfer_serve_host")
