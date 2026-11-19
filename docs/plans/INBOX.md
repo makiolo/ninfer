@@ -75,3 +75,5 @@ Entry format:
 > Codex 69 %. Reinicios: Claude el 2026-11-23 a las 23:59 (el «reset del martes»), Codex el 2026-11-24 a las 02:09; el
 > usuario tiene además un reinicio de Codex guardado. «Proporcionalmente» = repartir lo que queda de Claude a lo largo
 > de los días hasta su reinicio, en lugar de gastarlo ahora.
+>
+> → accepted: docs/plans/current/EXECUTION.md (revisiones y oráculos a Codex; Claude en proporción hasta el reinicio).

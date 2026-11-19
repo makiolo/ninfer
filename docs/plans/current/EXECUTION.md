@@ -558,3 +558,9 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   alias `ninfer_gdn_test_library`), validada sin modelo (`.agent-tmp/R97-31/gate2.log`: reconfiguración, `ninja: no
   work to do`, `ctest -N -L ops` lista 30); (c) `ninfer_hip_common_primitives_test` se queda en `-L ops`. Fila en
   PLAN_OPS §5. Siguiente: ficha de R97-16.
+- 2026-11-19 01:5x UTC · **Anuncio del usuario** (INBOX, reenviado por quantdesk a las 02:36 local): hasta el reinicio
+  de Claude (2026-11-23 23:59 UTC), preferencia a Codex; Claude solo en proporción al tiempo que falta. Aplicación en
+  ninfer: autores siguen en Codex (Q-010); **revisiones, oráculos y pre-revisiones también a Codex** con un modelo
+  distinto del autor (como la opción B de Q-012, adelantada); Claude queda para el director y para lo que Codex no
+  pueda hacer, con un presupuesto de unos 6 puntos semanales por día (68 % gastado, 32 % para casi 5 días). La revisión
+  de R97-31 ya se había hecho en Opus antes del anuncio.
