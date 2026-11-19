@@ -42,6 +42,11 @@ Depende de: HOST (R97-05..08) y OPS (R97-09..15, R97-29..31). Bloquea: PERF.
   reactivar el test host `perplexity_evaluation`, excluido hoy en `r9700` por ese motivo).
 - Aceptación: perplejidad dentro de la tolerancia acordada en la tarjeta (el oráculo la fija antes de ejecutar);
   tests MTP de `tests/models/qwen3_5` en verde.
+- Entradas de R97-17 (decisión del director, 2026-11-19): los tests con artefacto que fijan FP8 o MTP en su código
+  (`ninfer_qwen3_5_{preemption,fairness,grammar,tools,score}_real_test`, `ninfer_qwen3_5_native_transactions_test`;
+  ya compilan en `r9700`) y `ninfer_qwen3_5_loading_real_test` (no compila: `sys/resource.h`, que solo imprime el pico
+  de memoria con `getrusage`; portarlo es un arreglo de compilación del test; necesita `--artifact`), además de
+  `ninfer_qwen3_5_mtp_history_real_test`. Inventario: `.agent-tmp/R97-17/acceptance.md`.
 
 ### R97-28 — Documentación de producto de la diana R9700
 - Nivel L3 · Riesgo bajo · Autor: Claude Sonnet 5.5 high · Revisor: el director (contraste con el alcance del sprint).

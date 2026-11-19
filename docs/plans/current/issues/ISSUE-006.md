@@ -21,6 +21,11 @@
   - `ninfer_artifact_writer_interop_test` (llama a `materialization_test`, interpone ELF y `statx`);
   - `ninfer_artifact_cpu_materialization_test` (fallos de I/O inyectados, `statx` en `materialization_io.cpp`);
   - `ninfer_ple_disk_prepare_host_test` (interpone `cudaEventRecord`; además depende de PLE, fuera del hito).
+  - Añadidos en R97-17 (2026-11-19, `.agent-tmp/R97-17/acceptance.md`): `ninfer_qwen3_5_prefix_real_test` (interpone
+    `cudaEventQuery`) y los que reutilizan su ejecutable, `ninfer_qwen3_5_terminal_publication_real_test` y
+    `ninfer_qwen3_5_agent_continuation_real_test`; y `ninfer_artifact_materialization_test` (`dlfcn.h`, `statx`).
+    Estos tres de Qwen3.5 cubren reutilización de prefijos y publicación de terminales con el artefacto real: subir la
+    prioridad si `claude-local` (R97-32) depende de la reutilización de prefijos.
 - Esperado: los mismos fallos inyectados se comprueban también en Windows.
 
 ## 2. Divergence from the specification
