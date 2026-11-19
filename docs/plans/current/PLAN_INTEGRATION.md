@@ -61,13 +61,20 @@ Depende de: HOST (R97-05..08) y OPS (R97-09..15, R97-29..31). Bloquea: PERF.
   la gpu».
 - Fuera del repo: la fuente única es `~/.claude/skills/sprint/tools/claude_local.py` (los envoltorios de
   `S:/Apps/bin` no se editan); copia de seguridad antes de tocarlo. Hoy los grados van a LM Studio (`opus` → Qwen 3.8
-  en la ASUS; `sonnet`/`haiku` → Qwen 3.8 en la Sapphire). El cambio: el modelo de la ASUS pasa a servirlo
-  `ninfer-serve` con `out/qwen3_8_27b.ninfer` en HIP 0 (protocolo Anthropic del propio servidor), el de la Sapphire
-  sigue en LM Studio, y se puede elegir cualquiera de los dos. Órdenes nuevas para cargar y descargar el modelo de
-  cada GPU (ninfer: arrancar y parar el servidor; LM Studio: `lms load`/`unload` con su `gpuSplitConfig`), sin romper
-  las ranuras (`~/.claude-local/slots`) que usan los demás proyectos.
-- Aceptación: una sesión `claude-local` contra cada uno de los dos modelos responde y usa herramientas; cargar y
-  descargar dejan la VRAM de la GPU como estaba (medido); los demás proyectos siguen funcionando con sus órdenes.
+  en la ASUS; `sonnet`/`haiku` → Qwen 3.8 en la Sapphire). Precisión del usuario (2026-11-19): «tanto asus como
+  shappire usarian ninfer, que esperamos que sea mas rapido que lm studio. Y desde code, elegimos el modelo (o la gpu
+  mas bien)». El cambio: **las dos GPU sirven Qwen 3.8 con ninfer** (`out/qwen3_8_27b.ninfer`), una instancia de
+  `ninfer-serve` por GPU (ASUS por bus PCI 6, Sapphire por bus 3; el índice HIP no es estable, `claude_local.py` ya los
+  reconoce por bus), con el protocolo Anthropic del propio servidor; LM Studio deja de servir esos grados. Desde Claude
+  Code se elige la GPU eligiendo el modelo (un identificador por GPU, p. ej. `qwen3.8-asus` / `qwen3.8-sapphire`, que
+  `/model` y `Agent` puedan pedir). Órdenes nuevas para cargar y descargar el modelo de cada GPU (arrancar y parar su
+  servidor), sin romper las ranuras (`~/.claude-local/slots`) que usan los demás proyectos.
+- La Sapphire lleva el escritorio (WDDM reserva más VRAM) y la comparten otros proyectos: comprobar que el modelo
+  con su contexto cabe allí y fijar el contexto de cada GPU por medida, no por suposición.
+- Aceptación: una sesión `claude-local` contra cada GPU responde y usa herramientas; cargar y descargar dejan la VRAM
+  de esa GPU como estaba (medido); los demás proyectos siguen funcionando con sus órdenes; tabla ninfer frente a LM
+  Studio en cada GPU (tokens/s de prefill y de decode, mismo prompt y contexto). Que ninfer sea más rápido es lo que
+  se espera, no lo que se da por hecho: el informe dice el resultado medido.
 - Depende de R97-18 (corrección numérica comprobada). Rendimiento con prompts largos de Claude Code: prefill
   limitado por ISSUE-004 (TDR) y sin optimizar hasta R97-19..21 (SPRINT-02); se mide y se informa, no se arregla aquí.
 
