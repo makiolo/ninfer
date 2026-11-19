@@ -629,3 +629,12 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   no hay valor publicado para `groupwise-int` (solo NVFP4 en RTX 5090: 4,6148 y 4,6171, corpus completo, contexto
   4 096, stride 2 048, KV INT8); sin hardware CUDA aquí, el oráculo de R97-18 construye una referencia independiente
   en CPU (float32, capa a capa, ventanas cortas) con los códecs de `tools/artifact/codecs/`.
+- 2026-11-19 05:1x UTC · **R97-18 lanzada en dos hijos paralelos** (fichas pre-revisadas READY):
+  **oráculo** (653, Codex `gpt-6-astra` xhigh, 180 min, `R97-18/oracle-card.md`): forward float32 en CPU, independiente
+  del C++, con los mismos pesos cuantizados (`q4/q5/q6/q8_g*_fp16`, descuantización propia), cuatro ventanas de 256
+  tokens (una por dominio del modo `--quick`), modos `fp32` y `bf16-ideal`, tolerancias BF16 y FP8 con viabilidad
+  demostrada, `compare.py`; sin GPU, sin commits. **Autor** (654, Codex `gpt-6.1-sol` xhigh, 180 min, `R97-18/card.md`):
+  `gmtime_r` y test `perplexity_evaluation`, PPL `--quick` BF16 y FP8, CLI MTP+FP8 con tasa de aceptación, tests con
+  artefacto heredados de R97-17, `ctest` completo (ISSUE-005 crit. 3). La comparación con el oráculo la ejecuta el
+  director (`run-gate.py ppl-text`).
+- 2026-11-19 05:1x UTC · **Relevo 8 del director** por contexto (70 %).
