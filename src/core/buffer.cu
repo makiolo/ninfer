@@ -1,10 +1,17 @@
 #include "core/buffer.h"
 #include "core/device.h"
+#include "core/platform.h"
 
 #include <cstdio>
 #include <stdexcept>
 #include <string>
 #include <utility>
+
+#if NINFER_TARGET_R9700
+#include <iterator>
+#include <map>
+#include <mutex>
+#endif
 
 namespace ninfer {
 namespace {
@@ -14,6 +21,41 @@ void check(cudaError_t error, const char* operation) {
         throw std::runtime_error(std::string(operation) + ": " + cudaGetErrorString(error));
     }
 }
+
+#if NINFER_TARGET_R9700
+// HIP accepts a duplicate registration without retaining a second native lease.
+// Serialize registration ownership, so one destructor cannot invalidate another
+// owner's borrowed views. Subranges borrow the original owner's CudaHostView.
+struct HostRegistrations {
+    std::mutex mutex;
+    std::map<std::uintptr_t, std::size_t> ranges;
+};
+
+HostRegistrations& host_registrations() {
+    static HostRegistrations registrations;
+    return registrations;
+}
+
+void register_host(ConstMemorySpan host) {
+    auto& registrations = host_registrations();
+    std::lock_guard lock(registrations.mutex);
+    const auto begin = reinterpret_cast<std::uintptr_t>(host.data);
+    const auto next = registrations.ranges.lower_bound(begin);
+    if ((next != registrations.ranges.end() && next->first - begin < host.bytes) ||
+        (next != registrations.ranges.begin() &&
+         begin - std::prev(next)->first < std::prev(next)->second))
+        throw std::invalid_argument("CUDA registration overlaps an owned Host range");
+    // Acquire bookkeeping before the native resource, including on Host OOM.
+    const auto entry = registrations.ranges.emplace_hint(next, begin, host.bytes);
+    try {
+        check(cudaHostRegister(const_cast<void*>(host.data), host.bytes, cudaHostRegisterDefault),
+              "cudaHostRegister");
+    } catch (...) {
+        registrations.ranges.erase(entry);
+        throw;
+    }
+}
+#endif
 
 void release_device(void* data, Device device) noexcept {
     if (data == nullptr) { return; }
@@ -47,7 +89,14 @@ void release_registration(CudaHostView view) noexcept {
     if (!view.host.bytes) { return; }
     try {
         CudaDeviceScope scope(view.cuda_device);
+#if NINFER_TARGET_R9700
+        auto& registrations = host_registrations();
+        std::lock_guard lock(registrations.mutex);
+#endif
         check(cudaHostUnregister(const_cast<void*>(view.host.data)), "cudaHostUnregister");
+#if NINFER_TARGET_R9700
+        registrations.ranges.erase(reinterpret_cast<std::uintptr_t>(view.host.data));
+#endif
     } catch (const std::exception& error) {
         std::fprintf(stderr, "CUDA registration cleanup failed: %s\n", error.what());
     }
@@ -62,8 +111,12 @@ CudaHostRegistration::CudaHostRegistration(ConstMemorySpan host, Device cuda_dev
     }
     CudaDeviceScope scope(cuda_device);
     if (host.bytes) {
+#if NINFER_TARGET_R9700
+        register_host(host);
+#else
         check(cudaHostRegister(const_cast<void*>(host.data), host.bytes, cudaHostRegisterDefault),
               "cudaHostRegister");
+#endif
     }
     try {
         view_ = map_host(host, cuda_device);
