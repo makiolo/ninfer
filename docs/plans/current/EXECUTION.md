@@ -607,3 +607,14 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
 - 2026-11-19 04:0x UTC · **R97-33 cerrada.** Revisión (649, Codex `gpt-6-astra` high): ACCEPT, sin hallazgos. Fila en
   PLAN_INTEGRATION §5. **Revisión de R97-16 lanzada** (650, Codex `gpt-6-astra` xhigh, `R97-16/review-card.md`).
   Cuota a las 03:55 UTC: Claude 71 %, Fable 92 %, Codex 77 %.
+- 2026-11-19 04:0x UTC · **R97-16 cerrada.** Revisión (650, Codex `gpt-6-astra` xhigh): ACCEPT, sin hallazgos
+  bloqueantes; causa raíz del temporizador demostrada (25 marcas invertidas en 4 000 replays con eventos HIP, 0 con el
+  reloj directo); test changes legitimate (incluido `3f698a4c`). INFO: el temporizador añade dos kernels por intervalo
+  capturado (coste en métricas, no en resultados). Fila en PLAN_INTEGRATION §5. **ISSUE-002 cerrada**; ISSUE-004
+  criterio 1 marcado.
+- 2026-11-19 04:0x UTC · **R97-17 lanzada** (651, Codex `gpt-6.1-sol` high, 180 min; `R97-17/card.md`, redactada por el
+  director, pre-revisada READY). Alcance: CLI con tres prompts fijos (graph on/off, sin especulativo), diez tests
+  `*_real` con `NINFER_TEST_ARTIFACT`, tests de modelo sin artefacto pendientes y arranque del TOML de ejemplo
+  (R97-28). Sin medir velocidad (regla del usuario). Comprobado por el director antes de lanzar: las Ops rechazadas
+  del drafter (R97-11, R97-15) solo las llama DFlash/DFlash2 (`masked_draft()`, `decision.cpp:81`); el camino de MTP
+  usa `speculative_accept_greedy_drafts` (portada): R97-18 no queda bloqueada por eso.

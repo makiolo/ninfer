@@ -3,7 +3,7 @@
 | ID | Status | Severity | Destination | Card |
 |---|---|---|---|---|
 | ISSUE-001 | Open | Medium | Current sprint (R97-04 / R97-06 / OPS) | [ISSUE-001](ISSUE-001.md) |
-| ISSUE-002 | Pending verification | Medium | Current sprint (reconfiguración limpia en R97-16/R97-31) | [ISSUE-002](ISSUE-002.md) |
+| ISSUE-002 | Closed | Medium | Cerrada en R97-16 (configuración `--fresh` sin variables) | [ISSUE-002](ISSUE-002.md) |
 | ISSUE-003 | Open | Low | Backlog (dueño de `media_acquire`) | [ISSUE-003](ISSUE-003.md) |
 | ISSUE-004 | Open | Medium | Current sprint (R97-16 mide) y PERF | [ISSUE-004](ISSUE-004.md) |
 | ISSUE-005 | Open | Medium | Current sprint (antes del DoD de R97-18) | [ISSUE-005](ISSUE-005.md) |

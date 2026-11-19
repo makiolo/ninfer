@@ -1,7 +1,7 @@
 # [ISSUE-002] Las dependencias host de `r9700` viven en un árbol vcpkg temporal fuera del repo
 
 > **Type:** Defect\
-> **Status:** Pending verification\
+> **Status:** Closed\
 > **Detected:** 2026-11-17\
 > **Origin:** SPRINT-01 / PLAN_HOST / R97-07 (revisión 504, Sonnet 5.5 high, hallazgo 1)\
 > **Affected component:** resolución de dependencias de `r9700` (`cmake/Dependencies.cmake`, `CMakePresets.json`, vcpkg)\
@@ -43,3 +43,8 @@ según `docs/maintainer/build-system.md`.
   `build/r9700-dev` aún guarda el `VCPKG_INSTALLED_DIR` de su primera configuración). Lo comprueba la primera
   reconfiguración limpia (R97-16 o R97-31); el procedimiento en `docs/maintainer/build-system.md` va con la revisión
   de documentación que programa el usuario (AGENTS.md).
+
+## 6. Cierre (2026-11-19, director relevo 7)
+- Verificado en R97-16: `cmake --preset r9700-dev --fresh` con `NINFER_R9700_VCPKG_INSTALLED_DIR` y `VCPKG_INSTALLED_DIR`
+  fuera del entorno resolvió `G:/vcpkg_root/installed-ninfer-r9700` (`.agent-tmp/R97-16/configure-fresh.log:1`);
+  confirmado por la revisión de R97-16 (650, Codex `gpt-6-astra` xhigh).

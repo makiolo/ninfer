@@ -33,6 +33,8 @@ Pendiente. Propuesta: prefill de T=1 024 con 131 072 claves en la ASUS, midiendo
 Topología de lanzamiento fijada por la geometría del tensor, sin reparto por tiempo para anchos grandes.
 
 ## 5. Criterios de resolución
-- [ ] 1. Duración medida del lanzamiento para T de 256 a 4 096 y contextos de 8 192 a 262 144 claves (R97-16).
+- [x] 1. Duración medida del lanzamiento para T de 256 a 4 096 y contextos de 8 192 a 262 144 claves (R97-16:
+  15 de 24 combinaciones hasta la regla de parada; BF16 2 817,54 ms y FP8 1 807,87 ms en un lanzamiento, 0 eventos
+  4101; `.agent-tmp/R97-16/tdr-table.md`; las nueve restantes no se lanzan, decisión del director).
 - [ ] 2. Límite documentado o reparto del prefill en trozos que queden por debajo del TDR (PERF).
 - [ ] 3. Caso de test que cubra más de 128 consultas con contexto largo.
