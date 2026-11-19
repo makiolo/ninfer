@@ -618,3 +618,14 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   (R97-28). Sin medir velocidad (regla del usuario). Comprobado por el director antes de lanzar: las Ops rechazadas
   del drafter (R97-11, R97-15) solo las llama DFlash/DFlash2 (`masked_draft()`, `decision.cpp:81`); el camino de MTP
   usa `speculative_accept_greedy_drafts` (portada): R97-18 no queda bloqueada por eso.
+- 2026-11-19 04:1x UTC · **R97-17 entregada** (651): `53484e6c`. **Primera generación de Qwen3.8-27B en la R9700**
+  (ASUS): tres prompts × grafo on/off, respuestas correctas y coherentes; TOML de ejemplo con FP8 y MTP carga y
+  responde. Tests: 4 de modelo pasan; el resto, repartido por el director: FP8/MTP fijos y `loading_real` a R97-18
+  (PLAN_INTEGRATION §3), interposición ELF a ISSUE-006; `ninfer_qwen3_5_real_test` no existe (error de la ficha).
+- 2026-11-19 04:2x-04:5x UTC · Gate sin modelo del director: exit 0 tras dos intentos fallidos del propio script (objetivos
+  por defecto con tests ELF); build, modelo 4 de 4, host 71 de 71, CLI con grafo 3 de 3 con las mismas respuestas.
+- 2026-11-19 04:5x UTC · **R97-17 cerrada.** Revisión (652, Codex `gpt-5.6-terra` high): ACCEPT, sin hallazgos;
+  reasignaciones del director correctas. Fila en PLAN_INTEGRATION §5. Siguiente: R97-18. Referencia de perplejidad:
+  no hay valor publicado para `groupwise-int` (solo NVFP4 en RTX 5090: 4,6148 y 4,6171, corpus completo, contexto
+  4 096, stride 2 048, KV INT8); sin hardware CUDA aquí, el oráculo de R97-18 construye una referencia independiente
+  en CPU (float32, capa a capa, ventanas cortas) con los códecs de `tools/artifact/codecs/`.
