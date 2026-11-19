@@ -597,3 +597,13 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   efectivo. Producto 3 de 4: `ninfer_glm5next_protocol_test` falla al decodificar PNG (FFmpeg de vcpkg con
   `--disable-zlib`). **Decisión del director:** mismo motivo que `ninfer_glm5next_media_test` (R97-08), medios fuera del
   objetivo; ambos a **ISSUE-007** (backlog). Pendiente: gate del director y revisión.
+- 2026-11-19 03:5x UTC · **R97-16 intento 2 entregado** (648): `4ef80b7e`. Causa raíz (sonda,
+  `.agent-tmp/R97-16/timing-root-cause.md`): HIP/PAL devuelve marcas de tiempo de eventos invertidas, también sin
+  grafo; el orden del trabajo era correcto. Core mide ahora en `r9700` con el reloj de frecuencia constante de la GPU
+  (muestras en memoria host mapeada propiedad del temporizador); CUDA sin cambio. 1 000 ejecuciones sin fallo.
+- 2026-11-19 04:0x UTC · **Gate sin modelo del director: exit 0** (`.agent-tmp/R97-16/director-gate.log`, HEAD
+  `02b98ae9`): compilan motor, ejecutables y tests; producto 3 de 3, host **71 de 71**, GPU **11 de 11**, 50 tandas del
+  reproductor de tiempos sin fallo.
+- 2026-11-19 04:0x UTC · **R97-33 cerrada.** Revisión (649, Codex `gpt-6-astra` high): ACCEPT, sin hallazgos. Fila en
+  PLAN_INTEGRATION §5. **Revisión de R97-16 lanzada** (650, Codex `gpt-6-astra` xhigh, `R97-16/review-card.md`).
+  Cuota a las 03:55 UTC: Claude 71 %, Fable 92 %, Codex 77 %.

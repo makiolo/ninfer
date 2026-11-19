@@ -54,6 +54,13 @@ Depende de: HOST (R97-05..08) y OPS (R97-09..15, R97-29..31). Bloquea: PERF.
 - Aceptación: ninguna afirmación fuera de alcance; antes de cerrar el sprint, el director comprueba cada afirmación
   contra R97-17/18 (TOML de ejemplo arrancando con el modelo) y R97-19..21 rellena las cifras.
 
+### R97-33 — El motor enlaza en `r9700`: rechazo explícito de las Ops de familias no portadas
+- Añadida por el director (2026-11-19) tras el BLOCKED de R97-16: el motor público arrastra Ops de GLM5Next,
+  Qwen4Exp, Kimi/KDA, QSA y MoE sin definición en `r9700`. Nivel L5 · Riesgo alto (manifiestos compartidos con CUDA)
+  · Autor: Codex · Revisor: otro modelo. Mismo patrón que R97-31: rechazo explícito en el módulo dueño, o definición
+  real si es planificación host que compila tal cual. Ficha: `R97-33/card.md`.
+- Aceptación: motor, `ninfer`, `ninfer-serve` y los tests de producto enlazan; 0 símbolos sin definir; CUDA sin cambio.
+
 ### R97-32 — `claude-local` con Qwen3.8 de ninfer en la ASUS
 - Nivel L4 · Riesgo medio (herramienta compartida por todos los proyectos) · Autor: Codex · Revisor: otro modelo.
 - Añadida por el usuario (2026-11-19): «cuando terminemos cambia claude-local para poder usarlo desde allí, pudiendo
@@ -87,4 +94,5 @@ su verificación final va tras R97-18.
 
 | ID | Commit | Tests | Desviaciones |
 |---|---|---|---|
+| R97-33 | `448da3c4` | Autor Codex `gpt-6.1-sol` high (560). Enlace con `/errorlimit:0`: 56 símbolos, todos de Ops; 7 definiciones host de planificación y 49 rechazos (`.agent-tmp/R97-33/undefined-all.md`); sonda en la ASUS 60 de 60 rechazos. Validación sin modelo del director (`.agent-tmp/R97-16/director-gate.log`): compilan `ninfer_engine`, `ninfer_serve`, `ninfer`, `ninfer-serve` y los tests; producto 3 de 3, host **71 de 71**. Revisión Codex `gpt-6-astra` high (649): **ACCEPT**, sin hallazgos; ningún rechazo nuevo en el camino de Qwen3.8. | `ninfer_glm5next_protocol_test` compila y enlaza pero falla al decodificar PNG (FFmpeg de vcpkg con `--disable-zlib`): a **ISSUE-007** con `ninfer_glm5next_media_test` (medios, fuera del objetivo). Cargar en `r9700` un modelo de esas familias falla con `std::invalid_argument` que nombra la Op. CUDA: auditoría de lectura, sin compilar. |
 | R97-28 (parcial: escrita y contrastada con el alcance; falta la verificación final tras R97-18) | `68f00ba3` + corrección del director en `README.md:21` | No aplica (documentación y un TOML); enlaces relativos comprobados por el autor | Pendiente de comprobar con el producto: `cuda_graph = true` (hipGraph, R97-16), TOML arrancando con el modelo (R97-17/18), nombres `*.exe`, conversión `groupwise-int` con `--device cpu` (leída en `tools/convert`, no ejecutada), y si la fila de 260 096 tokens del perfil cabe en la R9700 (el TOML limita a 131 072) |
