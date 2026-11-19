@@ -6,4 +6,4 @@ ninfer_add_op_test(ninfer_gdn_control_test
           "${CMAKE_CURRENT_LIST_DIR}/cases.cpp"
           "${CMAKE_CURRENT_LIST_DIR}/runner.cpp"
           "${CMAKE_CURRENT_LIST_DIR}/validation.cpp"
-  LIBRARIES ${ninfer_gdn_test_library})
+  LIBRARIES ninfer_ops)
