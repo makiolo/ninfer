@@ -564,3 +564,7 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   distinto del autor (como la opción B de Q-012, adelantada); Claude queda para el director y para lo que Codex no
   pueda hacer, con un presupuesto de unos 6 puntos semanales por día (68 % gastado, 32 % para casi 5 días). La revisión
   de R97-31 ya se había hecho en Opus antes del anuncio.
+- 2026-11-19 01:5x UTC · **R97-16 lanzada** (559, Codex `gpt-6.1-sol` xhigh por `claude-or route --level 6`, 180 min;
+  `R97-16/card.md`, redactada el 17-11 y completada por el director con lo que deja R97-31: enlace del motor como
+  primera prueba real de los símbolos, Ops con rechazo explícito e ISSUE-002 sin `NINFER_R9700_VCPKG_INSTALLED_DIR`;
+  pre-revisada READY con Flash). Base `32e3429e`. Build `build/r9700-dev`.
