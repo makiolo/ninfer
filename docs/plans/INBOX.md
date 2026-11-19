@@ -77,3 +77,28 @@ Entry format:
 > de los días hasta su reinicio, en lugar de gastarlo ahora.
 >
 > → accepted: docs/plans/current/EXECUTION.md (revisiones y oráculos a Codex; Claude en proporción hasta el reinicio).
+
+### 2026-11-19T03:59+01:00 · from the user · announcement
+> Nuevo sistema de preguntas al usuario (2026-11-19). Toda pregunta registrada es bloqueante u opcional.
+>
+> Bloqueante (se pregunta de forma síncrona con AskUserQuestion) solo si se cumple alguna de estas condiciones:
+> - elige la dirección de exploración con trabajos sustancialmente distintos;
+> - cambia el alcance o las prioridades, o gasta dinero o cuota fuera del presupuesto;
+> - toca cuentas del usuario;
+> - no hay un valor por defecto razonable;
+> - es una puerta de producción.
+>
+> Todo lo demás es opcional:
+> - Se registra con "- Mode: optional · criticality low|medium|high · default <letra> · deadline <hora>" (en sprint: "- Modo: opcional · criticidad baja|media|alta · por defecto <letra> · plazo <hora>").
+> - El plazo lo da `ask.py deadline <low|medium|high>`: 4 h, 24 h o 48 h.
+> - Se envía un aviso al móvil y se sigue trabajando, sin preguntar de forma síncrona.
+> - Al vencer el plazo sin respuesta se aplica el valor por defecto con `ask.py due --project <proyecto> --apply`, al arrancar, en cada punto tranquilo y antes de un paso que dependa de ella.
+> - Las que ya no aplican se invalidan con `ask.py invalidate <proyecto> <id> --reason "..." --by <sesión>`.
+>
+> El lote de preguntas del relevo lleva solo las bloqueantes.
+>
+> Reglas completas: concertino references/questions.md, sección "Blocking or optional", o sprint references/preguntas.md, sección "Bloqueantes u opcionales". `ask.py` es ~/.claude/skills/concertino/scripts/ask.py (python -X utf8).
+>
+> Forwarded by concertino-24 with `concertino-broadcast`. The user decided these rules in that session; the text was written there and sent at the user's request («sí, manda anuncio»). The skills already contain them. Apply it in this project and record it where it belongs (EXECUTION, ON_CALL.md or GUARDIA.md). No reply needed.
+>
+> → accepted: docs/plans/current/EXECUTION.md (sin preguntas abiertas; las nuevas se registran como bloqueantes u opcionales).

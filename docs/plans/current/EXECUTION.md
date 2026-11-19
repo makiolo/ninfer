@@ -568,3 +568,25 @@ Registro de ejecución del director. Una línea por hecho relevante; los cierres
   `R97-16/card.md`, redactada el 17-11 y completada por el director con lo que deja R97-31: enlace del motor como
   primera prueba real de los símbolos, Ops con rechazo explícito e ISSUE-002 sin `NINFER_R9700_VCPKG_INSTALLED_DIR`;
   pre-revisada READY con Flash). Base `32e3429e`. Build `build/r9700-dev`.
+- 2026-11-19 ~02:55 UTC · **R97-16 intento 1: BLOCKED** (559). Commits `48c75643` (hipGraph, presupuesto de memoria
+  WDDM en Core: min(HIP libre, presupuesto WDDM − uso)) y `8ec0e337` (propiedad del registro de memoria pinned). GPU
+  10 de 11, host **71 de 71** (cuatro contratos host reactivados), configuración `--fresh` sin variables de vcpkg
+  (ISSUE-002). Bloqueos: (1) el motor no enlaza: ≥ 20 Ops de GLM5Next, Qwen4Exp, Kimi/KDA, QSA y MoE sin definir en
+  `r9700` (`.agent-tmp/R97-16/undefined-ops.md`); (2) `ninfer_state_store_test` con 0x42. TDR (ISSUE-004 crit. 1):
+  15 de 24 combinaciones; paradas BF16 2 817,54 ms y FP8 1 807,87 ms en un solo lanzamiento, 0 eventos 4101.
+  **Decisiones del director:** (2) era la prueba: relleno con `cudaMemset` en el stream por defecto, sin orden frente al
+  stream `NonBlocking` del contexto (también latente en CUDA); corregida por el director (`3f698a4c`, relleno en el
+  stream del contexto) y validada (pasa). (1) nueva tarea **R97-33** (rechazo explícito en los módulos dueños, mismo
+  patrón que R97-31; no se excluyen familias en el registro del motor). TDR: las nueve combinaciones restantes no se
+  lanzan (mayores que las que ya pararon); criterio 1 cubierto.
+- 2026-11-19 ~03:05 UTC · Al validar `3f698a4c`, **fallo intermitente nuevo**: `ninfer_device_sync_*_test` («Graph timing
+  events lost their replay interval», `tests/test_device.cpp:186`): `cudaEventElapsedTime` negativo entre eventos
+  externos grabados en un grafo. Reproductor del director (`.agent-tmp/director/r97-16-repeat.py`): **7 de 25** tandas,
+  los cuatro modos. Producción los usa solo en métricas (`src/runtime/observability/gpu_timing.h`).
+- 2026-11-19 ~03:10 UTC · **R97-33 lanzada** (560, Codex `gpt-6.1-sol` high, 150 min, `R97-33/card.md`, pre-revisada
+  READY) y **R97-16 intento 2** (648, Codex `gpt-6.1-sol` xhigh, 120 min, `R97-16/card-fix.md`, READY): causa raíz y
+  corrección en `src/core` del intervalo negativo; aceptación 200 tandas sin fallo. Las dos comparten `build/r9700-dev`
+  y la cola.
+- 2026-11-19 03:59 local · **Anuncio del usuario** (INBOX, vía concertino-24): las preguntas al usuario se registran como
+  bloqueantes u opcionales (`references/questions.md` §«Blocking or optional»; `ask.py`). En ninfer no hay preguntas
+  abiertas; se aplica a las próximas.
